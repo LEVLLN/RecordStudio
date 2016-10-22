@@ -79,7 +79,7 @@ def register(request):
     return render(request, 'bookings/home.html')
 
 
-@user_passes_test(lambda u: u.groups.filter(name='Soundman').exists())
+@user_passes_test(lambda u: u.groups.filter(name='soundmans').exists())
 def soundman_page(request):
     return render(request, "soundman_p/soundman_page.html")
 
