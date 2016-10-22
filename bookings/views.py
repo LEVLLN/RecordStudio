@@ -25,7 +25,7 @@ def create_booking(request):
     soundman = request.POST['soundman']
     print(start)
     print(soundman)
-    
+
     user = request.user
     new_booking = Reservation(user=user, start=start, is_active=1,
                               duration=datetime.timedelta(minutes=timeparse(duration)),
