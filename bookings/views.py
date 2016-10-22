@@ -4,17 +4,25 @@ from django.shortcuts import render
 from django.contrib import auth
 from bookings.models import Reservation
 import datetime
+from pytimeparse.timeparse import timeparse
 
 def home(request):
     return render(request, 'bookings/home.html')
 
 def create_booking(request):
+
+
+    duration = request.POST['duration']
+    start = request.POST['start']
+
+    print(start)
+    print(duration)
+
+    user = request.user
+    new_booking = Reservation(user=user, start=start, is_active=1, duration=datetime.timedelta(minutes=timeparse(duration)), soundman=user)
+    new_booking.save()
     reserv = Reservation.objects.all()
     context = {
-        'bookings':reserv
+        'bookings': new_booking
     }
-    user = auth.authenticate(username='admin',password='qwertY123')
-    auth.login(request,user)
-    new_booking = Reservation(user=user,start='2016-01-31 15:00',is_active=1,duration=datetime.timedelta(hours=1, minutes=60,seconds=12),soundman=user)
-    new_booking.save()
     return render(request, 'bookings/create_booking.html', context)
