@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+
+{% for reserv in bookings %}
+    <pre>USER:{{ reserv.user }}</pre>
+    <pre>SOUNDMAN:{{ reserv.soundman }}</pre>
+   <pre>START FIELD:{{ reserv.start}}</pre>
+   <pre>DURATION FIELD: {{ reserv.duration }}</pre>
+{%  endfor %}
