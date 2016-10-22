@@ -1,7 +1,12 @@
 <!DOCTYPE html>
+<h1>Hello World</h1>
+<form action='create_booking' method='post'>
+    {% csrf_token %}
 
+    <label for="start">Start</label>
+    <input type="datetime-local" name="start" value="" id="start">
+    <label for="duration">Duration</label>
+    <input type="time"  name="duration" value="" id="duration">
+    <input type="submit" value="create_booking" />
 
-<pre>USER:{{ bookings.user }}</pre>
-<pre>SOUNDMAN:{{ bookings.soundman }}</pre>
-<pre>START FIELD:{{ bookings.start }}</pre>
-<pre>DURATION FIELD: {{ bookings.duration }}</pre>
+</form>
