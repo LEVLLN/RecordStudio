@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.IntegerField(choices=[(1, 'Active'), (2, 'In progress'), (3, 'Inactive')])),
                 ('start', models.DateTimeField()),
                 ('duration', models.DurationField()),
-                ('soundman', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='assigned_reservations', to=settings.AUTH_USER_MODEL)),
+                ('administrator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='assigned_reservations', to=settings.AUTH_USER_MODEL)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservations', to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('start_of_the_day', models.TimeField()),
                 ('end_of_the_day', models.TimeField()),
                 ('working_day', models.IntegerField(choices=[(1, 'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday'), (7, 'Sunday')])),
-                ('soundman', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('administrator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
