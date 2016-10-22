@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация</title>
+</head>
+<body>
+<form action="" method="post">
+    {% csrf_token %}
+    <label for="username">Логин:</label>
+    <input type="text" name="username" value="" id="username">
+    <br/>
+    <label for="password">Пароль:</label>
+    <input type="password" name="password1" value="" id="password1">
+    <br/>
+    <input type="password" name="password2" value="" id="password2">
+    <br/>
+    <label for="email">Email: </label>
+    <input type="email" name="email" value ="" id="email">
+    <br/>
+    {% if form.errors %}
+        {{ form.errors }}
+    {% endif %}
+    <button type="submit">Зарегистрироваться</button>
+</form>
+</body>
+</html>

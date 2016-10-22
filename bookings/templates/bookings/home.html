@@ -1,0 +1,7 @@
+<h1>Hello World</h1>
+<h2>Welcome to Reservation System</h2>
+  {% csrf_token %}
+{% for schedule in schedules %}
+
+    <h4>{{ schedule.soundman }}</h4>
+{%  endfor %}
