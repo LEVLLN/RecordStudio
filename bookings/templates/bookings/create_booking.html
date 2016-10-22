@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 
-{% for reserv in bookings %}
-    <pre>USER:{{ reserv.user }}</pre>
-    <pre>SOUNDMAN:{{ reserv.soundman }}</pre>
-   <pre>START FIELD:{{ reserv.start}}</pre>
-   <pre>DURATION FIELD: {{ reserv.duration }}</pre>
-{%  endfor %}
+
+<pre>USER:{{ bookings.user }}</pre>
+<pre>SOUNDMAN:{{ bookings.soundman }}</pre>
+<pre>START FIELD:{{ bookings.start }}</pre>
+<pre>DURATION FIELD: {{ bookings.duration }}</pre>
