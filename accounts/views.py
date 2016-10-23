@@ -1,10 +1,17 @@
 from django.contrib import auth
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import permission_required, user_passes_test, login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
+
+
+def check_for_permission(request):
+    if request.user.groups.filter(name='Administrators').exists():
+        return render(request, "administrator/administrator_page.html")
+    if request.user.groups.filter(name='Soundman').exists():
+        return render(request, "soundman_p/soundman_page.html")
+    else:
+        return render(request, "user/home.html")
 
 
 def login(request):
@@ -14,39 +21,21 @@ def login(request):
     if request.method == "GET":
 
         if request.user.is_authenticated():
-
-            if request.user.groups.filter(name='Administrators').exists():
-                return render(request, "administrator/administrator_page.html")
-            if request.user.groups.filter(name='Soundman').exists():
-                return render(request, "soundman_p/soundman_page.html")
-            else:
-                return redirect("/")
-
+            return check_for_permission(request)
         else:
             return render(request, "accounts/login.html")
 
-    if request.method == "POST":
-
+    else:
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
 
         if user is not None and user.is_active:
             auth.login(request, user)
-
-            if request.user.groups.filter(name='Administrators').exists():
-                return render(request, "administrator/administrator_page.html")
-            if request.user.groups.filter(name='Soundman').exists():
-                return render(request, "soundman_p/soundman_page.html")
-            else:
-                return redirect("/")
-
+            return check_for_permission(request)
         else:
             args['login_error'] = "Пользователь не найден"
             return render_to_response("accounts/login.html", args)
-
-    else:
-        return HttpResponse(request, "accounts/login.html")
 
 
 def logout(request):
@@ -78,13 +67,3 @@ def register(request):
             return render(request, 'accounts/register.html')
     else:
         return render(request, 'bookings/home.html')
-
-
-@user_passes_test(lambda u: u.groups.filter(name='soundmans').exists())
-def soundman_page(request):
-    return render(request, "soundman_p/soundman_page.html")
-
-
-@user_passes_test(lambda u: u.groups.filter(name='Administrators').exists())
-def administrators_page(request):
-    return render(request, "administrator/administrator_page.html")
