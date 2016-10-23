@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.contrib import auth
 from django.template.context_processors import csrf
 
@@ -64,4 +64,12 @@ def creating_booking(request):
 
 
 def home(request):
-    return render(request, "bookings/home.html")
+    args = {}
+    args.update(csrf(request))
+    if not request.user.is_authenticated():
+        args['auth_error'] = "Пользователь не авторизован"
+        return render_to_response("bookings/home.html", args)
+    else:
+        return render(request, "bookings/home.html")
+
+

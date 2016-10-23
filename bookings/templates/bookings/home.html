@@ -6,5 +6,9 @@
 </head>
 <body>
 <p>Welcome to the best main page EVER!</p>
+{% if auth_error %}
+    Авторизуйтесь!!!
+    <div class="auth"><a href="/accounts/login">Авторизация</a></div>
+{% endif %}
 </body>
 </html>
