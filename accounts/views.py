@@ -67,10 +67,10 @@ def register(request):
                 new_user_form.save()
                 email = request.POST['email']
                 new_user = auth.authenticate(username=new_user_form.cleaned_data['username'],
-                                             password=new_user_form.cleaned_data['password2'],
-                                             email=email)
+                                             password=new_user_form.cleaned_data['password2'])
+                new_user.email = email
                 auth.login(request, new_user)
-                return redirect(request)
+                return redirect("/")
             else:
                 args['form'] = new_user_form
                 return render_to_response('accounts/register.html', args)
