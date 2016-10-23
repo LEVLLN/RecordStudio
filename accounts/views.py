@@ -60,7 +60,6 @@ def register(request):
     args['form'] = UserCreationForm()
 
     if not request.user.is_authenticated():
-
         if request.POST:
             new_user_form = UserCreationForm(request.POST)
 
@@ -75,8 +74,10 @@ def register(request):
             else:
                 args['form'] = new_user_form
                 return render_to_response('accounts/register.html', args)
-
-    return render(request, 'bookings/home.html')
+        else:
+            return render(request, 'accounts/register.html')
+    else:
+        return render(request, 'bookings/home.html')
 
 
 @user_passes_test(lambda u: u.groups.filter(name='soundmans').exists())

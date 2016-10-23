@@ -43,7 +43,7 @@ from pytimeparse.timeparse import timeparse
 def creating_booking(request):
     args = {}
     args.update(csrf(request))
-    if request.method=="GET":
+    if request.method == "GET":
         group = Group.objects.get(name='soundmans')
         users = group.user_set.all()
         context = {
@@ -51,7 +51,7 @@ def creating_booking(request):
         }
         print(users)
         return render(request, 'bookings/create_booking.html', context)
-    elif request.method=="POST":
+    elif request.method == "POST":
         duration = request.POST['duration']
         start = request.POST['start']
         soundman = request.POST['soundman']
@@ -62,3 +62,6 @@ def creating_booking(request):
         new_booking.save()
         return render(request, 'bookings/show_booking.html', {'booking': new_booking})
 
+
+def home(request):
+    return render(request, "bookings/home.html")
