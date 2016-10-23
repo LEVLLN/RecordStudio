@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
+from emailer.views import EmailTest
+
+import emailer
 
 
 def check_for_permission(request):
@@ -72,3 +75,15 @@ def register(request):
 
     else:
         return render(request, 'bookings/home.html')
+
+
+def forget(request):
+    args = {}
+    args.update(csrf(request))
+    if request.method == 'GET':
+        return render(request, 'accounts/forget.html')
+    else:
+        email = request.POST['email']
+        EmailTest.send(request, email)
+        return render(request, 'bookings/home.html')
+
