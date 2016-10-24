@@ -11,8 +11,12 @@
     <input type="time"  name="duration" value="" id="duration">
 </pre>
 <pre>
-    <label for="soundman">Soundman</label>
-    <input type="search"  name="soundman" value="{{ sounmanlist.first }}" id="soundman">
+
+
+    {% for foo in sounmanlist %}
+         <label for="soundman">{{ foo.username }}</label>
+            <input type="radio"  name="soundman" value="{{ foo }}" id="soundman">
+    {% endfor %}
 </pre>
 
   <pre>
