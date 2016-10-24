@@ -43,8 +43,9 @@ from pytimeparse.timeparse import timeparse
 def creating_booking(request):
     args = {}
     args.update(csrf(request))
+
     if request.method == "GET":
-        group = Group.objects.get(name='soundmans')
+        group = Group.objects.get(name='Soundmans')
         users = group.user_set.all()
         context = {
             'sounmanlist': users
@@ -54,11 +55,12 @@ def creating_booking(request):
     elif request.method == "POST":
         duration = request.POST['duration']
         start = request.POST['start']
-        soundman = request.POST['soundman']
+        soundman_str = request.POST['soundman']
+        soundman = User.objects.get(username=soundman_str)
         user = request.user
         new_booking = Reservation(user=user, start=start, is_active=1,
                                   duration=datetime.timedelta(minutes=timeparse(duration)),
-                                  soundman=request.user)
+                                  soundman=soundman)
         new_booking.save()
         return render(request, 'bookings/show_booking.html', {'booking': new_booking})
 
