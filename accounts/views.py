@@ -1,12 +1,11 @@
 from django.contrib import auth
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
-from emailer.views import send
 
-import emailer
+from accounts.forms import UserCreationForm
+from emailer.views import send
 
 
 def check_for_permission(request):
@@ -56,13 +55,20 @@ def register(request):
 
             new_user_form = UserCreationForm(request.POST)
             if new_user_form.is_valid():
-
+                first_name = new_user_form.cleaned_data['first_name']
+                last_name = new_user_form.cleaned_data['last_name']
                 username = new_user_form.cleaned_data['username']
                 password = new_user_form.cleaned_data['password2']
-                email = request.POST['email']
+                email = new_user_form.cleaned_data['email']
 
-                new_user = User(username=username, password=password, email=email)
+                new_user = User(username=username,
+                                password=password,
+                                email=email,
+                                first_name=first_name,
+                                last_name=last_name)
+
                 new_user.save()
+                send(request, username, password, email)
                 auth.login(request, new_user)
                 return redirect("/")
 
@@ -86,4 +92,3 @@ def forget(request):
         email = request.POST['email']
         send(request, email)
         return render(request, 'bookings/home.html')
-

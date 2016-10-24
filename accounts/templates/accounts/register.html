@@ -6,6 +6,12 @@
 <body>
 <form action="" method="post">
     {% csrf_token %}
+    <label for="first_name">first_name:</label>
+    <input type="text" name="first_name" value="" id="first_name">
+    <br/>
+    <label for="last_name">last_name:</label>
+    <input type="text" name="last_name" value="" id="last_name">
+    <br/>
     <label for="username">Логин:</label>
     <input type="text" name="username" value="" id="username">
     <br/>
