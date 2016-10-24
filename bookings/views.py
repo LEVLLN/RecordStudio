@@ -43,7 +43,6 @@ from pytimeparse.timeparse import timeparse
 def creating_booking(request):
     args = {}
     args.update(csrf(request))
-
     if request.method == "GET":
         group = Group.objects.get(name='Soundmans')
         users = group.user_set.all()
@@ -61,9 +60,11 @@ def creating_booking(request):
         new_booking = Reservation(user=user, start=start, is_active=1,
                                   duration=datetime.timedelta(minutes=timeparse(duration)),
                                   soundman=soundman)
-        new_booking.save()
-        return render(request, 'bookings/show_booking.html', {'booking': new_booking})
-
+        if request.user.groups.filter(name='Customers').exists():
+            new_booking.save()
+            return render(request, 'bookings/show_booking.html', {'booking': new_booking})
+        else:
+          return HttpResponse('U cant do this')
 
 def home(request):
     args = {}
