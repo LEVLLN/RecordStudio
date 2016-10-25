@@ -1,3 +1,7 @@
+import random
+import re
+import string
+
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -5,7 +9,7 @@ from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
 
 from accounts.forms import UserCreationForm
-from emailer.views import send
+from emailer.views import send_welcome_mail, send_forget_mail
 
 
 def check_for_permission(request):
@@ -13,6 +17,7 @@ def check_for_permission(request):
         return render(request, "administrator/administrator_page.html")
     if request.user.groups.filter(name='Soundman').exists():
         return render(request, "soundman_p/soundman_page.html")
+    # прописать чек для кастомера
     else:
         return render(request, "user/home.html")
 
@@ -28,9 +33,8 @@ def login(request):
             return render(request, "accounts/login.html")
 
         else:
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
+            user = authenticate(username=request.POST['username'].lower(),
+                                password=request.POST['password'])
 
             if user is not None and user.is_active:
                 auth.login(request, user)
@@ -52,23 +56,22 @@ def register(request):
 
     if not request.user.is_authenticated():
         if request.POST:
-
             new_user_form = UserCreationForm(request.POST)
             if new_user_form.is_valid():
-                first_name = new_user_form.cleaned_data['first_name']
-                last_name = new_user_form.cleaned_data['last_name']
-                username = new_user_form.cleaned_data['username']
-                password = new_user_form.cleaned_data['password2']
-                email = new_user_form.cleaned_data['email']
-
-                new_user = User(username=username,
-                                password=password,
-                                email=email,
-                                first_name=first_name,
-                                last_name=last_name)
+                new_user = User(username=new_user_form.cleaned_data['username'].lower(), # Реализовать удаление пробелов
+                                password=new_user_form.cleaned_data['password2'],
+                                email=new_user_form.cleaned_data['email'],
+                                first_name=new_user_form.cleaned_data['first_name'],
+                                last_name=new_user_form.cleaned_data['last_name'])
 
                 new_user.save()
-                send(request, username, password, email)
+
+                # Добавить пользователя в группу кастомерс
+
+                send_welcome_mail(new_user_form.cleaned_data['username'].lower(),
+                                  new_user_form.cleaned_data['password2'],
+                                  new_user_form.cleaned_data['email'], new_user_form.cleaned_data['first_name'],
+                                  new_user_form.cleaned_data['last_name'])
                 auth.login(request, new_user)
                 return redirect("/")
 
@@ -89,6 +92,23 @@ def forget(request):
     if request.method == 'GET':
         return render(request, 'accounts/forget.html')
     else:
-        email = request.POST['email']
-        send(request, email)
-        return render(request, 'bookings/home.html')
+        result = re.search(r"@", request.POST['email'])
+        if result:
+            email = request.POST['email']
+            user = User.objects.get(email=email)
+            __new_password = pass_generator()
+            user.set_password(__new_password)
+            send_forget_mail(email, user.username, __new_password)
+            # Реализовать озвращение на страницу success или возвращение сообщения об успешной отправки мыла
+            return redirect('/')
+        else:
+            username = request.POST['email'] # реализовать удаление пробелов
+            user = User.objects.get(username=username)
+            email = user.email
+            __new_password = pass_generator()
+            send_forget_mail(email, username, __new_password)
+            return redirect('/')
+
+
+def pass_generator(size=8, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
