@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 {% for schedule in schedules %}
-<b>{{ schedule.get_working_day_display }}</b>
+    <b>День недели: {{ schedule.get_working_day_display }}</b>
     <br>
-    start: {{ schedule.start_of_the_day}}
+    start: {{ schedule.start_of_the_day }}
     <br>
     end: {{ schedule.end_of_the_day }}
+    <br>
+{% endfor %}
+<h1>Все брони к звукорежиссеру</h1>
+{% for booking in bookings %}
+    <b>Номер брони: </b> {{ booking.id }}
+    <br>
+    Точная дата: {{ booking.start }}
+    <br>
+    День недели: {{ booking.start.weekday }}
+    <br>
+    Время начала записи: {{ booking.start|time }}
+    <br>
+    Продолжительность записи: {{ booking.duration }}
     <br>
 {% endfor %}

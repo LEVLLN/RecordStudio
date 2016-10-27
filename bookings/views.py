@@ -95,5 +95,10 @@ def show_soundman_schedule(request, soundman_id):
     print(soundman)
     schedules = Schedule.objects.all().filter(soundman=soundman)
     print(schedules)
-    context = {'schedules': schedules}
+    bookings = Reservation.objects.all().filter(soundman=soundman)
+    context = {
+        'schedules': schedules,
+        'bookings': bookings
+
+    }
     return render(request, "bookings/show_soundman_schedule.html", context)
