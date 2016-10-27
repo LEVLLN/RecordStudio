@@ -1,1 +1,6 @@
 .idea
+RecordStudio/__pycache__
+accounts/__pycache__
+bookings/__pycache__
+emailer/__pycache__
+records/__pycache__
