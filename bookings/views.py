@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.contrib import auth
 from django.template.context_processors import csrf
 
-from bookings.models import Reservation
+from bookings.models import Reservation, Schedule
 import datetime
 from pytimeparse.timeparse import timeparse
 
@@ -40,6 +40,7 @@ from pytimeparse.timeparse import timeparse
 #     return render(request, 'bookings/show_booking.html', context)
 
 
+# ___________________________________________________________________________________________
 def creating_booking(request):
     args = {}
     args.update(csrf(request))
@@ -64,7 +65,8 @@ def creating_booking(request):
             new_booking.save()
             return render(request, 'bookings/show_booking.html', {'booking': new_booking})
         else:
-          return HttpResponse('U cant do this')
+            return HttpResponse('U cant do this')
+
 
 def home(request):
     args = {}
@@ -76,3 +78,22 @@ def home(request):
         return render(request, "bookings/home.html")
 
 
+# _________________________________________________________________________________________
+#
+def show_soundmans(request):
+    group = Group.objects.get(name="Soundmans")
+    soundmans = group.user_set.all()
+    context = {
+        'soundmans': soundmans
+    }
+
+    return render(request, "bookings/show_soundmans.html", context)
+
+
+def show_soundman_schedule(request, soundman_id):
+    soundman = get_object_or_404(User, id=soundman_id)
+    print(soundman)
+    schedules = Schedule.objects.all().filter(soundman=soundman)
+    print(schedules)
+    context = {'schedules': schedules}
+    return render(request, "bookings/show_soundman_schedule.html", context)

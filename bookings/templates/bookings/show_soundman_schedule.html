@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+{% for schedule in schedules %}
+<b>{{ schedule.get_working_day_display }}</b>
+    <br>
+    start: {{ schedule.start_of_the_day}}
+    <br>
+    end: {{ schedule.end_of_the_day }}
+    <br>
+{% endfor %}
