@@ -33,11 +33,11 @@ class RegisterTest(unittest.TestCase):
         response = self.client.get('/accounts/register')
         self.assertEqual(response.status_code, 200)
 
-    def test_register_post(self):
-        data = {'first_name':'Bekzat', 'last_name':'Shayakhmetov','username':'smbkzt', 'password1':'2251452Bb', 'password2':'2251452Bb', 'email':'bekzat.98@mail.ru'}
-        response = self.client.post('/accounts/register', data)
-        self.client.login(username='smbkzt', password='2251452Bb')
-        self.assertEqual(response.status_code, 200)
+    # def test_register_post(self):
+    #     data = {'first_name':'Bekzat', 'last_name':'Shayakhmetov','username':'smbkzt', 'password1':'2251452Bb', 'password2':'2251452Bb', 'email':'bekzat.98@mail.ru'}
+    #     response = self.client.post('/accounts/register', data)
+    #     self.client.login(username='smbkzt', password='2251452Bb')
+    #     self.assertEqual(response.status_code, 200)
 
 
 # class EmailTest(TestCase):
