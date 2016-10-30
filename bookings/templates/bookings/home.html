@@ -1,14 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'bookings/base.html' %}
+{% load staticfiles %}
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Admin page</title>
+    {% block title %}<title>RS | Главная</title> {% endblock %}
 </head>
+
+
 <body>
-<p>Welcome to the best main page EVER!</p>
-{% if auth_error %}
-    Авторизуйтесь!!!
-    <div class="auth"><a href="/accounts/login">Авторизация</a></div>
-{% endif %}
+<!-- Fixed navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+    <div class="container">
+        <div class="navbar-header">
+            <!-- Button for smallest screens -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            <a class="navbar-brand" href="/bookings/home"><img src="{% static 'images/logo.png' %}" alt="Record Studio"></a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav pull-right">
+                {% block navbar-active %}
+                    <li class="active"><a href="#">Главная</a></li>
+                    <li><a href="">О студии</a></li>
+                    <li><a href="">Бронь записи</a></li>
+                    <li><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
+                {% endblock %}
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+<!-- /.navbar -->
+{% block header %}
+    <!-- Header -->
+    <header id="head">
+        <div class="container">
+            <div class="row">
+                <h1 class="lead">RECORD STUDIO</h1>
+                <p class="tagline"> <a href="http://www.gettemplate.com/?utm_source=progressus&amp;utm_medium=template&amp;utm_campaign=progressus">Студия звукозаписи</a></p>
+                <p><a class="btn btn-default btn-lg" href="#!" role="button">ЗАБРОНИРОВАТЬ СЕЙЧАС</a>
+            </div>
+        </div>
+    </header>
+    <!-- /Header -->
+{% endblock %}
+
+<!-- Intro -->
+<div class="container text-center">
+    <br> <br>
+    <h2 class="thin">Мы можем записать! Так почему нет?!</h2>
+    <p class="text-muted extra-space">
+        В течение часа, в студии записывается несколько дублей, корректируется вокальное исполнение,<br> после выбора лучших дублей корректируется высота нот, если это требуется.
+    </p>
+</div>
+<!-- /Intro-->
+
+<!-- Highlights - jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 highlight">
+                <div class="h-caption"><h4><i class="fa fa-microphone fa-5"></i>ПЕСНИ</h4></div>
+                <div class="h-body text-center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque, tempora velit mollitia. Atque voluptates ipsa voluptas, neque distinctio reiciendis sapiente pariatur odit dolorem incidunt unde sequi officiis, sed perspiciatis rem!</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 highlight">
+                <div class="h-caption"><h4><i class="fa fa-music fa-5"></i>АРАНЖИРОВКА</h4></div>
+                <div class="h-body text-center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptatum magnam iste tempore unde voluptas repellat, quo soluta laboriosam consequatur reiciendis esse accusamus earum aperiam cupiditate nesciunt sed quod dolorum.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 highlight">
+                <div class="h-caption"><h4><i class="fa fa-headphones fa-5"></i>СВЕДЕНИЕ</h4></div>
+                <div class="h-body text-center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero, quos aliquid cumque ut consectetur ullam ipsum nam sint, nostrum. Praesentium ad quod, illo vitae sed ea totam! Fugit, facilis, sequi.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 highlight">
+                <div class="h-caption"><h4><i class="fa fa-signal fa-5"></i>МАСТЕРИНГ</h4></div>
+                <div class="h-body text-center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam laborum quasi, deleniti reprehenderit, voluptatum temporibus. Aut eveniet saepe corrupti, et, labore sunt, voluptatibus, fugit iusto eum quaerat maxime. Dicta, tempora.</p>
+                </div>
+            </div>
+        </div> <!-- /row  -->
+
+    </div>
+</div>
+<!-- /Highlights -->
+
 </body>
 </html>
