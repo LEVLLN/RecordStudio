@@ -16,10 +16,10 @@ def send_welcome_mail(email, username, password, first_name, last_name):
     try:
         mail.send_mail('Subject here', message, settings.EMAIL_HOST_USER,
                        [email], fail_silently=False)
-        return render_to_response("successful_page.html", args) # We should redirec the user to the email page
+        return render_to_response("emailer/successful_page.html", args) # We should redirec the user to the email page
     except Exception:
         args['email_error'] = "Error while sending an email"
-        return render_to_response("successful_page.html", args)
+        return render_to_response("emailer/successful_page.html", args)
 
 
 def send_forget_mail(email, username, password):
@@ -28,7 +28,7 @@ def send_forget_mail(email, username, password):
     try:
         mail.send_mail('Subject here', message, settings.EMAIL_HOST_USER,
                        [email], fail_silently=False)
-        return render_to_response("successful_page.html", args) # The same principle
+        return render_to_response("emailer/successful_page.html", args) # The same principle
     except Exception:
         args['email_error'] = "Error while sending an email"
         return render_to_response("emailer/successful_page.html", args)
