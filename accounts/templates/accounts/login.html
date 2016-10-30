@@ -42,6 +42,9 @@
                                     <label>Пароль <span class="text-danger">*</span></label>
                                     <input id="password" name="password" type="password" data-validate="required,password,min(8)" class="form-control">
                                 </div>
+                                {% if login_error %}
+                                    <p style="color:red; margin:0;">{{ login_error }}</p>
+                                {% endif %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-lg-8">
