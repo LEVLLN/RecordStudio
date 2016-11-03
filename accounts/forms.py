@@ -19,45 +19,6 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 
-class ReadOnlyPasswordHashWidget(forms.Widget):
-    def render(self, name, value, attrs):
-        encoded = value
-        final_attrs = self.build_attrs(attrs)
-
-        if not encoded or encoded.startswith(UNUSABLE_PASSWORD_PREFIX):
-            summary = mark_safe("<strong>%s</strong>" % ugettext("No password set."))
-        else:
-            try:
-                hasher = identify_hasher(encoded)
-            except ValueError:
-                summary = mark_safe("<strong>%s</strong>" % ugettext(
-                    "Invalid password format or unknown hashing algorithm."
-                ))
-            else:
-                summary = format_html_join(
-                    '', '<strong>{}</strong>: {} ',
-                    ((ugettext(key), value) for key, value in hasher.safe_summary(encoded).items())
-                )
-
-        return format_html("<div{}>{}</div>", flatatt(final_attrs), summary)
-
-
-class ReadOnlyPasswordHashField(forms.Field):
-    widget = ReadOnlyPasswordHashWidget
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("required", False)
-        super(ReadOnlyPasswordHashField, self).__init__(*args, **kwargs)
-
-    def bound_data(self, data, initial):
-        # Always return initial because the widget doesn't
-        # render an input field.
-        return initial
-
-    def has_changed(self, initial, data):
-        return False
-
-
 class FirstNameField(forms.CharField):
     def to_python(self, value):
         return unicodedata.normalize('NFKC', super(FirstNameField, self).to_python(value))
@@ -149,12 +110,13 @@ class UserCreationForm(forms.ModelForm):
         email = self.cleaned_data['email']
         active_user = get_user_model()._default_manager.filter(
             email__iexact=email, is_active=True)
-
-        if validate_email(email):
+        try:
+            validate_email(email)
+        except ValidationError:
             raise forms.ValidationError(
                 self.error_messages['email_error'],
                 code='email_error', )
-        elif active_user:
+        if active_user:
             raise ValidationError(
                 self.error_messages['email_error2'],
                 code='email_error2', )

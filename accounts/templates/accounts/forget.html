@@ -11,6 +11,9 @@
     <input type="text" name="email" value="" id="email">
     <br/>
     <input type="submit" value="forget" />
+    {% if NoUserFound %}
+        {{ NoUserFound }}
+    {% endif %}
 </form>
 </body>
 </html>
