@@ -1,32 +1,88 @@
-<!DOCTYPE html>
+{% extends "bookings/base.html" %}
+</html>
 <html>
 <head>
-    <title>Регистрация</title>
+  {% block title %}<title>RS | Регистрация</title> {% endblock %}
 </head>
 <body>
-<form action="" method="post">
-    {% csrf_token %}
-    <label for="first_name">first_name:</label>
-    <input type="text" name="first_name" value="" id="first_name">
-    <br/>
-    <label for="last_name">last_name:</label>
-    <input type="text" name="last_name" value="" id="last_name">
-    <br/>
-    <label for="username">Логин:</label>
-    <input type="text" name="username" value="" id="username">
-    <br/>
-    <label for="password">Пароль:</label>
-    <input type="password" name="password1" value="" id="password1">
-    <br/>
-    <input type="password" name="password2" value="" id="password2">
-    <br/>
-    <label for="email">Email: </label>
-    <input type="email" name="email" value ="" id="email">
-    <br/>
-    {% if form.errors %}
-        {{ form.errors }}
-    {% endif %}
-    <button type="submit">Зарегистрироваться</button>
-</form>
+
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li><a href="">О студии</a></li>
+  <li><a href="">Бронь записи</a></li>
+  <li class="active"><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
+  {% endblock %}
+  {% block login-container %}
+  <header id="head" class="secondary"></header>
+  <!-- container -->
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.html">Главная</a></li>
+      <li class="active">Регистрация</li>
+    </ol>
+    <div class="row">
+      <!-- Article main content -->
+      <article class="col-xs-12 maincontent">
+        <header class="page-header">
+          <h1 class="page-title">Регистрация</h1>
+        </header>
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3 class="thin text-center">Регистрация нового аккаунта</h3>
+              <p class="text-center text-muted larger-than">У вас уже есть аккаунт? <a href="signin.html">Войдите</a> используя ваше<br> имя пользователя и пароль, указанные при регистрации.</p>
+              <hr>
+              <form action="" method="post">
+                {% csrf_token %}
+                <div class="top-margin">
+                  <label>Фамилия<span class="text-danger">*</span></label>
+                  <input id="lastName" name="last_name" type="text" data-validate="required,alpha" class="form-control" >
+                </div>
+                <div class="top-margin">
+                  <label>Имя<span class="text-danger">*</span></label>
+                  <input id="firstName" name="first_name" type="text" data-validate="required,alpha" class="form-control" >
+                </div>
+                <div class="top-margin">
+                  <label>Имя пользователя<span class="text-danger">*</span></label>
+                  <input id="userName" name="username" type="text" data-validate="required,alphanumeric" class="form-control" >
+                </div>
+                <div class="top-margin">
+                  <label>Email адрес<span class="text-danger">*</span></label>
+                  <input type="text" id="email" name="email" data-validate="required,email" class="form-control" >
+                </div>
+                <div class="row top-margin">
+                  <div class="col-sm-6">
+                    <label>Пароль <span class="text-danger">*</span></label>
+                    <input id="password" name="password1" data-validate="required,password,min(8)" type="password" onchange="validatePassword()" class="form-control" >
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Подтверждение пароля <span class="text-danger">*</span></label>
+                    <input id="confirm_password" name="password2" type="password" data-validate="required" onkeyup="validatePassword()" class="form-control">
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-lg-8">
+                    <label class="checkbox">
+                      <input id="termConfirmation" data-validate="agreement" type="checkbox">
+                      Я прочитал и согласен с <a href="page_terms.html">правилами и условиями</a>
+                    </label>
+                  </div>
+                  {% if form.errors %}
+                      <p style="color:red; margin:0;">{{ form.errors }}</p>
+                  {% endif %}
+                  <div class="col-lg-4 text-right">
+                    <button class="btn btn-action" type="submit">Регистрация</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </article>
+      <!-- /Article -->
+    </div>
+  </div>    <!-- /container -->
+  {% endblock %}
 </body>
 </html>

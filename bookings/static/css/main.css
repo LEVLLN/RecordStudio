@@ -257,3 +257,7 @@ img.pull-left {
 .extra-space {
 	margin-bottom: 40px;
 }
+
+.checkbox, .radio {
+	margin-left: 20px !important;
+}
