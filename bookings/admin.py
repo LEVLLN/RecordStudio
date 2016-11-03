@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from bookings.models import Schedule, Reservation
+from bookings.models import Schedule, Reservation, Record
 
 
 @admin.register(Reservation)
@@ -12,4 +12,9 @@ class ReservationAdmin(admin.ModelAdmin):
 
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Record)
+class RecordAdmin(admin.ModelAdmin):
     pass

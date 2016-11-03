@@ -1,12 +1,12 @@
+from datetime import datetime, timezone
+
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, render_to_response
-from django.contrib import auth
+from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from django.template.context_processors import csrf
-
-from bookings.models import Reservation, Schedule
-import datetime
 from pytimeparse.timeparse import timeparse
+
+from bookings.models import Reservation, Schedule, Record
 
 
 # def home(request):
@@ -102,3 +102,25 @@ def show_soundman_schedule(request, soundman_id):
 
     }
     return render(request, "bookings/show_soundman_schedule.html", context)
+
+
+class RecordView:
+    def start_record(request):
+        if request.POST:
+            new_record = Record(reservation_id=72, start_record=datetime.now(timezone.utc))
+            new_record.save()
+            return redirect("/accounts/my_profile")
+        else:
+            return render(request, "records/records.html")
+
+    def stop_record(request):
+        if request.POST:
+            new_record = Record.objects.get(reservation_id=72)
+            stop_record = datetime.now(timezone.utc)
+            new_record.stop_record = stop_record
+            dur = stop_record - new_record.start_record
+            new_record.current_duration = dur.seconds/60
+            new_record.save()
+            return redirect("/accounts/my_profile")
+        else:
+            return render(request, "records/records.html")
