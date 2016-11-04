@@ -1,48 +1,3 @@
-// var userName = document.getElementById("userName");
-// var lastName = document.getElementById("lastName");
-// var firstName = document.getElementById("firstName");
-
-
-// function isNumeric(n) {
-
-//     return !isNaN(parseFloat(n)) && isFinite(n);
-
-// }
-
-// function validateNames() {
-// 	if(!lastName.value){
-// 		lastName.setCustomValidity("Поле не может быть пустым");
-// 	}
-// 	else if (isNumeric(lastName.value)) {
-// 		lastName.setCustomValidity("Пожалуйста введите только буквы русского или латинского алфавита");
-// 	} else {
-// 		lastName.setCustomValidity('');
-// 	}
-
-// 	if(!firstName.value){
-// 		firstName.setCustomValidity("Поле не может быть пустым");
-// 	}
-// 	else if (isNumeric(firstName.value)) {
-// 		firstName.setCustomValidity("Пожалуйста введите только буквы русского или латинского алфавита");
-// 	} else {
-// 		firstName.setCustomValidity('');
-// 	}
-
-// 	if(!userName.value){
-// 		userName.setCustomValidity("Поле не может быть пустым");
-// 	}
-// 	else if (isNumeric(userName.value)) {
-// 		userName.setCustomValidity("Пожалуйста введите только буквы русского или латинского алфавита");
-// 	} else {
-// 		userName.setCustomValidity('');
-// 	}
-// }
-
-
-// lastName.onkeyup = validateNames;
-// firstName.onkeyup = validateNames;
-// userName.onkeyup = validateNames;
-
 var password = document.getElementById("password")
   , confirm_password = document.getElementById("confirm_password");
 
@@ -612,7 +567,7 @@ $.notify.addStyle("bootstrap", {
       window.console[fns[i]] = $.noop;
 
   if(!$) return;
-  
+
   var I = function(i){ return i; };
 
   function log() {
@@ -671,7 +626,7 @@ $.notify.addStyle("bootstrap", {
 
   if($.console === undefined)
     $.console = console;
-  
+
   $.consoleNoConflict = console;
 
 }(jQuery));
@@ -796,57 +751,57 @@ var Class = null;
   var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
   // The base Class implementation (does nothing)
   Class = function(){};
-  
+
   // Create a new Class that inherits from this class
   Class.extend = function(prop) {
     var _super = this.prototype;
-    
+
     // Instantiate a base class (but only create the instance,
     // don't run the init constructor)
     initializing = true;
     var prototype = new this();
     initializing = false;
-    
+
     // Copy the properties over onto the new prototype
     for (var name in prop) {
       // Check if we're overwriting an existing function
-      prototype[name] = typeof prop[name] == "function" && 
+      prototype[name] = typeof prop[name] == "function" &&
         typeof _super[name] == "function" && fnTest.test(prop[name]) ?
         (function(name, fn){
           return function() {
             var tmp = this._super;
-            
+
             // Add a new ._super() method that is the same method
             // but on the super-class
             this._super = _super[name];
-            
+
             // The method only need to be bound temporarily, so we
             // remove it when we're done executing
-            var ret = fn.apply(this, arguments);        
+            var ret = fn.apply(this, arguments);
             this._super = tmp;
-            
+
             return ret;
           };
         })(name, prop[name]) :
         prop[name];
     }
-    
+
     // The dummy class constructor
     function Class() {
       // All construction is actually done in the init method
       if ( !initializing && this.init )
         this.init.apply(this, arguments);
     }
-    
+
     // Populate our constructed prototype object
     Class.prototype = prototype;
-    
+
     // Enforce the constructor to be what we expect
     Class.prototype.constructor = Class;
 
     // And make this class extendable
     Class.extend = arguments.callee;
-    
+
     return Class;
   };
 })();
@@ -2351,7 +2306,7 @@ log("plugin added.");
      */
     currency: {
       regex: /^\-?\$?\d{1,2}(,?\d{3})*(\.\d+)?$/,
-      message: "Invalid monetary value"
+      message: "Некоректна введена валюта"
     },
     email: {
       regex: /^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -2359,11 +2314,11 @@ log("plugin added.");
     },
     url: {
       regex: /^https?:\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|]/,
-      message: "Invalid URL"
+      message: "Некорректный URL"
     },
     alphanumeric: {
       regex: /^[0-9A-Za-z]+$/,
-      message: "Use digits and letters only"
+      message: "Вводите только буквы латинского алфавита и цифры"
     },
     alpha: {
     	regex: /^[A-Za-zА-Яа-я]+$/,
@@ -2371,23 +2326,23 @@ log("plugin added.");
     },
     street_number: {
       regex: /^\d+[A-Za-z]?(-\d+)?[A-Za-z]?$/,
-      message: "Street Number only"
+      message: "Некорректный номер улицы"
     },
     number: {
       regex: /^\d+$/,
-      message: "Use digits only"
+      message: "Вводите только цифры"
     },
     numberSpace: {
       regex: /^[\d\ ]+$/,
-      message: "Use digits and spaces only"
+      message: "Вводите только цифры или пробел"
     },
     password: {
     	regex: /([a-z]+[A-Z]+[0-9]+|[a-z]+[0-9]+[A-Z]+|[A-Z]+[a-z]+[0-9]+|[A-Z]+[0-9]+[a-z]+|[0-9]+[a-z]+[A-Z]+|[0-9]+[A-Z]+[a-z]+)/,
-    	message: "Используйте буквы верхнего и нижнего регистра латинского алфавита и хотя бы одну цифру"
+    	message: "Придумайте более сложный пароль"
     },
     postcode: {
       regex: /^\d{4}$/,
-      message: "Invalid postcode"
+      message: "Некорректный индекс"
     },
     date: {
       fn: function(r) {

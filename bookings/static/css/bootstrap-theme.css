@@ -5,7 +5,7 @@
 /*******************************/
 .navbar-inverse {
 	border-radius: 0;
-	background: rgba(113, 16, 0, 0.8);
+	background: rgba(35, 35, 34, 0.8);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 	min-height: 100px;
 	padding-top: 25px;
@@ -36,7 +36,7 @@
 }
 .navbar-inverse .navbar-nav > .active > a {
 	background: none;
-	color: white;
+	color: #c83939;
 }
 .navbar-inverse .navbar-brand {
 	font-family: "Open sans", helvetica, arial;
@@ -46,7 +46,7 @@
 	margin: 12px 0 0 0;
 }
 .navbar-inverse .navbar-brand img {
-	margin-top: -8px;
+	margin-top: -20px;
 }
 .navbar-nav .dropdown-menu {
 	left: -5px;
@@ -111,7 +111,7 @@
 	text-shadow: 0 2px 1px rgba(0, 0, 0, .2);
 }
 .btn {
-	padding: 10px 40px;
+	padding: 10px 30px;
 	font-weight: bold;
 	border: 0 none;
 	-webkit-border-radius: 3px;
@@ -147,8 +147,8 @@
 }
 .btn-action, .btn-primary {
 	color: #FFEFD7;
-	background-image: -webkit-linear-gradient(top, #FF9B22 0%, #FF8C00 100%);
-	background-image: linear-gradient(to bottom, #FF9B22 0%, #FF8C00 100%);
+	background-image: -webkit-linear-gradient(top, #c83939 0%, #ce4b4b 100%);
+	background-image: linear-gradient(to bottom, #c83939 0%, #ce4b4b 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffFF9B22', endColorstr='#ffFF8C00', GradientType=0);
 	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 	background-repeat: repeat-x;
@@ -156,7 +156,7 @@
 }
 .btn-action:hover, .btn-action:focus {
 	color: #fff;
-	background: #FF9B22;
+	background: #a02c2c;
 }
 .btn-action:active {
 	background: #FF8C00;

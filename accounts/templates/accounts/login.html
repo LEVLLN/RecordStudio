@@ -2,66 +2,66 @@
 </html>
 <html>
 <head>
-    {% block title %}<title>RS | Авторизация</title> {% endblock %}
+  {% block title %}<title>RS | Авторизация</title> {% endblock %}
 </head>
 <body>
 
-{% block navbar-active %}
-    <li><a href="/">Главная</a></li>
-    <li><a href="">О студии</a></li>
-    <li><a href="">Бронь записи</a></li>
-    <li class="active"><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
-{% endblock %}
-{% block login-container %}
-    <header id="head" class="secondary"></header>
-    <!-- container -->
-    <div class="container">
-        <ol class="breadcrumb">
-            <li><a href="bookings/home.html">Главная</a></li>
-            <li class="active">Авторизация</li>
-        </ol>
-        <div class="row">
-            <!-- Article main content -->
-            <article class="col-xs-12 maincontent">
-                <header class="page-header">
-                    <h1 class="page-title">Вход в аккаунт</h1>
-                </header>
-                <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <h3 class="thin text-center">Войдите в свой аккаунт</h3>
-                            <p class="text-center text-muted larger-than">Если у вас нету аккаунта, вы можете <a href="/accounts/register">зарегистрироваться</a>. Это займет всего пару минут.</p>
-                            <hr>
-                            <form method="post" action="">
-                                {% csrf_token %}
-                                <div class="top-margin">
-                                    <label>Имя пользователя <span class="text-danger">*</span></label>
-                                    <input id="userName" name="username" data-validate="required,alpha" type="text" class="form-control">
-                                </div>
-                                <div class="top-margin">
-                                    <label>Пароль <span class="text-danger">*</span></label>
-                                    <input id="password" name="password" type="password" data-validate="required,password,min(8)" class="form-control">
-                                </div>
-                                {% if login_error %}
-                                    <p style="color:red; margin:0;">{{ login_error }}</p>
-                                {% endif %}
-                                <hr>
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                        <b><a href="">Забыли пароль?</a></b>
-                                    </div>
-                                    <div class="col-lg-4 text-right">
-                                        <button class="btn btn-action" value="login" type="submit">Войти</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li><a href="">О студии</a></li>
+  <li><a href="">Бронь записи</a></li>
+  <li class="active"><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
+  {% endblock %}
+  {% block login-container %}
+  <header id="head" class="secondary"></header>
+  <!-- container -->
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">Главная</a></li>
+      <li class="active">Авторизация</li>
+    </ol>
+    <div class="row">
+      <!-- Article main content -->
+      <article class="col-xs-12 maincontent">
+        <header class="page-header">
+          <h1 class="page-title">Вход в аккаунт</h1>
+        </header>
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3 class="thin text-center">Войдите в свой аккаунт</h3>
+              <p class="text-center text-muted larger-than">Если у вас нету аккаунта, вы можете <a href="/accounts/register">зарегистрироваться</a>. Это займет всего пару минут.</p>
+              <hr>
+              <form method="post" action="">
+                {% csrf_token %}
+                <div class="top-margin">
+                  <label>Имя пользователя <span class="text-danger">*</span></label>
+                  <input id="userName" name="username" data-validate="required,alphanumeric" type="text" class="form-control">
                 </div>
-            </article>
-            <!-- /Article -->
+                <div class="top-margin">
+                  <label>Пароль <span class="text-danger">*</span></label>
+                  <input id="password" name="password" type="password" data-validate="required,password,min(8)" class="form-control">
+                </div>
+                {% if login_error %}
+                <p style="color:red; margin:0;">{{ login_error }}</p>
+                {% endif %}
+                <hr>
+                <div class="row">
+                  <div class="col-lg-8">
+                    <b><a href="/accounts/forget">Забыли пароль?</a></b>
+                  </div>
+                  <div class="col-lg-4 text-right">
+                    <button class="btn btn-action" value="login" type="submit">Войти</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
+      </article>
+      <!-- /Article -->
     </div>
-{% endblock %}
+  </div>
+  {% endblock %}
 </body>
 </html>

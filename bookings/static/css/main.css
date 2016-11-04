@@ -19,7 +19,7 @@
 	font-size: 48px;
 	font-weight: 400;
 	margin-bottom: 6px;
-	color: #d42b10;
+	color: #C83939;
 	line-height: 1.15em;
 }
 #head .tagline {
@@ -35,7 +35,7 @@
 #head .btn-default {
 	text-shadow: none;
 	background: transparent;
-	color: rgba(212, 43, 16, .9);
+	color: #C83939;
 	-webkit-box-shadow: inset 0px 0px 0px 3px rgba(255, 255, 255, .9);
 	-moz-box-shadow: inset 0px 0px 0px 3px rgba(255, 255, 255, .9);
 	box-shadow: inset 0px 0px 0px 3px rgba(255, 255, 255, .9);
@@ -86,7 +86,7 @@
 .h-caption i {
 	display: block;
 	font-size: 54px;
-	color: #d42b10;
+	color: #C83939;
 	margin-bottom: 36px;
 }
 .h-caption h4 {
@@ -229,7 +229,7 @@ img.pull-left {
 	margin: 0 10px 0 0;
 }
 .footer2 {
-	background: rgb(113, 16, 0);
+	background: rgb(35, 34, 34);
 	padding: 15px 0;
 	color: #777;
 	font-size: 12px;
@@ -238,7 +238,7 @@ img.pull-left {
 	color: #aaa;
 }
 .footer2 a:hover {
-	color: #fff;
+	color: #c83939;
 }
 .footer2 p {
 	margin: 0;
@@ -256,4 +256,21 @@ img.pull-left {
 
 .extra-space {
 	margin-bottom: 40px;
+}
+
+.checkbox, .radio {
+	margin-left: 20px !important;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+	color: #c83939 !important;
+}
+.nav>li>a {
+	font-size: 16px;
+	text-transform: uppercase;
+	font-weight: bolder;
+}
+.nav>li>a.btn {
+	font-size:14px;
+	margin-left: 20px;
 }
