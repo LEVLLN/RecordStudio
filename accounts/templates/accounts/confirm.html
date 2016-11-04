@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="hash" />
+    <input type="submit" />
+
+    {% if fail %}
+        {{ fail }}
+    {% elif alreadydone %}
+        {{ alreadydone }}
+    {% else %}
+        {{ success }}
+    {% endif %}
+</form>
+</body>
+</html>

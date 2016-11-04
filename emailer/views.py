@@ -5,14 +5,13 @@ from RecordStudio import settings
 from django.shortcuts import render_to_response
 
 
-def send_welcome_mail(email, username, password, first_name, last_name):
+def send_welcome_mail(email, username, password, first_name, last_name, hashs):
     # Send not just a message, but an html message!! (for Jaxy)
     args = {}
     message = "Hello my dear friend! " \
               " You have successfully registered! " \
               " Your login is " + username + "" \
-                                             "  Password is " + password + " First Name " + first_name + " " \
-                                                                                                         "Last Name" + last_name
+                                             "  Hashcode is " + hashs
     try:
         mail.send_mail('Subject here', message, settings.EMAIL_HOST_USER,
                        [email], fail_silently=False)

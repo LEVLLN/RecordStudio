@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^register', views.RegistrationView.as_view(), name="reg"),
 
     url(r'^forget', views.ForgetPasswordView.as_view(), name='forget'),
+    url(r'^confirm/', views.ConfirmView.as_view(), name='confirmation'),
+
 
     url(r'^start', booking_views.RecordView.start_record),
     url(r'^stop', booking_views.RecordView.stop_record),

@@ -1,3 +1,10 @@
+from django.contrib.auth.models import User
 from django.db import models
 
-# Create your models here.
+
+class SecretHashCode(models.Model):
+    user = models.OneToOneField(User, primary_key=True, related_name='hashcode')
+    hashcode = models.CharField(max_length=12)
+
+    def __str__(self):
+        return self.hashcode

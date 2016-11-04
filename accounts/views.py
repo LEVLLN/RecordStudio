@@ -13,6 +13,7 @@ from django.template.context_processors import csrf
 from django.views import View
 
 from accounts.forms import UserCreationForm
+from accounts.models import SecretHashCode
 from emailer.views import send_welcome_mail, send_forget_mail
 
 
@@ -84,10 +85,7 @@ class AuthenticationView(View):
             return render(request, "administrator/administrator_page.html")
         if request.user.groups.filter(name='Soundmans').exists():
             return render(request, "soundman_p/soundman_page.html")
-        if request.user.groups.filter(name='Customers').exists():
-            return render(request, "user/home.html")
-        else:
-            return redirect('/')
+        return redirect('/')
 
 
 class RegistrationView(View):
@@ -112,17 +110,50 @@ class RegistrationView(View):
                                 last_name=new_user_form.cleaned_data['last_name'])
 
                 new_user.set_password(new_user_form.cleaned_data["password2"])  # хеширует пароль :С
+                new_user.is_active = False
                 new_user.save()
                 Group.objects.get(name='Customers').user_set.add(new_user)
-                auth.login(request, new_user)
+
+                SecretHashCode(user_id=new_user.pk,
+                               hashcode=''.join(
+                                   random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
+                               ).save()
+
+                # auth.login(request, new_user)
+                __new_hash = SecretHashCode.objects.get(user_id=new_user.pk).hashcode
                 return send_welcome_mail(new_user_form.cleaned_data['username'].lower(),
                                          new_user_form.cleaned_data['password2'],
                                          new_user_form.cleaned_data['email'],
                                          new_user_form.cleaned_data['first_name'],
-                                         new_user_form.cleaned_data['last_name'])
+                                         new_user_form.cleaned_data['last_name'],
+                                          __new_hash)
             else:
                 args['form'] = new_user_form
                 return render_to_response('accounts/register.html', args)
 
         return render(request, 'bookings/home.html')
+
+
+class ConfirmView(View):
+    @staticmethod
+    def get(request):
+        return render(request, "accounts/confirm.html")
+
+    @staticmethod
+    def post(request):
+        args = {}
+        args.update(csrf(request))
+        hash_code = request.POST['hash']
+        try:
+            is_true = SecretHashCode.objects.get(hashcode=hash_code)
+            if is_true.user.is_active:
+                args['alreadydone'] = "You already have confirmed your email"
+                return render_to_response('accounts/confirm.html', args)
+            is_true.user.is_active = True
+            is_true.user.save()
+            args['success'] = "You have confirmed your email"
+            return render_to_response('accounts/confirm.html', args)
+        except ObjectDoesNotExist:
+            args['fail'] = "No hash code like this"
+            return render_to_response('accounts/confirm.html', args)
 

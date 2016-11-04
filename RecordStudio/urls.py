@@ -1,8 +1,6 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from emailer import views
-
 urlpatterns = [
     url(r'^', include('bookings.urls'), name='booking'),
     url(r'^accounts/', include('accounts.urls'), name='acc'),
