@@ -1,16 +1,15 @@
 import random
-import re
 import string
 
-from django.core.exceptions import ValidationError
 from django.contrib import auth
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
-from django.core.validators import validate_email
-from django.contrib.auth.models import Group
-from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 
 from accounts.forms import UserCreationForm
@@ -22,8 +21,7 @@ class ForgetPasswordView(View):
     def get(request):
         return render(request, 'accounts/forget.html')
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         args = {}
         args.update(csrf(request))
         try:
@@ -31,7 +29,7 @@ class ForgetPasswordView(View):
             email = request.POST['email']
             try:
                 user = User.objects.get(email=email)
-                __new_password = ForgetPasswordView.passGeneratorMethod()
+                __new_password = self.passGeneratorMethod()
                 user.set_password(__new_password)
                 return send_forget_mail(email, user.username, __new_password)  #
             except ObjectDoesNotExist:
@@ -43,7 +41,7 @@ class ForgetPasswordView(View):
             try:
                 user = User.objects.get(username=username)
                 email = user.email
-                __new_password = ForgetPasswordView.passGeneratorMethod()
+                __new_password = self.passGeneratorMethod()
                 user.set_password(__new_password)
                 return send_forget_mail(email, username, __new_password)
             except ObjectDoesNotExist:
@@ -56,15 +54,13 @@ class ForgetPasswordView(View):
 
 
 class AuthenticationView(View):
-    @staticmethod
-    def get(request):
+    def get(self, request):
         if request.user.is_authenticated():
-            return AuthenticationView.check_for_permission(request)
+            return self.check_for_permission(request)
         else:
             return render(request, "accounts/login.html")
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         args = {}
         args.update(csrf(request))
         user = authenticate(username=request.POST['username'].lower(),
@@ -72,7 +68,7 @@ class AuthenticationView(View):
 
         if user is not None and user.is_active:
             auth.login(request, user)
-            return AuthenticationView.check_for_permission(request)
+            return self.check_for_permission(request)
         else:
             args['login_error'] = "Ошибка авторизации"
             return render_to_response("accounts/login.html", args)
