@@ -1,0 +1,216 @@
+{% extends 'bookings/base.html' %}
+{% load staticfiles %}
+<html>
+<head>
+  {% block title %}<title>RS | О студии</title> {% endblock %}
+</head>
+
+<body>
+
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-inverse navbar-fixed-top headroom" >
+    <div class="container">
+      <div class="navbar-header">
+        <!-- Button for smallest screens -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+        <a class="navbar-brand" href="/bookings/home"><img src="{% static 'images/logo.png' %}" alt="Record Studio"></a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          {% block navbar-active %}
+          <li><a href="/">Главная</a></li>
+          <li  class="active"><a href="">О студии</a></li>
+          <li><a href="">Бронь записи</a></li>
+          {% if auth_error %}
+          <li><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
+          {% else %}
+          <li><a class="btn" href="/accounts/logout">Выход</a></li>
+          {% endif %}
+          {% endblock %}
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+  <!-- /.navbar -->
+  {% block header %}
+
+  <!--Page Title-->
+  <section class="page-title-about">
+    <div class="auto-container">
+      <div class="row clearfix">
+        <!--Title -->
+        <div class="title-column col-md-6 col-sm-12 col-xs-12">
+          <h1>About</h1>
+        </div>
+      </div>
+    </div>
+    </section
+
+    <!-- about-section -->
+    <section class="about-section">
+      <div class="auto-container">
+
+        <!--Two Column-->
+        <div class="two-column">
+
+          <div class="row clearfix">
+            <!--Image Column-->
+            <div class="image-column column col-lg-6 col-md-6 col-sm-12">
+              <a class="image-box" href="/about/"><img src="{% static 'images/about_us.PNG' %}" alt="Record Studio"></a>
+
+              <div class="image-caption">About Us</div>
+            </div>
+            <!--Content Column-->
+            <div class="content-column column col-lg-6 col-md-6 col-sm-12">
+              <div class="inner-box">
+                <div class="default-title"><h3>WHY CHOOSE US</h3></div>
+
+                <div class="text">We offer a full range of garage services to vehicle owners located in all over    areas. All mechanic services are performed by highly qualified mechanics. We can handle any car problem.</div>
+
+                <!--List Style One-->
+                <ul class="list-style-one">
+                  <li><i class="fa fa-check" aria-hidden="true"></i> Modern Workshop</li>
+                  <li><i class="fa fa-check" aria-hidden="true"></i> Talented Workers</li>
+                  <li><i class="fa fa-check" aria-hidden="true"></i> Best Price</li>
+                  <li><i class="fa fa-check" aria-hidden="true"></i> Quick Support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Three Column Boxed-->
+        <div class="three-column-boxed">
+          <div class="row clearfix">
+            <!--Boxed COlumn-->
+            <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
+              <div class="inner-box">
+                <div class="icon-box"><span class="flaticon-diamond-3"></span></div>
+                <i class="fa fa-diamond fa-3x" aria-hidden="true"></i>
+                <h3>MISSION</h3>
+                <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+              </div>
+            </div>
+
+            <!--Boxed COlumn-->
+            <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
+              <div class="inner-box">
+                <div class="icon-box"><span class="flaticon-eye"></span></div>
+                <i class="fa fa-eye fa-3x" aria-hidden="true"></i>
+                <h3>VISION</h3>
+                <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+              </div>
+            </div>
+
+            <!--Boxed COlumn-->
+            <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
+              <div class="inner-box">
+                <div class="icon-box"><span class="flaticon-target-1"></span></div>
+                <i class="fa fa-bullseye fa-3x" aria-hidden="true"></i>
+                <h3>GOALS</h3>
+                <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!--Team Style one-->
+        <section class="team-style-one altered">
+          <div class="default-title"><h3>OUR SPECIALIST TEAM</h3></div>
+          <div class="four-column-boxed">
+            <div class="row clearfix">
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-3 col-sm-4 col-xs-12">
+                <div class="member-style-one">
+                  <div class="inner-box">
+                    <figure class="image-box"><a href="mailto:mail@mail.com"><img src="{% static 'images/team-image-1.jpg' %}" alt=""></a></figure>
+                    <div class="lower-content">
+                      <div class="info">
+                        <h4>Jack Wilshere</h4>
+                        <div class="designation">Founder</div>
+                      </div>
+                      <div class="social-links">
+                        <a href="#"><span class="fa fa-facebook-f"></span></a>
+                        <a href="#"><span class="fa fa-twitter"></span></a>
+                        <a href="#"><span class="fa fa-google-plus"></span></a>
+                        <a href="#"><span class="fa fa-rss"></span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-3 col-sm-4 col-xs-12">
+                <div class="member-style-one">
+                  <div class="inner-box">
+                    <figure class="image-box"><a href="mailto:mail@mail.com"><img src="{% static 'images/team-image-2.jpg' %}" alt=""></a></figure>
+                    <div class="lower-content">
+                      <div class="info">
+                        <h4>Benson Paul</h4>
+                        <div class="designation">Senior Mechanic</div>
+                      </div>
+                      <div class="social-links">
+                        <a href="#"><span class="fa fa-facebook-f"></span></a>
+                        <a href="#"><span class="fa fa-twitter"></span></a>
+                        <a href="#"><span class="fa fa-google-plus"></span></a>
+                        <a href="#"><span class="fa fa-rss"></span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-3 col-sm-4 col-xs-12">
+                <div class="member-style-one">
+                  <div class="inner-box">
+                    <figure class="image-box"><a href="mailto:mail@mail.com"><img src="{% static 'images/team-image-3.jpg' %}" alt=""></a></figure>
+                    <div class="lower-content">
+                      <div class="info">
+                        <h4>Jane Wilkings</h4>
+                        <div class="designation">Mechanic</div>
+                      </div>
+                      <div class="social-links">
+                        <a href="#"><span class="fa fa-facebook-f"></span></a>
+                        <a href="#"><span class="fa fa-twitter"></span></a>
+                        <a href="#"><span class="fa fa-google-plus"></span></a>
+                        <a href="#"><span class="fa fa-rss"></span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-3 col-sm-4 col-xs-12">
+                <div class="member-style-one">
+                  <div class="inner-box">
+                    <figure class="image-box"><a href="mailto:mail@mail.com"><img src="{% static 'images/team-image-4.jpg' %}" alt=""></a></figure>
+                    <div class="lower-content">
+                      <div class="info">
+                        <h4>Bentick Lenney</h4>
+                        <div class="designation">Car Painter</div>
+                      </div>
+                      <div class="social-links">
+                        <a href="#"><span class="fa fa-facebook-f"></span></a>
+                        <a href="#"><span class="fa fa-twitter"></span></a>
+                        <a href="#"><span class="fa fa-google-plus"></span></a>
+                        <a href="#"><span class="fa fa-rss"></span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        {% endblock %}
+        {% block intro %}
+        <!-- /Highlights -->
+        {% endblock %}
+</body>
+</html>

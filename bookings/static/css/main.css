@@ -274,3 +274,251 @@ img.pull-left {
 	font-size:14px;
 	margin-left: 20px;
 }
+.page-title-about{
+	position:relative;
+	padding:80px 0px;
+	background-image:url( ../images/title.PNG);
+	background-color:#ffffff;
+	background-size:cover;
+	background-position:center center;
+	background-repeat:no-repeat;
+}
+
+.page-title-about:before{
+	content:'';
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:100%;
+	background:rgba(4,4,4,0.70);
+}
+
+.page-title-about .auto-container{
+	position:relative;
+	z-index:1;
+}
+
+.page-title-about h1{
+	margin-left: 100px;
+	padding-top: 50px;
+	position:relative;
+	font-size:32px;
+	line-height:44px;
+	font-family: "Open sans", Helvetica, Arial;
+	text-transform:uppercase;
+	font-weight:700;
+	letter-spacing:1px;
+	color: #C83939
+}
+
+.default-title{
+	position:relative;
+	margin-right: 15px;
+	margin-bottom:40px;
+	padding-bottom:20px;
+	background:url( ../images/nav-dots.png) left bottom no-repeat;
+	background-position: center;
+}
+
+.default-title.centered{
+	text-align:center;
+	background-position:center bottom;
+}
+
+.default-title h3{
+	position:relative;
+	text-align: center;
+	font-size:16px;
+	font-family: "Open sans", Helvetica, Arial;
+	font-weight:600;
+	text-transform:uppercase;
+	color:#222222;
+}
+.image-column.column.col-lg-6.col-md-6.col-sm-12 {
+  margin-left: 180px;
+  width: 450px;
+}
+.image-column.column.col-lg-6.col-md-6.col-sm-12 .image-box	img {
+  border-radius: 130px;
+}
+.list-style-one {
+	position: relative;
+	margin-bottom:30px;
+}
+
+.list-style-one li {
+	position: relative;
+	line-height: 24px;
+	margin-bottom: 10px;
+	padding-left: 22px;
+	font-size:14px;
+	list-style-type: none;
+	margin-left: -20px;
+}
+
+.list-style-one li:before {
+	content: '';
+	font-family: "Open sans", Helvetica, Arial;
+	left: 0;
+	top:0px;
+	line-height:24px;
+	color:#f44122;
+	position: absolute;
+}
+i.fa.fa-check {
+    color: #C83939;
+}
+.text {
+	margin-bottom: 15px;
+	margin-top: -15px;
+}
+.two-column {
+  margin-top: 50px;
+	padding-bottom: 40px;
+}
+.about-section .two-column .image-caption{
+	position:relative;
+	padding:10px;
+	margin-left: 70px;
+	color:#aaaaaa;
+	font-weight:700;
+	font-size:18px;
+	text-transform:uppercase;
+}
+.three-column-boxed .row{
+	margin-left:-10px;
+	margin-right:-10px;
+}
+
+.three-column-boxed .boxed-column{
+	position:relative;
+	padding:0px 10px;
+	margin-bottom:20px;
+}
+
+.three-column-boxed .boxed-column .inner-box{
+	position:relative;
+	padding:60px 40px;
+	background:#f7f7f7;
+	text-align:center;
+	border-radius:3px;
+}
+
+.three-column-boxed .boxed-column .icon-box{
+	position:relative;
+	font-size:36px;
+	line-height:1em;
+	margin-bottom:7px;
+	color:#f44122;
+}
+
+.three-column-boxed .boxed-column h3{
+	position:relative;
+	font-size:16px;
+	color:#222222;
+	font-weight:600;
+	font-family: "Open sans", Helvetica, Arial;
+	text-transform:uppercase;
+	margin-bottom:18px;
+}
+
+.three-column-boxed .boxed-column .text{
+	position:relative;
+	line-height:1.8em;
+}
+.three-column-boxed {
+    margin-top: 30px;
+}
+i.fa.fa-diamond.fa-3x, i.fa.fa-eye.fa-3x,
+i.fa.fa-bullseye.fa-3x {
+    color: #C83939;
+}
+/***
+
+====================================================================
+	Team Style One
+====================================================================
+
+***/
+
+.team-style-one{
+	position:relative;
+	padding:120px 0px;
+	background-color:#ffffff;
+}
+
+.team-style-one.altered{
+	padding-top:60px;
+}
+
+.member-style-one{
+	position:relative;
+}
+
+.member-style-one .inner-box{
+	position:relative;
+	display:block;
+	border:1px solid #e0e0e0;
+	text-align:center;
+	border-radius:2px;
+	overflow:hidden;
+	background:#ffffff;
+}
+
+.member-style-one .image-box{
+	display:block;
+}
+
+.member-style-one .image-box img{
+	display:block;
+	width:100%;
+	height:auto;
+}
+
+.member-style-one .lower-content{
+	position:relative;
+	padding:15px 15px;
+}
+
+.member-style-one .lower-content .info{
+	position:relative;
+	padding-bottom:15px;
+	border-bottom:1px solid #f0f0f0;
+	margin-bottom:15px;
+}
+
+.member-style-one .lower-content .info h4{
+	font-size:16px;
+	font-family:'Lato',sans-serif;
+	color:#222222;
+	text-transform:capitalize;
+	font-weight:600;
+	margin-bottom:2px;
+}
+
+.member-style-one .lower-content .info .designation{
+	font-size:14px;
+	color:#6b6b6b;
+	text-transform:capitalize;
+}
+
+.member-style-one .lower-content .social-links{
+	position:relative;
+}
+
+.member-style-one .lower-content .social-links a{
+	display:inline-block;
+	width:30px;
+	font-size:13px;
+	color:#222222;
+	line-height:24px;
+	margin:0px 5px;
+}
+
+.member-style-one .lower-content .social-links a:hover{
+	color:#C83939;
+}
+section.team-style-one.altered {
+    padding-bottom: 0px;
+}
