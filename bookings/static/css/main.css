@@ -229,7 +229,7 @@ img.pull-left {
 	margin: 0 10px 0 0;
 }
 .footer2 {
-	background: rgb(113, 16, 0);
+	background: rgb(35, 34, 34);
 	padding: 15px 0;
 	color: #777;
 	font-size: 12px;
@@ -238,7 +238,7 @@ img.pull-left {
 	color: #aaa;
 }
 .footer2 a:hover {
-	color: #fff;
+	color: #c83939;
 }
 .footer2 p {
 	margin: 0;
@@ -260,4 +260,17 @@ img.pull-left {
 
 .checkbox, .radio {
 	margin-left: 20px !important;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+	color: #c83939 !important;
+}
+.nav>li>a {
+	font-size: 16px;
+	text-transform: uppercase;
+	font-weight: bolder;
+}
+.nav>li>a.btn {
+	font-size:14px;
+	margin-left: 20px;
 }

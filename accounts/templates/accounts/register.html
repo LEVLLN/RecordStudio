@@ -17,7 +17,7 @@
   <!-- container -->
   <div class="container">
     <ol class="breadcrumb">
-      <li><a href="index.html">Главная</a></li>
+      <li><a href="/">Главная</a></li>
       <li class="active">Регистрация</li>
     </ol>
     <div class="row">
@@ -65,11 +65,11 @@
                   <div class="col-lg-8">
                     <label class="checkbox">
                       <input id="termConfirmation" data-validate="agreement" type="checkbox">
-                      Я прочитал и согласен с <a href="page_terms.html">правилами и условиями</a>
+                      Я прочитал и согласен с <a href="#!">правилами и условиями</a>
                     </label>
                   </div>
                   {% if form.errors %}
-                      <p style="color:red; margin:0;">{{ form.errors }}</p>
+                  <p style="color:red; margin:0;">{{ form.errors }}</p>
                   {% endif %}
                   <div class="col-lg-4 text-right">
                     <button class="btn btn-action" type="submit">Регистрация</button>
