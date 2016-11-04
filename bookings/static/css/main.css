@@ -19,7 +19,7 @@
 	font-size: 48px;
 	font-weight: 400;
 	margin-bottom: 6px;
-	color: #d42b10;
+	color: #C83939;
 	line-height: 1.15em;
 }
 #head .tagline {
@@ -35,7 +35,7 @@
 #head .btn-default {
 	text-shadow: none;
 	background: transparent;
-	color: rgba(212, 43, 16, .9);
+	color: #C83939;
 	-webkit-box-shadow: inset 0px 0px 0px 3px rgba(255, 255, 255, .9);
 	-moz-box-shadow: inset 0px 0px 0px 3px rgba(255, 255, 255, .9);
 	box-shadow: inset 0px 0px 0px 3px rgba(255, 255, 255, .9);
@@ -86,7 +86,7 @@
 .h-caption i {
 	display: block;
 	font-size: 54px;
-	color: #d42b10;
+	color: #C83939;
 	margin-bottom: 36px;
 }
 .h-caption h4 {
