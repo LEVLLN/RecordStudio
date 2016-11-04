@@ -11,19 +11,19 @@ from django.template.context_processors import csrf
 from django.core.validators import validate_email
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
+from django.views import View
 
 from accounts.forms import UserCreationForm
 from emailer.views import send_welcome_mail, send_forget_mail
 
 
-class ForgetPasswordView:
-    def forget(request):
-        if request.method == 'GET':
-            return render(request, 'accounts/forget.html')
-        else:
-            return ForgetPasswordView.generateNewPassword(request)
+class ForgetPasswordView(View):
+    @staticmethod
+    def get(request):
+        return render(request, 'accounts/forget.html')
 
-    def generateNewPassword(request):
+    @staticmethod
+    def post(request):
         args = {}
         args.update(csrf(request))
         try:
@@ -50,22 +50,21 @@ class ForgetPasswordView:
                 args['NoUserFound'] = "Почтовый ящик или логин не найдены."
                 return render_to_response("accounts/forget.html", args)
 
+    @staticmethod
     def passGeneratorMethod(size=8, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
 
-class AuthenticationView:
-    def login(request):
+class AuthenticationView(View):
+    @staticmethod
+    def get(request):
         if request.user.is_authenticated():
             return AuthenticationView.check_for_permission(request)
         else:
+            return render(request, "accounts/login.html")
 
-            if request.method == "GET":
-                return render(request, "accounts/login.html")
-            else:
-                return AuthenticationView.loginPost(request)
-
-    def loginPost(request):
+    @staticmethod
+    def post(request):
         args = {}
         args.update(csrf(request))
         user = authenticate(username=request.POST['username'].lower(),
@@ -78,10 +77,12 @@ class AuthenticationView:
             args['login_error'] = "Ошибка авторизации"
             return render_to_response("accounts/login.html", args)
 
+    @staticmethod
     def logout(request):
         auth.logout(request)
         return redirect("/accounts/login/")
 
+    @staticmethod
     def check_for_permission(request):
         if request.user.groups.filter(name='Administrators').exists():
             return render(request, "administrator/administrator_page.html")
@@ -93,39 +94,39 @@ class AuthenticationView:
             return redirect('/')
 
 
-class RegistrationView:
-    def register(request):
+class RegistrationView(View):
+    @staticmethod
+    def get(request):
         if not request.user.is_authenticated():
+            return render(request, 'accounts/register.html')
+        return render(request, 'bookings/home.html')
 
-            if request.POST:
-                return RegistrationView.registerPost(request)
+    @staticmethod
+    def post(request):
+        if not request.user.is_authenticated():
+            args = {}
+            args.update(csrf(request))
+            args['form'] = UserCreationForm()
+            new_user_form = UserCreationForm(request.POST)
+            if new_user_form.is_valid():
+                new_user = User(username=new_user_form.cleaned_data['username'].lower(),
+                                password=new_user_form.cleaned_data['password2'],
+                                email=new_user_form.cleaned_data['email'],
+                                first_name=new_user_form.cleaned_data['first_name'],
+                                last_name=new_user_form.cleaned_data['last_name'])
+
+                new_user.set_password(new_user_form.cleaned_data["password2"])  # хеширует пароль :С
+                new_user.save()
+                Group.objects.get(name='Customers').user_set.add(new_user)
+                auth.login(request, new_user)
+                return send_welcome_mail(new_user_form.cleaned_data['username'].lower(),
+                                         new_user_form.cleaned_data['password2'],
+                                         new_user_form.cleaned_data['email'],
+                                         new_user_form.cleaned_data['first_name'],
+                                         new_user_form.cleaned_data['last_name'])
             else:
-                return render(request, 'accounts/register.html')
+                args['form'] = new_user_form
+                return render_to_response('accounts/register.html', args)
 
-        else:
-            return render(request, 'bookings/home.html')
+        return render(request, 'bookings/home.html')
 
-    def registerPost(request):
-        args = {}
-        args.update(csrf(request))
-        args['form'] = UserCreationForm()
-        new_user_form = UserCreationForm(request.POST)
-        if new_user_form.is_valid():
-            new_user = User(username=new_user_form.cleaned_data['username'].lower(),
-                            password=new_user_form.cleaned_data['password2'],
-                            email=new_user_form.cleaned_data['email'],
-                            first_name=new_user_form.cleaned_data['first_name'],
-                            last_name=new_user_form.cleaned_data['last_name'])
-
-            new_user.set_password(new_user_form.cleaned_data["password2"])  # хеширует пароль :С
-            new_user.save()
-            Group.objects.get(name='Customers').user_set.add(new_user)
-            auth.login(request, new_user)
-            return send_welcome_mail(new_user_form.cleaned_data['username'].lower(),
-                                     new_user_form.cleaned_data['password2'],
-                                     new_user_form.cleaned_data['email'],
-                                     new_user_form.cleaned_data['first_name'],
-                                     new_user_form.cleaned_data['last_name'])
-        else:
-            args['form'] = new_user_form
-            return render_to_response('accounts/register.html', args)
