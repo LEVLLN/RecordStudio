@@ -120,7 +120,7 @@ def show_soundman_schedule(request, soundman_id):
             print("Начало времени слота:",slotstimeStart)
             slotstimeEnd = slotstimeStart + timedelta(hours=2)
             print("Конец времени слота:",slotstimeEnd)
-            starEndslots = [slotstimeStart, slotstimeEnd]
+            starEndslots = [(slotstimeStart.seconds/3600), slotstimeEnd.seconds/3600]
             slots.insert(i, starEndslots)
             slotstimeStart = slotstimeEnd
             # print(slotstimeStart)
