@@ -121,9 +121,9 @@ class RegistrationView(View):
 
                 # auth.login(request, new_user)
                 __new_hash = SecretHashCode.objects.get(user_id=new_user.pk).hashcode
-                return send_welcome_mail(new_user_form.cleaned_data['username'].lower(),
+                return send_welcome_mail(new_user_form.cleaned_data['email'],
+                                         new_user_form.cleaned_data['username'].lower(),
                                          new_user_form.cleaned_data['password2'],
-                                         new_user_form.cleaned_data['email'],
                                          new_user_form.cleaned_data['first_name'],
                                          new_user_form.cleaned_data['last_name'],
                                          __new_hash)
@@ -137,7 +137,7 @@ class RegistrationView(View):
 class ConfirmView(View):
     @staticmethod
     def get(request):  # Пример ссылки для подтверждения
-                       # http://127.0.0.1:8000/accounts/confirm?username=hashtest&hash=VAYN76N0VUUQ
+        # http://127.0.0.1:8000/accounts/confirm?username=hashtest&hash=VAYN76N0VUUQ
         args = {}
         args.update(csrf(request))
         username = request.GET['username']
@@ -157,8 +157,8 @@ class ConfirmView(View):
                 return render_to_response('accounts/confirm.html', args)
 
             # Если все условия соблюдены, то активируем юзера и выбрасываем сообщение об успешной активации
-            user.user.is_active = True
-            user.user.save()
+            user.is_active = True
+            user.save()
             args['success'] = "You have confirmed your email"
             return render_to_response('accounts/confirm.html', args)
 

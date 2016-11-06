@@ -66,11 +66,11 @@ class UserCreationForm(forms.ModelForm):
     )
     last_name = forms.CharField(
         label='Enter your last name',
-        max_length=25,
+        max_length=30,
     )
     email = forms.EmailField(
         label='Enter your email address',
-        max_length=25,
+        max_length=50,
     )
 
     class Meta:
