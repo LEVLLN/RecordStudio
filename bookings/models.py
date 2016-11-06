@@ -22,7 +22,8 @@ class Schedule(models.Model):
 
     )
     working_day = models.IntegerField(choices=DAY_OF_WEEK)
-
+    def __str__(self):
+        return '%s (%s)' % (self.soundman.username, self.get_working_day_display())
 
 class Reservation(models.Model):
     user = models.ForeignKey(User, related_name='reservations')
@@ -34,7 +35,6 @@ class Reservation(models.Model):
     )
     is_active = models.IntegerField(choices=STATUS)
     start = models.DateTimeField()
-    duration = models.DurationField()
 
     def __str__(self):
         return '%s (%s)' % (self.user.username, self.soundman.username)

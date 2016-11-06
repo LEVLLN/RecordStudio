@@ -2,9 +2,9 @@
 {% for schedule in schedules %}
     <b>День недели: {{ schedule.get_working_day_display }}</b>
     <br>
-    start: {{ schedule.start_of_the_day }}
+    start: {{ schedule.start_of_the_day.isoformat }}
     <br>
-    end: {{ schedule.end_of_the_day }}
+    end: {{ schedule.end_of_the_day.isoformat }}
     <br>
 {% endfor %}
 <h1>Все брони к звукорежиссеру</h1>
@@ -13,10 +13,8 @@
     <br>
     Точная дата: {{ booking.start }}
     <br>
-    День недели: {{ booking.start.weekday }}
+    День недели: {{ booking.start.isoweekday }}
     <br>
-    Время начала записи: {{ booking.start|time }}
-    <br>
-    Продолжительность записи: {{ booking.duration }}
+    Время начала записи: {{ booking.start.time.isoformat }}
     <br>
 {% endfor %}
