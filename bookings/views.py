@@ -69,11 +69,13 @@ def creating_booking(request):
 
 
 def home(request):
-        return render(request, "bookings/home.html")
+    return render(request, "bookings/home.html")
+
 
 def about(request):
-        return render(request, "bookings/about.html")
-        
+    return render(request, "bookings/about.html")
+
+
 # _________________________________________________________________________________________
 #
 def show_soundmans(request):
@@ -86,7 +88,6 @@ def show_soundmans(request):
 
 
 def show_soundman_schedule(request, soundman_id):
-
     soundman = get_object_or_404(User, id=soundman_id)
     print(soundman)
     schedules = Schedule.objects.all().filter(soundman=soundman)
@@ -99,12 +100,37 @@ def show_soundman_schedule(request, soundman_id):
     for sch in schedules:
         deltaStart = timedelta(hours=sch.start_of_the_day.hour, minutes=sch.start_of_the_day.minute)
         deltaEnd = timedelta(hours=sch.end_of_the_day.hour, minutes=sch.end_of_the_day.minute)
-        delta = deltaEnd-deltaStart
-        slotscount = (delta.seconds/3600)/2
-        print("SLOTS:",slotscount)
-        #check git cmd changes
-    return render(request, "bookings/show_soundman_schedule.html", context)
+        delta = deltaEnd - deltaStart
+        slotscount = (delta.seconds / 3600) / 2
+        slotstimeStart = deltaStart
+        # for i in slotscount:
+        #     slotstimeEnd = slotstimeStart+2
+        #     slotsStart.insert(slotstimeStart)
+        #     print(slotstimeStart)
+        k = int(slotscount)
+        i = 0
+        slots = []
+        starEndslots = []
+        print("Начало расписания:",sch.start_of_the_day)
+        print("Конец расписания:", sch.end_of_the_day)
+        print("Всего слотов на это расписание:", k)
+        while i < k:
+            i = i + 1
+            print("Слот номер:",i)
+            print("Начало времени слота:",slotstimeStart)
+            slotstimeEnd = slotstimeStart + timedelta(hours=2)
+            print("Конец времени слота:",slotstimeEnd)
+            starEndslots = [slotstimeStart, slotstimeEnd]
+            slots.insert(i, starEndslots)
+            slotstimeStart = slotstimeEnd
+            # print(slotstimeStart)
+            # slottimeEnd = slotstimeStart+2
+            # slotstimeStart = slottimeEnd
+            # print(slottimeEnd)
 
+            # check git cmd changes
+        print("непонятный список слотов:",slots)
+    return render(request, "bookings/show_soundman_schedule.html", context)
 
 
 class RecordView:
@@ -122,7 +148,7 @@ class RecordView:
             stop_record = datetime.now(timezone.utc)
             new_record.stop_record = stop_record
             dur = stop_record - new_record.start_record
-            new_record.current_duration = dur.seconds/60
+            new_record.current_duration = dur.seconds / 60
             new_record.save()
             return redirect("/accounts/my_profile")
         else:
