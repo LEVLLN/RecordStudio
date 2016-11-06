@@ -43,8 +43,12 @@
           <li class="active"><a href="#">Главная</a></li>
           <li><a href="">О студии</a></li>
           <li><a href="">Бронь записи</a></li>
-          <li><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
           {% endblock %}
+          {% if user.is_authenticated %}
+          <li><a class="btn" href="/accounts/logout">Выход</a></li>
+          {% else %}
+          <li><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
+          {% endif %}
         </ul>
       </div><!--/.nav-collapse -->
     </div>

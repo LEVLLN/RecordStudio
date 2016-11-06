@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
@@ -69,22 +69,11 @@ def creating_booking(request):
 
 
 def home(request):
-    args = {}
-    args.update(csrf(request))
-    if not request.user.is_authenticated():
-        args['auth_error'] = "Пользователь не авторизован"
-        return render_to_response("bookings/home.html", args)
-    else:
         return render(request, "bookings/home.html")
 
 def about(request):
-    args = {}
-    args.update(csrf(request))
-    if not request.user.is_authenticated():
-        args['auth_error'] = "Пользователь не авторизован"
-        return render_to_response("bookings/about.html", args)
-    else:
         return render(request, "bookings/about.html")
+        
 # _________________________________________________________________________________________
 #
 def show_soundmans(request):
@@ -93,11 +82,11 @@ def show_soundmans(request):
     context = {
         'soundmans': soundmans
     }
-
     return render(request, "bookings/show_soundmans.html", context)
 
 
 def show_soundman_schedule(request, soundman_id):
+
     soundman = get_object_or_404(User, id=soundman_id)
     print(soundman)
     schedules = Schedule.objects.all().filter(soundman=soundman)
@@ -106,9 +95,16 @@ def show_soundman_schedule(request, soundman_id):
     context = {
         'schedules': schedules,
         'bookings': bookings
-
     }
+    for sch in schedules:
+        deltaStart = timedelta(hours=sch.start_of_the_day.hour, minutes=sch.start_of_the_day.minute)
+        deltaEnd = timedelta(hours=sch.end_of_the_day.hour, minutes=sch.end_of_the_day.minute)
+        delta = deltaEnd-deltaStart
+        slotscount = (delta.seconds/3600)/2
+        print("SLOTS:",slotscount)
+
     return render(request, "bookings/show_soundman_schedule.html", context)
+
 
 
 class RecordView:
