@@ -102,7 +102,7 @@ def show_soundman_schedule(request, soundman_id):
         delta = deltaEnd-deltaStart
         slotscount = (delta.seconds/3600)/2
         print("SLOTS:",slotscount)
-
+        #check git cmd changes
     return render(request, "bookings/show_soundman_schedule.html", context)
 
 
