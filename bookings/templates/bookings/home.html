@@ -21,11 +21,6 @@
           <li class="active"><a href="#">Главная</a></li>
           <li><a href="/about/">О студии</a></li>
           <li><a href="">Бронь записи</a></li>
-          {% if auth_error %}
-          <li><a class="btn" href="/accounts/login">Вход / регистрация</a></li>
-          {% else %}
-          <li><a class="btn" href="/accounts/logout">Выход</a></li>
-          {% endif %}
           {% endblock %}
         </ul>
       </div><!--/.nav-collapse -->

@@ -69,22 +69,11 @@ def creating_booking(request):
 
 
 def home(request):
-    args = {}
-    args.update(csrf(request))
-    if not request.user.is_authenticated():
-        args['auth_error'] = "Пользователь не авторизован"
-        return render_to_response("bookings/home.html", args)
-    else:
         return render(request, "bookings/home.html")
 
 def about(request):
-    args = {}
-    args.update(csrf(request))
-    if not request.user.is_authenticated():
-        args['auth_error'] = "Пользователь не авторизован"
-        return render_to_response("bookings/about.html", args)
-    else:
         return render(request, "bookings/about.html")
+        
 # _________________________________________________________________________________________
 #
 def show_soundmans(request):
