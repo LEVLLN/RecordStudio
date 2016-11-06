@@ -126,7 +126,7 @@ class RegistrationView(View):
                                          new_user_form.cleaned_data['email'],
                                          new_user_form.cleaned_data['first_name'],
                                          new_user_form.cleaned_data['last_name'],
-                                          __new_hash)
+                                         __new_hash)
             else:
                 args['form'] = new_user_form
                 return render_to_response('accounts/register.html', args)
@@ -136,24 +136,33 @@ class RegistrationView(View):
 
 class ConfirmView(View):
     @staticmethod
-    def get(request):
-        return render(request, "accounts/confirm.html")
-
-    @staticmethod
-    def post(request):
+    def get(request):  # Пример ссылки для подтверждения
+                       # http://127.0.0.1:8000/accounts/confirm?username=hashtest&hash=VAYN76N0VUUQ
         args = {}
         args.update(csrf(request))
-        hash_code = request.POST['hash']
+        username = request.GET['username']
+        hash_code = request.GET['hash']
         try:
-            is_true = SecretHashCode.objects.get(hashcode=hash_code)
-            if is_true.user.is_active:
-                args['alreadydone'] = "You already have confirmed your email"
+            user = User.objects.get(username=username)
+            hash_of_user = SecretHashCode.objects.get(user_id=user.pk).hashcode
+
+            # Выбросит ошибку, если хеш код не совпадает хешу пользователя
+            if not hash_of_user == hash_code:  # В конце кадой ссылки идет слеш "/", который мешает проверке
+                args['fail'] = "No hash code like this"
                 return render_to_response('accounts/confirm.html', args)
-            is_true.user.is_active = True
-            is_true.user.save()
+
+            # Если пользователь уже активирован, то снова выбросит ошибку
+            if user.is_active:
+                args['alreadydone'] = "You have already confirmed your email"
+                return render_to_response('accounts/confirm.html', args)
+
+            # Если все условия соблюдены, то активируем юзера и выбрасываем сообщение об успешной активации
+            user.user.is_active = True
+            user.user.save()
             args['success'] = "You have confirmed your email"
             return render_to_response('accounts/confirm.html', args)
+
+        # Ловим ошибку, если пользователь или его хеш не найдены.
         except ObjectDoesNotExist:
             args['fail'] = "No hash code like this"
             return render_to_response('accounts/confirm.html', args)
-

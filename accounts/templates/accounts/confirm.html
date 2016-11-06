@@ -7,9 +7,6 @@
 <body>
 <form method="POST">
     {% csrf_token %}
-    <input type="text" name="hash" />
-    <input type="submit" />
-
     {% if fail %}
         {{ fail }}
     {% elif alreadydone %}

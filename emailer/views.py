@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 
 
 def send_welcome_mail(email, username, password, first_name, last_name, hashs):
+    # Требуется отправить сгенерированную ссылку из логина и хеша для подтверждения имейла
     # Send not just a message, but an html message!! (for Jaxy)
     args = {}
     message = "Hello my dear friend! " \
