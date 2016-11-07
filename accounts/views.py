@@ -2,7 +2,8 @@ import random
 import string
 
 from django.contrib import auth
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -166,3 +167,29 @@ class ConfirmView(View):
         except ObjectDoesNotExist:
             args['fail'] = "No hash code like this"
             return render_to_response('accounts/confirm.html', args)
+
+
+class PasswordChangeView(View):
+    @staticmethod
+    def get(request):
+        if request.user.is_authenticated:
+            args = {}
+            args.update(csrf(request))
+            return render_to_response("accounts/settings.html", args)
+        return redirect('/accounts/register')
+
+    @staticmethod
+    def post(request):
+        if request.user.is_authenticated:
+            args = {}
+            args.update(csrf(request))
+            form = PasswordChangeForm(user=request.user, data=request.POST)
+            if form.is_valid():
+                form.save()
+                update_session_auth_hash(request, form.user)
+                args['success'] = 'Success'
+                return render_to_response('accounts/settings.html', args)
+            else:
+                args['error'] = form.errors
+                return render_to_response("accounts/settings.html", args)
+        return redirect('/accounts/register')

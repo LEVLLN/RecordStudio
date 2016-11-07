@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ user.username }} <br/>
+    <input type="password" name="old_password"/>
+    <input type="password" name="new_password1"/>
+    <input type="password" name="new_password2"/>
+    <input type="submit"/>
+    {% if error %}
+        {{ error }}
+    {% else %}
+        {{ success }}
+    {% endif %}
+
+</form>
+</body>
+</html>
