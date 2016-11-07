@@ -140,7 +140,7 @@ insertCSS = function(cssText) {
 pluginOptions = {
   clickToHide: true,
   autoHide: true,
-  autoHideDelay: 5000,
+  autoHideDelay: 3000,
   arrowShow: true,
   arrowSize: 5,
   elementPosition: 'bottom',

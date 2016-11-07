@@ -5,11 +5,13 @@
   {% block title %}<title>RS | Авторизация</title> {% endblock %}
 </head>
 <body>
-
   {% block navbar-active %}
   <li><a href="/">Главная</a></li>
-  <li><a href="">О студии</a></li>
-  <li><a href="">Бронь записи</a></li>
+  <li><a href="/about/">О студии</a></li>
+  <li><a href="#!">Бронь записи</a></li>
+  {% endblock %}
+  {% block login-active %}
+  <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
   {% endblock %}
   {% block login-container %}
   <header id="head" class="secondary"></header>
@@ -39,7 +41,7 @@
                 </div>
                 <div class="top-margin">
                   <label>Пароль <span class="text-danger">*</span></label>
-                  <input id="password" name="password" type="password" data-validate="required,password,min(8)" class="form-control">
+                  <input id="password" name="password" type="password" data-validate="required" class="form-control">
                 </div>
                 {% if login_error %}
                 <p style="color:red; margin:0;">{{ login_error }}</p>

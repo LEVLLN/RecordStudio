@@ -60,12 +60,12 @@
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 .navbar-nav .dropdown-menu > li > a {
-	color: rgba(255, 255, 255, .7);
+	color: #fff;
 	padding: 7px 20px;
 }
 .navbar-nav .dropdown-menu > li > a:hover, .navbar-nav .dropdown-menu > li > a:focus, .navbar-nav .dropdown-menu > .active > a:hover {
 	background: rgba(255, 255, 255, .1);
-	color: white;
+	color: #c83939;
 }
 .navbar-nav .dropdown-menu > .active > a, .navbar-nav .dropdown-menu > .active > a:focus {
 	background: none;
@@ -173,7 +173,13 @@
 	padding-top: 30px;
 	padding-bottom: 30px;
 	margin-bottom: 0;
+	text-align: center;
 }
+
+.jumbotron h3 {
+	margin-bottom: 20px;
+}
+
 .container .jumbotron {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;

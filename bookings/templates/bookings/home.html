@@ -7,25 +7,11 @@
 
 
 <body>
-  <!-- Fixed navbar -->
-  <div class="navbar navbar-inverse navbar-fixed-top headroom" >
-    <div class="container">
-      <div class="navbar-header">
-        <!-- Button for smallest screens -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-        <a class="navbar-brand" href="/bookings/home"><img src="{% static 'images/logo.png' %}" alt="Record Studio"></a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav pull-right">
-          {% block navbar-active %}
-          <li class="active"><a href="#">Главная</a></li>
-          <li><a href="/about/">О студии</a></li>
-          <li><a href="">Бронь записи</a></li>
-          {% endblock %}
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
+  {% block navbar-active %}
+  <li class="active"><a href="/">Главная</a></li>
+  <li><a href="/about/">О студии</a></li>
+  <li><a href="#!">Бронь записи</a></li>
+  {% endblock %}
   <!-- /.navbar -->
   {% block header %}
   <!-- Header -->
@@ -33,7 +19,7 @@
     <div class="container">
       <div class="row">
         <h1 class="lead">RECORD STUDIO</h1>
-        <p class="tagline"> <a href="#!">Студия звукозаписи</a></p>
+        <h6 class="tagline">СТУДИЯ ЗВУКОЗАПИСИ</h6>
         <p><a class="btn btn-default btn-lg" href="#!" role="button">ЗАБРОНИРОВАТЬ СЕЙЧАС</a>
         </div>
       </div>
@@ -80,7 +66,6 @@
             </div>
           </div>
         </div> <!-- /row  -->
-
       </div>
     </div>
     <!-- /Highlights -->

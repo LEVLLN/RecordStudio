@@ -6,114 +6,90 @@
 </head>
 
 <body>
-
-  <!-- Fixed navbar -->
-  <div class="navbar navbar-inverse navbar-fixed-top headroom" >
-    <div class="container">
-      <div class="navbar-header">
-        <!-- Button for smallest screens -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-        <a class="navbar-brand" href="/bookings/home"><img src="{% static 'images/logo.png' %}" alt="Record Studio"></a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav pull-right">
-          {% block navbar-active %}
-          <li><a href="/">Главная</a></li>
-          <li  class="active"><a href="">О студии</a></li>
-          <li><a href="">Бронь записи</a></li>
-          {% endblock %}
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
-  <!-- /.navbar -->
-  {% block header %}
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li class="active"><a href="">О студии</a></li>
+  <li><a href="#!">Бронь записи</a></li>
+  {% endblock %}
+  {% block about-container %}
 
   <!--Page Title-->
   <section class="page-title-about">
-    <div class="auto-container">
+    <div class="container">
       <div class="row clearfix">
         <!--Title -->
-        <div class="title-column col-md-6 col-sm-12 col-xs-12">
+        <div class="col-md-6 col-sm-12 col-xs-12">
           <h1>О СТУДИИ</h1>
         </div>
       </div>
     </div>
-    </section
+  </section>
 
     <!-- about-section -->
-    <section class="about-section">
-      <div class="auto-container">
-
-        <!--Two Column-->
-        <div class="two-column">
-
-          <div class="row clearfix">
-            <!--Image Column-->
-            <div class="image-column column col-lg-6 col-md-6 col-sm-12">
-              <a class="image-box" href="/about/"><img src="{% static 'images/about_us.PNG' %}" alt="Record Studio"></a>
-
-              
+      <div class="whyus container">
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a class="image-box" href="/about/"><img src="{% static 'images/about_us.PNG' %}" alt="Record Studio"></a>
             </div>
-            <!--Content Column-->
-            <div class="content-column column col-lg-6 col-md-6 col-sm-12">
-              <div class="inner-box">
-                <div class="default-title"><h3>Почему выбирают нас</h3></div>
+            <div class="col-lg-8 col-md-8 col-sm-12">
+              <div class="default-title"><h3>Почему выбирают нас</h3></div>
+              <div class="text">Мы предлагаем полный спектр услуг для профессиональных певцов,
+                расположенных во всей области. Все предлагаемые нами услуги выполняются исключительно
+                профессионалами. Мы можем справиться с любой поставленной задачей.</div>
 
-                <div class="text">Мы предлагаем полный спектр услуг для профессиональных певцов, расположенных во всей области. Все предлагаемые нами услуги выполняются исключительно профессионалами. Мы можем справиться с любой поставленной задачей.</div>
-
-                <!--List Style One-->
-                <ul class="list-style-one">
-                  <li><i class="fa fa-check" aria-hidden="true"></i> Современное оборудование</li>
-                  <li><i class="fa fa-check" aria-hidden="true"></i> Талантливые режиссёры</li>
-                  <li><i class="fa fa-check" aria-hidden="true"></i> Лучшая цена</li>
-                  <li><i class="fa fa-check" aria-hidden="true"></i> Быстрая поддержка</li>
-                </ul>
-              </div>
+              <!--List Style One-->
+              <ul class="list-style-one">
+                <li><i class="fa fa-check" aria-hidden="true"></i> Современное оборудование</li>
+                <li><i class="fa fa-check" aria-hidden="true"></i> Талантливые режиссёры</li>
+                <li><i class="fa fa-check" aria-hidden="true"></i> Лучшая цена</li>
+                <li><i class="fa fa-check" aria-hidden="true"></i> Быстрая поддержка</li>
+              </ul>
             </div>
+
           </div>
         </div>
-
         <!--Three Column Boxed-->
         <div class="three-column-boxed">
-          <div class="row clearfix">
-            <!--Boxed COlumn-->
-            <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
-              <div class="inner-box">
-                <div class="icon-box"><span class="flaticon-diamond-3"></span></div>
-                <i class="fa fa-diamond fa-3x" aria-hidden="true"></i>
-                <h3>МИССИЯ</h3>
-                <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+          <div class="container">
+            <div class="row">
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
+                <div class="inner-box">
+                  <div class="icon-box"><span class="flaticon-diamond-3"></span></div>
+                  <i class="fa fa-diamond fa-3x" aria-hidden="true"></i>
+                  <h3>МИССИЯ</h3>
+                  <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+                </div>
+              </div>
+
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
+                <div class="inner-box">
+                  <div class="icon-box"><span class="flaticon-eye"></span></div>
+                  <i class="fa fa-eye fa-3x" aria-hidden="true"></i>
+                  <h3>ВИДЕНИЕ</h3>
+                  <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+                </div>
+              </div>
+
+              <!--Boxed COlumn-->
+              <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
+                <div class="inner-box">
+                  <div class="icon-box"><span class="flaticon-target-1"></span></div>
+                  <i class="fa fa-bullseye fa-3x" aria-hidden="true"></i>
+                  <h3>ЦЕЛИ</h3>
+                  <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
+                </div>
               </div>
             </div>
-
-            <!--Boxed COlumn-->
-            <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
-              <div class="inner-box">
-                <div class="icon-box"><span class="flaticon-eye"></span></div>
-                <i class="fa fa-eye fa-3x" aria-hidden="true"></i>
-                <h3>ВИДЕНИЕ</h3>
-                <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
-              </div>
-            </div>
-
-            <!--Boxed COlumn-->
-            <div class="boxed-column col-md-4 col-sm-6 col-xs-12">
-              <div class="inner-box">
-                <div class="icon-box"><span class="flaticon-target-1"></span></div>
-                <i class="fa fa-bullseye fa-3x" aria-hidden="true"></i>
-                <h3>ЦЕЛИ</h3>
-                <div class="text">Short ribs salami shank pork loin, rump bacon tenderloin leberkas doner beef ribs frankfurter pork belly jowl shoulder.</div>
-              </div>
-            </div>
-
           </div>
+
         </div>
 
         <!--Team Style one-->
         <section class="team-style-one altered">
           <div class="default-title"><h3>НАША КОМАНДА СПЕЦИАЛИСТОВ</h3></div>
-          <div class="four-column-boxed">
+          <div class="container">
             <div class="row clearfix">
               <!--Boxed COlumn-->
               <div class="boxed-column col-md-3 col-sm-4 col-xs-12">
@@ -201,11 +177,8 @@
             </div>
           </div>
         </section>
-
-
         {% endblock %}
         {% block intro %}
-        <!-- /Highlights -->
         {% endblock %}
-</body>
-</html>
+      </body>
+      </html>

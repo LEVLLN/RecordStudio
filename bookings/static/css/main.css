@@ -63,7 +63,18 @@
 	#head .lead {
 		font-size: 34px;
 	}
+
 }
+
+@media (max-width:991px) {
+	.navbar-brand img {
+		height: 50px;
+	}
+	.nav > li > a {
+    font-size: 14px !important;
+}
+}
+
 
 /* Autohide navbar */
 .slideUp {
@@ -190,10 +201,10 @@ img.pull-left {
 	color: #8c8c8c;
 }
 .footer1 a {
-	color: #ccc;
+	color: #8c8c8c;
 }
 .footer1 a:hover {
-	color: #fff;
+	color: #C83939;
 }
 .footer1 .widget {
 	margin-bottom: 30px;
@@ -299,8 +310,7 @@ img.pull-left {
 	z-index:1;
 }
 
-.page-title-about h1{
-	margin-left: 100px;
+.page-title-about h1 {
 	padding-top: 50px;
 	position:relative;
 	font-size:32px;
@@ -335,13 +345,14 @@ img.pull-left {
 	text-transform:uppercase;
 	color:#222222;
 }
-.image-column.column.col-lg-6.col-md-6.col-sm-12 {
-  margin-left: 180px;
-  width: 450px;
-}
-.image-column.column.col-lg-6.col-md-6.col-sm-12 .image-box	img {
+
+.whyus .image-box	img {
   border-radius: 130px;
-	margin-top: 40px;
+	/*margin-top: 40px;*/
+	margin: 40px;
+}
+.whyus {
+	margin-top: 25px;
 }
 .list-style-one {
 	position: relative;
@@ -370,9 +381,13 @@ img.pull-left {
 i.fa.fa-check {
     color: #C83939;
 }
+.whyus .text {
+	text-align: justify;
+}
 .text {
 	margin-bottom: 15px;
 	margin-top: -15px;
+	font-size: 14px;
 }
 .two-column {
   margin-top: 50px;
