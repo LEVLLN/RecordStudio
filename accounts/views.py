@@ -25,7 +25,7 @@ class ForgetPasswordView(View):
     def get(request):
         if request.user.is_authenticated():
             return render(request, 'accounts/forget.html')
-        raise Http404()
+        return render(request, 'accounts/http404.html')
 
     def post(self, request):
         args = {}
@@ -62,7 +62,7 @@ class ForgetPasswordView(View):
 class AuthenticationView(View):
     def get(self, request):
         if request.user.is_authenticated():
-            raise Http404()
+            return render(request, 'accounts/http404.html')
         return render(request, "accounts/login.html")
 
     def post(self, request):
@@ -89,14 +89,14 @@ class AuthenticationView(View):
             return render(request, "administrator/administrator_page.html")
         if request.user.groups.filter(name='Soundmans').exists():
             return render(request, "soundman_p/soundman_page.html")
-        return render(request, "user/home.html")
+        return render(request, "user/profile.html")
 
 
 class RegistrationView(View):
     @staticmethod
     def get(request):
         if request.user.is_authenticated():
-            raise Http404()
+            return render(request, 'accounts/http404.html')
         return render(request, 'accounts/register.html')
 
     @staticmethod

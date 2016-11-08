@@ -11,6 +11,9 @@
   <li><a href="">О студии</a></li>
   <li><a href="#!">Бронь записи</a></li>
   {% endblock %}
+  {% block login-active %}
+  <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
+  {% endblock %}
   {% block login-container %}
   <header id="head" class="secondary"></header>
   <!-- container -->
@@ -29,7 +32,7 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <h3 class="thin text-center">Регистрация нового аккаунта</h3>
-              <p class="text-center text-muted larger-than">У вас уже есть аккаунт? <a href="signin.html">Войдите</a> используя ваше<br> имя пользователя и пароль, указанные при регистрации.</p>
+              <p class="text-center text-muted larger-than">У вас уже есть аккаунт? <a href="/accounts/login">Войдите</a> используя ваше<br> имя пользователя и пароль, указанные при регистрации.</p>
               <hr>
               <form action="" method="post">
                 {% csrf_token %}
