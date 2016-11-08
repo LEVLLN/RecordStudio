@@ -7,16 +7,10 @@ from django import forms
 from django.contrib.auth import (
     get_user_model, password_validation,
 )
-from django.contrib.auth.hashers import (
-    UNUSABLE_PASSWORD_PREFIX, identify_hasher,
-)
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.forms.utils import flatatt
-from django.utils.html import format_html, format_html_join
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 
 class FirstNameField(forms.CharField):
@@ -104,7 +98,7 @@ class UserCreationForm(forms.ModelForm):
                 self.error_messages['last_name_error'],
                 code='last_name_error', )
         else:
-            return self.cleaned_data['first_name']
+            return last_name
 
     def clean_email(self):
         email = self.cleaned_data['email']

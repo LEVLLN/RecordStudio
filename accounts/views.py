@@ -107,11 +107,11 @@ class RegistrationView(View):
             args['form'] = UserCreationForm()
             new_user_form = UserCreationForm(request.POST)
             if new_user_form.is_valid():
-                new_user = User(username=new_user_form.cleaned_data['username'].lower(),
-                                password=new_user_form.cleaned_data['password2'],
-                                email=new_user_form.cleaned_data['email'],
-                                first_name=new_user_form.cleaned_data['first_name'],
-                                last_name=new_user_form.cleaned_data['last_name'])
+                new_user = User.objects.create_user(username=new_user_form.cleaned_data['username'].lower(),
+                                                    first_name=new_user_form.cleaned_data['first_name'],
+                                                    last_name=new_user_form.cleaned_data['last_name'],
+                                                    email=new_user_form.cleaned_data['email'],
+                                                    )
 
                 new_user.set_password(new_user_form.cleaned_data["password2"])  # хеширует пароль :С
                 new_user.is_active = False
