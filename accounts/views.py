@@ -1,5 +1,6 @@
 import random
 import string
+from datetime import datetime, timezone, timedelta
 
 from django.contrib import auth
 from django.contrib.auth import authenticate, update_session_auth_hash
@@ -119,7 +120,8 @@ class RegistrationView(View):
 
                 SecretHashCode(user_id=new_user.pk,
                                hashcode=''.join(
-                                   random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
+                                   random.choice(string.ascii_uppercase + string.digits) for _ in range(12)),
+                               expired_date=datetime.now(timezone.utc) + timedelta(minutes=60)
                                ).save()
 
                 # auth.login(request, new_user)
@@ -142,7 +144,7 @@ class ConfirmView(View):
     def get(request):  # Пример ссылки для подтверждения
         if request.user.is_authenticated():
             raise Http404()
-            
+
         # http://127.0.0.1:8000/accounts/confirm?username=hashtest&hash=VAYN76N0VUUQ
         args = {}
         args.update(csrf(request))
@@ -151,6 +153,12 @@ class ConfirmView(View):
         try:
             user = User.objects.get(username=username)
             hash_of_user = SecretHashCode.objects.get(user_id=user.pk).hashcode
+            expired_date = SecretHashCode.objects.get(user_id=user.pk).expired_date
+
+            if datetime.now(timezone.utc) > expired_date:
+                args['expired'] = "This Link is expired"
+                args['username'] = username  # Реализовать переотправку имейла
+                return render_to_response('accounts/confirm.html', args)
 
             # Выбросит ошибку, если хеш код не совпадает хешу пользователя
             if not hash_of_user == hash_code:  # В конце кадой ссылки идет слеш "/", который мешает проверке

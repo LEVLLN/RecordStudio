@@ -11,6 +11,8 @@
         {{ fail }}
     {% elif alreadydone %}
         {{ alreadydone }}
+    {% elif expired %}
+    {{ expired }}
     {% else %}
         {{ success }}
     {% endif %}
