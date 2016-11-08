@@ -12,6 +12,7 @@ from django.core.validators import validate_email
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
 from django.views import View
+from django.http import Http404
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
@@ -21,7 +22,9 @@ from emailer.views import send_welcome_mail, send_forget_mail
 class ForgetPasswordView(View):
     @staticmethod
     def get(request):
-        return render(request, 'accounts/forget.html')
+        if request.user.is_authenticated():
+            return render(request, 'accounts/forget.html')
+        raise Http404()
 
     def post(self, request):
         args = {}
@@ -58,9 +61,8 @@ class ForgetPasswordView(View):
 class AuthenticationView(View):
     def get(self, request):
         if request.user.is_authenticated():
-            return self.check_for_permission(request)
-        else:
-            return render(request, "accounts/login.html")
+            raise Http404()
+        return render(request, "accounts/login.html")
 
     def post(self, request):
         args = {}
@@ -70,7 +72,7 @@ class AuthenticationView(View):
 
         if user is not None and user.is_active:
             auth.login(request, user)
-            return self.check_for_permission(request)
+            return redirect('/')
         else:
             args['login_error'] = "Ошибка авторизации"
             return render_to_response("accounts/login.html", args)
@@ -78,7 +80,7 @@ class AuthenticationView(View):
     @staticmethod
     def logout(request):
         auth.logout(request)
-        return redirect("/accounts/login/")
+        return redirect("/")
 
     @staticmethod
     def check_for_permission(request):
@@ -86,15 +88,15 @@ class AuthenticationView(View):
             return render(request, "administrator/administrator_page.html")
         if request.user.groups.filter(name='Soundmans').exists():
             return render(request, "soundman_p/soundman_page.html")
-        return redirect('/')
+        return render(request, "user/home.html")
 
 
 class RegistrationView(View):
     @staticmethod
     def get(request):
-        if not request.user.is_authenticated():
-            return render(request, 'accounts/register.html')
-        return render(request, 'bookings/home.html')
+        if request.user.is_authenticated():
+            raise Http404()
+        return render(request, 'accounts/register.html')
 
     @staticmethod
     def post(request):
@@ -132,12 +134,15 @@ class RegistrationView(View):
                 args['form'] = new_user_form
                 return render_to_response('accounts/register.html', args)
 
-        return render(request, 'bookings/home.html')
+        return render(request, 'accounts/register.html')
 
 
 class ConfirmView(View):
     @staticmethod
     def get(request):  # Пример ссылки для подтверждения
+        if request.user.is_authenticated():
+            raise Http404()
+            
         # http://127.0.0.1:8000/accounts/confirm?username=hashtest&hash=VAYN76N0VUUQ
         args = {}
         args.update(csrf(request))
@@ -176,7 +181,7 @@ class PasswordChangeView(View):
             args = {}
             args.update(csrf(request))
             return render_to_response("accounts/settings.html", args)
-        return redirect('/accounts/register')
+        raise Http404()
 
     @staticmethod
     def post(request):
@@ -192,4 +197,4 @@ class PasswordChangeView(View):
             else:
                 args['error'] = form.errors
                 return render_to_response("accounts/settings.html", args)
-        return redirect('/accounts/register')
+        return redirect('/accounts/settings')
