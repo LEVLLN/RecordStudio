@@ -8,7 +8,7 @@ from django.db import models
 
 
 class Schedule(models.Model):
-    soundman = models.ForeignKey(User)
+    soundman = models.ForeignKey(User,related_name='schedules')
     start_of_the_day = models.TimeField()
     end_of_the_day = models.TimeField()
     DAY_OF_WEEK = (
@@ -25,23 +25,25 @@ class Schedule(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.soundman.username, self.get_working_day_display())
 
-class Reservation(models.Model):
-    user = models.ForeignKey(User, related_name='reservations')
-    soundman = models.ForeignKey(User, related_name='assigned_reservations')
+class Booking(models.Model):
+    user = models.ForeignKey(User, related_name='bookings')
     STATUS = (
         (1, 'Active'),
         (2, 'In progress'),
-        (3, 'Inactive')
+        (3, 'Inactive'),
+        (4, 'Canceled')
     )
     is_active = models.IntegerField(choices=STATUS)
-    start = models.DateTimeField()
+    date = models.DateField()
+    start = models.TimeField()
+    end = models.TimeField()
+    schedule = models.ForeignKey(Schedule, related_name='sch_bookings')
 
     def __str__(self):
-        return '%s (%s)' % (self.user.username, self.soundman.username)
-
+        return '%s (%s)' % (self.user.username, self.schedule.soundman.username)
 
 class Record(models.Model):
-    reservation = models.OneToOneField(Reservation, primary_key=True, related_name='reservations')
+    reservation = models.OneToOneField(Booking, primary_key=True, related_name='reservations')
     start_record = models.DateTimeField(null=True)
     stop_record = models.DateTimeField(null=True)
     current_duration = models.IntegerField(null=True)

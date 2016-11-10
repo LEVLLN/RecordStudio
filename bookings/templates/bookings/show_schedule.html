@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<h1>Расписание звукорежиссера {{ soundman.username }}</h1>
+{% for schedule in schedules %}
+    <b>День недели: {{ schedule.get_working_day_display }}</b>
+    <br>
+    start: {{ schedule.start_of_the_day.isoformat }}
+    <br>
+    end: {{ schedule.end_of_the_day.isoformat }}
+    <br>
+{% endfor %}
+
+<h2>Брони, которые активны и относятся к звукорежиссеру</h2>
+{% for act in active_bookings %}
+    <b>Номер брони: </b> {{ act.id }}
+    <br>
+    Дата записи: {{ act.date }}
+    <br>
+    День недели: {{ act.date.isoweekday }}
+    <br>
+    Время начала записи: {{ act.start.isoformat }}
+    <br>
+    Время окончания записи: {{ act.end.isoformat }}
+    <br>
+    Состояние брони: {{ act.get_is_active_display }}
+    <br>
+{% endfor %}
+
+<h1>Все брони к звукорежиссеру</h1>
+
+{% for booking in bookings %}
+    <b>Номер брони: </b> {{ booking.id }}
+    <br>
+    Дата записи: {{ booking.date }}
+    <br>
+    День недели: {{ booking.date.isoweekday }}
+    <br>
+    Время начала записи: {{ booking.start.isoformat }}
+    <br>
+    Время окончания записи: {{ booking.end.isoformat }}
+    <br>
+    Состояние брони: {{ booking.get_is_active_display }}
+    <br>
+    <br>
+    <br>
+{% endfor %}
+

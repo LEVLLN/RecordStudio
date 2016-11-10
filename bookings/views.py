@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, render_to_response, redi
 from django.template.context_processors import csrf
 from pytimeparse.timeparse import timeparse
 
-from bookings.models import Reservation, Schedule, Record
+from bookings.models import Booking, Schedule, Record
 
 
 # def home(request):
@@ -58,9 +58,9 @@ def creating_booking(request):
         soundman_str = request.POST['soundman']
         soundman = User.objects.get(username=soundman_str)
         user = request.user
-        new_booking = Reservation(user=user, start=start, is_active=1,
-                                  duration=datetime.timedelta(minutes=timeparse(duration)),
-                                  soundman=soundman)
+        new_booking = Booking(user=user, start=start, is_active=1,
+                              duration=datetime.timedelta(minutes=timeparse(duration)),
+                              soundman=soundman)
         if request.user.groups.filter(name='Customers').exists():
             new_booking.save()
             return render(request, 'bookings/show_booking.html', {'booking': new_booking})
@@ -87,50 +87,72 @@ def show_soundmans(request):
     return render(request, "bookings/show_soundmans.html", context)
 
 
-def show_soundman_schedule(request, soundman_id):
+def show_schedule(request, soundman_id, year):
+    print(year)
     soundman = get_object_or_404(User, id=soundman_id)
-    print(soundman)
     schedules = Schedule.objects.all().filter(soundman=soundman)
-    print(schedules)
-    bookings = Reservation.objects.all().filter(soundman=soundman)
-    context = {
-        'schedules': schedules,
-        'bookings': bookings
-    }
-    for sch in schedules:
-        deltaStart = timedelta(hours=sch.start_of_the_day.hour, minutes=sch.start_of_the_day.minute)
-        deltaEnd = timedelta(hours=sch.end_of_the_day.hour, minutes=sch.end_of_the_day.minute)
-        delta = deltaEnd - deltaStart
-        slotscount = (delta.seconds / 3600) / 2
-        slotstimeStart = deltaStart
-        # for i in slotscount:
-        #     slotstimeEnd = slotstimeStart+2
-        #     slotsStart.insert(slotstimeStart)
-        #     print(slotstimeStart)
-        k = int(slotscount)
-        i = 0
-        slots = []
-        starEndslots = []
-        print("Начало расписания:",sch.start_of_the_day)
-        print("Конец расписания:", sch.end_of_the_day)
-        print("Всего слотов на это расписание:", k)
-        while i < k:
-            i = i + 1
-            print("Слот номер:",i)
-            print("Начало времени слота:",slotstimeStart)
-            slotstimeEnd = slotstimeStart + timedelta(hours=2)
-            print("Конец времени слота:",slotstimeEnd)
-            starEndslots = [(slotstimeStart.seconds/3600), slotstimeEnd.seconds/3600]
-            slots.insert(i, starEndslots)
-            slotstimeStart = slotstimeEnd
-            # print(slotstimeStart)
-            # slottimeEnd = slotstimeStart+2
-            # slotstimeStart = slottimeEnd
-            # print(slottimeEnd)
+    bookings = Booking.objects.all().filter(schedule__soundman=soundman)
 
-            # check git cmd changes
-        print("непонятный список слотов:",slots)
-    return render(request, "bookings/show_soundman_schedule.html", context)
+    act_bookings = []
+    for schedule in schedules:
+        for booking in bookings:
+            if schedule == booking.schedule:
+                if booking.is_active ==1:
+                    print("есть занятая бронь на это расписание")
+                    act_bookings.append(booking)
+    context = {
+        'soundman': soundman,
+        'schedules': schedules,
+        'bookings': bookings,
+        'active_bookings': act_bookings
+    }
+    return render(request, 'bookings/show_schedule.html',context)
+
+
+# def show_soundman_schedule(request, soundman_id):
+#  soundman = get_object_or_404(User, id=soundman_id)
+#     print(soundman)
+#     schedules = Schedule.objects.all().filter(soundman=soundman)
+#     print(schedules)
+#     bookings = Booking.objects.all().filter(soundman=soundman)
+#     context = {
+#         'schedules': schedules,
+#         'bookings': bookings
+#     }
+#     for sch in schedules:
+#         deltaStart = timedelta(hours=sch.start_of_the_day.hour, minutes=sch.start_of_the_day.minute)
+#         deltaEnd = timedelta(hours=sch.end_of_the_day.hour, minutes=sch.end_of_the_day.minute)
+#         delta = deltaEnd - deltaStart
+#         slotscount = (delta.seconds / 3600) / 2
+#         slotstimeStart = deltaStart
+#         # for i in slotscount:
+#         #     slotstimeEnd = slotstimeStart+2
+#         #     slotsStart.insert(slotstimeStart)
+#         #     print(slotstimeStart)
+#         k = int(slotscount)
+#         i = 0
+#         slots = []
+#         starEndslots = []
+#         print("Начало расписания:",sch.start_of_the_day)
+#         print("Конец расписания:", sch.end_of_the_day)
+#         print("Всего слотов на это расписание:", k)
+#         while i < k:
+#             i = i + 1
+#             print("Слот номер:",i)
+#             print("Начало времени слота:",slotstimeStart)
+#             slotstimeEnd = slotstimeStart + timedelta(hours=2)
+#             print("Конец времени слота:",slotstimeEnd)
+#             starEndslots = [(slotstimeStart.seconds/3600), slotstimeEnd.seconds/3600]
+#             slots.insert(i, starEndslots)
+#             slotstimeStart = slotstimeEnd
+#             # print(slotstimeStart)
+#             # slottimeEnd = slotstimeStart+2
+#             # slotstimeStart = slottimeEnd
+#             # print(slottimeEnd)
+#
+#             # check git cmd changes
+#         print("непонятный список слотов:",slots)
+#     return render(request, "bookings/show_schedule.html", context)
 
 
 class RecordView:

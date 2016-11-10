@@ -2,10 +2,10 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from bookings.models import Schedule, Reservation, Record
+from bookings.models import Schedule, Booking, Record
 
 
-@admin.register(Reservation)
+@admin.register(Booking)
 class ReservationAdmin(admin.ModelAdmin):
     pass
 
