@@ -1,6 +1,7 @@
 from datetime import datetime, timezone, timedelta
 
 from django.contrib.auth.models import User, Group
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from django.template.context_processors import csrf
@@ -97,7 +98,7 @@ def show_schedule(request, soundman_id, year):
     for schedule in schedules:
         for booking in bookings:
             if schedule == booking.schedule:
-                if booking.is_active ==1:
+                if booking.is_active == 1:
                     print("есть занятая бронь на это расписание")
                     act_bookings.append(booking)
     context = {
@@ -106,7 +107,7 @@ def show_schedule(request, soundman_id, year):
         'bookings': bookings,
         'active_bookings': act_bookings
     }
-    return render(request, 'bookings/show_schedule.html',context)
+    return render(request, 'bookings/show_schedule.html', context)
 
 
 # def show_soundman_schedule(request, soundman_id):
@@ -156,22 +157,55 @@ def show_schedule(request, soundman_id, year):
 
 
 class RecordView:
+    @staticmethod
     def start_record(request):
         if request.POST:
-            new_record = Record(reservation_id=72, start_record=datetime.now(timezone.utc))
-            new_record.save()
-            return redirect("/accounts/my_profile")
-        else:
-            return render(request, "records/records.html")
+            args = {}
+            args.update(csrf(request))
+            # reservationId = request.POST['id']
+            try:
 
+                if not Record.objects.get(reservation_id=1).start_record is None:
+                    args['againClicked'] = "Record is already started"
+                    return render(request, "soundman/soundman_page.html", args)
+
+            except ObjectDoesNotExist:
+                _new_record = Record(reservation_id=1, start_record=datetime.now(timezone.utc))
+                _new_record.save()
+
+                _reservation = Booking.objects.get(pk=1)
+                _reservation.is_active = 2
+                _reservation.save()
+                args['againClicked'] = "Record is starting"
+                return render(request, "soundman/soundman_page.html", args)
+
+        return redirect('/accounts/my_profile')
+
+    @staticmethod
     def stop_record(request):
         if request.POST:
-            new_record = Record.objects.get(reservation_id=72)
-            stop_record = datetime.now(timezone.utc)
-            new_record.stop_record = stop_record
-            dur = stop_record - new_record.start_record
-            new_record.current_duration = dur.seconds / 60
-            new_record.save()
-            return redirect("/accounts/my_profile")
-        else:
-            return render(request, "records/records.html")
+            args = {}
+            args.update(csrf(request))
+
+            if Record.objects.get(reservation_id=1).stop_record is None:
+                _new_record = Record.objects.get(reservation_id=1)
+                _new_record.stop_record = datetime.now(timezone.utc)
+
+                # duration is in minutes
+                duration = (_new_record.stop_record - _new_record.start_record).seconds / 60
+                price_per_minute = 100  # The price per minute of record
+
+                if duration > 5:
+                    _new_record.money_back = duration * price_per_minute
+                else:
+                    _new_record.money_back = 0
+
+                _new_record.save()
+
+                args['againStopped'] = "Record is stopping"
+                return render(request, "soundman/soundman_page.html", args)
+
+            args['againStopped'] = "Record is already stopped"
+            return render(request, "soundman/soundman_page.html", args)
+
+        return redirect('/accounts/my_profile')

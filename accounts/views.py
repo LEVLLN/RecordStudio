@@ -23,7 +23,7 @@ from emailer.views import send_welcome_mail, send_forget_mail
 class ForgetPasswordView(View):
     @staticmethod
     def get(request):
-        if request.user.is_authenticated():
+        if not request.user.is_authenticated():
             return render(request, 'accounts/forget.html')
         return render(request, 'accounts/http404.html')
 
@@ -60,12 +60,14 @@ class ForgetPasswordView(View):
 
 
 class AuthenticationView(View):
-    def get(self, request):
+    @staticmethod
+    def get(request):
         if request.user.is_authenticated():
             return render(request, 'accounts/http404.html')
         return render(request, "accounts/login.html")
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         args = {}
         args.update(csrf(request))
         user = authenticate(username=request.POST['username'].lower(),
@@ -88,8 +90,10 @@ class AuthenticationView(View):
         if request.user.groups.filter(name='Administrators').exists():
             return render(request, "administrator/administrator_page.html")
         if request.user.groups.filter(name='Soundmans').exists():
-            return render(request, "soundman_p/soundman_page.html")
-        return render(request, "user/profile.html")
+            return render(request, "soundman/soundman_page.html")
+        if request.user.groups.filter(name='Customers').exists():
+            return render(request, "user/profile.html")
+        return redirect('/accounts/login')
 
 
 class RegistrationView(View):

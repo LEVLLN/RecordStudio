@@ -8,7 +8,7 @@ from django.db import models
 
 
 class Schedule(models.Model):
-    soundman = models.ForeignKey(User,related_name='schedules')
+    soundman = models.ForeignKey(User, related_name='schedules')
     start_of_the_day = models.TimeField()
     end_of_the_day = models.TimeField()
     DAY_OF_WEEK = (
@@ -22,8 +22,10 @@ class Schedule(models.Model):
 
     )
     working_day = models.IntegerField(choices=DAY_OF_WEEK)
+
     def __str__(self):
         return '%s (%s)' % (self.soundman.username, self.get_working_day_display())
+
 
 class Booking(models.Model):
     user = models.ForeignKey(User, related_name='bookings')
@@ -42,9 +44,9 @@ class Booking(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.user.username, self.schedule.soundman.username)
 
+
 class Record(models.Model):
     reservation = models.OneToOneField(Booking, primary_key=True, related_name='reservations')
     start_record = models.DateTimeField(null=True)
     stop_record = models.DateTimeField(null=True)
-    current_duration = models.IntegerField(null=True)
-    difference = models.IntegerField(null=True)
+    money_back = models.IntegerField(null=True)

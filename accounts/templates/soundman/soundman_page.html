@@ -6,6 +6,21 @@
 </head>
 <body>
 <h1>Welcome to the soundmans page</h1>
+<form action="start" method="post">
+    {% csrf_token %}
+    <button type="submit">Start Record</button>
+</form>
 
+<form action="stop" method="post">
+    {% csrf_token %}
+    <button type="submit">Stop Record</button>
+
+    {%if againClicked%}
+        {{ againClicked }}
+    {% endif %}
+    {%if againStopped%}
+        {{ againStopped }}
+    {% endif %}
+</form>
 </body>
 </html>
