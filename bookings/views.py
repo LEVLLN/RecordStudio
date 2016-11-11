@@ -88,26 +88,35 @@ def show_soundmans(request):
     return render(request, "bookings/show_soundmans.html", context)
 
 
-def show_schedule(request, soundman_id, year):
-    print(year)
+def show_schedule(request, soundman_id):
+    args = {}
+    args.update(csrf(request))
     soundman = get_object_or_404(User, id=soundman_id)
     schedules = Schedule.objects.all().filter(soundman=soundman)
-    bookings = Booking.objects.all().filter(schedule__soundman=soundman)
+    if request.method == "POST":
+       bookings = Booking.objects.all().filter(schedule__soundman=soundman)
+       date = request.POST['date']
+       print(date)
+       act_bookings = []
+       for schedule in schedules:
+           for booking in bookings:
+               if schedule == booking.schedule:
+                   if booking.is_active == 1:
+                       print("есть занятая бронь на это расписание")
+                       act_bookings.append(booking)
+       context = {
+           'soundman': soundman,
+           'schedules': schedules,
+           'bookings': bookings,
+           'active_bookings': act_bookings
+       }
+       return render(request, 'bookings/show_schedule.html', context)
+    elif request.method == "GET":
+        context = {
+            'schedule':schedules
+        }
+        return render(request,'bookings/show_calendar.html',context)
 
-    act_bookings = []
-    for schedule in schedules:
-        for booking in bookings:
-            if schedule == booking.schedule:
-                if booking.is_active == 1:
-                    print("есть занятая бронь на это расписание")
-                    act_bookings.append(booking)
-    context = {
-        'soundman': soundman,
-        'schedules': schedules,
-        'bookings': bookings,
-        'active_bookings': act_bookings
-    }
-    return render(request, 'bookings/show_schedule.html', context)
 
 
 # def show_soundman_schedule(request, soundman_id):
