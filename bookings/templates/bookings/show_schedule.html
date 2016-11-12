@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<h1>Расписание звукорежиссера {{ soundman.username }}</h1>
-{% for schedule in schedules %}
+<h1>Расписание звукорежиссера {{ soundman.username }} на {{ date }}</h1>
+{% for schedule in today_schedule %}
     <b>День недели: {{ schedule.get_working_day_display }}</b>
     <br>
     start: {{ schedule.start_of_the_day.isoformat }}
@@ -9,7 +9,7 @@
     <br>
 {% endfor %}
 
-<h2>Брони, которые активны и относятся к звукорежиссеру</h2>
+<h2>Активные брони на сегодня</h2>
 {% for act in active_bookings %}
     <b>Номер брони: </b> {{ act.id }}
     <br>

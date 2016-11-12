@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-
+from django.utils.dateparse import parse_date
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -96,20 +96,29 @@ def show_schedule(request, soundman_id):
     schedules = Schedule.objects.all().filter(soundman=soundman)
     if request.method == "POST":
         bookings = Booking.objects.all().filter(schedule__soundman=soundman)
-        date = request.POST['date']
-        print(date)
+        datestr = request.POST['date']
+        print(datestr)
         act_bookings = []
+        today_schedule = []
+        date = parse_date(datestr)
+        print(date)
         for schedule in schedules:
+            if date.isoweekday()==schedule.working_day:
+                print(schedule)
+                today_schedule.append(schedule)
             for booking in bookings:
                 if schedule == booking.schedule:
                     if booking.is_active == 1:
-                        print("есть занятая бронь на это расписание")
-                        act_bookings.append(booking)
+                        if booking.date == date:
+                            print("имеется бронь на эту дату")
+                            act_bookings.append(booking)
         context = {
             'soundman': soundman,
             'schedules': schedules,
             'bookings': bookings,
-            'active_bookings': act_bookings
+            'active_bookings': act_bookings,
+            'date':date,
+            'today_schedule': today_schedule
         }
         return render(request, 'bookings/show_schedule.html', context)
     elif request.method == "GET":
