@@ -8,4 +8,10 @@ urlpatterns = [
     url(r'^step_1', views.show_soundmans, name='step_1'),
     url(r'^step_2/(?P<soundman_id>[0-9]+)/$', views.show_schedule, name='step_2'),
 
+
+    url(r'^records$', views.CurrentRecordsView.get, name='current_records_of_soundman'),
+    url(r'^records/(?P<booking_id>[0-9]+)/$', views.RecordView.details, name='start_record'),
+    url(r'^records/(?P<booking_id>[0-9]+)/start', views.RecordView.start_record_method),
+    url(r'^records/(?P<booking_id>[0-9]+)/stop', views.RecordView.stop_record_method),
+
 ]

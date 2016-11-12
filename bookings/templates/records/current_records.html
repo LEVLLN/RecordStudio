@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current records</title>
+</head>
+<body>
+<form action="GET">
+    {% csrf_token %}
+    {% if bookings%}
+        {% for booking in bookings %}
+            <li><a href="{% url 'start_record' booking.id%}"> {{ booking.user }}</a></li>
+        {% endfor %}
+
+
+    {% else %}
+        {{ nobookings }}
+    {% endif %}
+</form>
+
+</body>
+</html>

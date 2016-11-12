@@ -1,10 +1,11 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, render_to_response, redirect
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
+from django.views import View
 from pytimeparse.timeparse import timeparse
 
 from bookings.models import Booking, Schedule, Record
@@ -94,29 +95,28 @@ def show_schedule(request, soundman_id):
     soundman = get_object_or_404(User, id=soundman_id)
     schedules = Schedule.objects.all().filter(soundman=soundman)
     if request.method == "POST":
-       bookings = Booking.objects.all().filter(schedule__soundman=soundman)
-       date = request.POST['date']
-       print(date)
-       act_bookings = []
-       for schedule in schedules:
-           for booking in bookings:
-               if schedule == booking.schedule:
-                   if booking.is_active == 1:
-                       print("есть занятая бронь на это расписание")
-                       act_bookings.append(booking)
-       context = {
-           'soundman': soundman,
-           'schedules': schedules,
-           'bookings': bookings,
-           'active_bookings': act_bookings
-       }
-       return render(request, 'bookings/show_schedule.html', context)
+        bookings = Booking.objects.all().filter(schedule__soundman=soundman)
+        date = request.POST['date']
+        print(date)
+        act_bookings = []
+        for schedule in schedules:
+            for booking in bookings:
+                if schedule == booking.schedule:
+                    if booking.is_active == 1:
+                        print("есть занятая бронь на это расписание")
+                        act_bookings.append(booking)
+        context = {
+            'soundman': soundman,
+            'schedules': schedules,
+            'bookings': bookings,
+            'active_bookings': act_bookings
+        }
+        return render(request, 'bookings/show_schedule.html', context)
     elif request.method == "GET":
         context = {
-            'schedule':schedules
+            'schedule': schedules
         }
-        return render(request,'bookings/show_calendar.html',context)
-
+        return render(request, 'bookings/show_calendar.html', context)
 
 
 # def show_soundman_schedule(request, soundman_id):
@@ -164,40 +164,53 @@ def show_schedule(request, soundman_id):
 #         print("непонятный список слотов:",slots)
 #     return render(request, "bookings/show_schedule.html", context)
 
+class CurrentRecordsView:
+    def get(self):
+        args = {}
+        args.update(csrf(self))
+        soundman = self.user
+        try:
+            args['bookings'] = Booking.objects.all().filter(schedule__soundman=soundman)
+            return render_to_response('records/current_records.html', args)
+        except ObjectDoesNotExist:
+            args['nobookings'] = "You have no customers who booked"
+            return render_to_response('records/current_records.html', args)
+
 
 class RecordView:
-    @staticmethod
-    def start_record(request):
-        if request.POST:
+    def details(self, booking_id):
+        return render(self, "records/user_record_page.html")
+
+    def start_record_method(self, booking_id):
+        if self.POST:
             args = {}
-            args.update(csrf(request))
+            args.update(csrf(self))
             # reservationId = request.POST['id']
             try:
 
-                if not Record.objects.get(reservation_id=1).start_record is None:
+                if not Record.objects.get(reservation_id=booking_id).start_record is None:
                     args['againClicked'] = "Record is already started"
-                    return render(request, "soundman/soundman_page.html", args)
+                    return render(self, "records/user_record_page.html", args)
 
             except ObjectDoesNotExist:
-                _new_record = Record(reservation_id=1, start_record=datetime.now(timezone.utc))
+                _new_record = Record(reservation_id=booking_id, start_record=datetime.now(timezone.utc))
                 _new_record.save()
 
-                _reservation = Booking.objects.get(pk=1)
+                _reservation = Booking.objects.get(pk=booking_id)
                 _reservation.is_active = 2
                 _reservation.save()
                 args['againClicked'] = "Record is starting"
-                return render(request, "soundman/soundman_page.html", args)
+                return render(self, "records/user_record_page.html", args)
 
         return redirect('/accounts/my_profile')
 
-    @staticmethod
-    def stop_record(request):
-        if request.POST:
+    def stop_record_method(self, booking_id):
+        if self.POST:
             args = {}
-            args.update(csrf(request))
+            args.update(csrf(self))
 
-            if Record.objects.get(reservation_id=1).stop_record is None:
-                _new_record = Record.objects.get(reservation_id=1)
+            if Record.objects.get(reservation_id=booking_id).stop_record is None:
+                _new_record = Record.objects.get(reservation_id=booking_id)
                 _new_record.stop_record = datetime.now(timezone.utc)
 
                 # duration is in minutes
@@ -211,10 +224,14 @@ class RecordView:
 
                 _new_record.save()
 
+                _reservation = Booking.objects.get(pk=booking_id)
+                _reservation.is_active = 3
+                _reservation.save()
+
                 args['againStopped'] = "Record is stopping"
-                return render(request, "soundman/soundman_page.html", args)
+                return render(self, "records/user_record_page.html", args)
 
             args['againStopped'] = "Record is already stopped"
-            return render(request, "soundman/soundman_page.html", args)
+            return render(self, "records/user_record_page.html", args)
 
         return redirect('/accounts/my_profile')
