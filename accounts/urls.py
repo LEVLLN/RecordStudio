@@ -1,6 +1,6 @@
 from django.conf.urls import url
+
 from accounts import views
-from bookings import views as booking_views
 
 urlpatterns = [
     url(r'^login', views.AuthenticationView.as_view(), name='login'),
@@ -12,6 +12,7 @@ urlpatterns = [
 
     url(r'^forget', views.ForgetPasswordView.as_view(), name='forget'),
     url(r'^confirm', views.ConfirmView.as_view(), name='confirmation'),
+    url(r'^resend', views.ConfirmView.resend_email, name='resend'),
 
     
 ]

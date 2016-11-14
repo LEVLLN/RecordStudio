@@ -17,7 +17,7 @@ from django.http import Http404
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
-from emailer.views import send_welcome_mail, send_forget_mail
+from emailer.views import send_welcome_mail, send_forget_mail, resend_email
 
 
 class ForgetPasswordView(View):
@@ -184,6 +184,20 @@ class ConfirmView(View):
         except ObjectDoesNotExist:
             args['fail'] = "No hash code like this"
             return render_to_response('accounts/confirm.html', args)
+
+    @staticmethod
+    def resend_email(request):
+        username = request.GET['username']
+        user = User.objects.get(username=username)
+        SecretHashCode(user_id=user.pk,
+                       hashcode=''.join(
+                           random.choice(string.ascii_uppercase + string.digits) for _ in range(12)),
+                       expired_date=datetime.now(timezone.utc) + timedelta(minutes=60)
+                       ).save()
+        email = user.email
+        hash_code = user.hashcode
+
+        return resend_email(username, email, hash_code)
 
 
 class PasswordChangeView(View):

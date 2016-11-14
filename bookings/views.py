@@ -179,7 +179,7 @@ class CurrentRecordsView:
         args.update(csrf(self))
         soundman = self.user
         try:
-            args['bookings'] = Booking.objects.all().filter(schedule__soundman=soundman)
+            args['bookings'] = Booking.objects.all().filter(schedule__soundman=soundman, date=datetime.now().date())
             return render_to_response('records/current_records.html', args)
         except ObjectDoesNotExist:
             args['nobookings'] = "You have no customers who booked"
