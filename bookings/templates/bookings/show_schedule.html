@@ -1,5 +1,11 @@
 <!DOCTYPE html>
+
+
+{% if schedules %}
 <h1>Расписание звукорежиссера {{ soundman.username }} на {{ date }}</h1>
+
+
+
 {% for schedule in today_schedule %}
     <b>День недели: {{ schedule.get_working_day_display }}</b>
     <br>
@@ -8,7 +14,10 @@
     end: {{ schedule.end_of_the_day.isoformat }}
     <br>
 {% endfor %}
-
+    {% else %}
+    <h1>На сегодняшнюю дату не установлено расписания</h1>
+{% endif %}
+{% if active_bookings %}
 <h2>Активные брони на сегодня</h2>
 {% for act in active_bookings %}
     <b>Номер брони: </b> {{ act.id }}
@@ -24,7 +33,10 @@
     Состояние брони: {{ act.get_is_active_display }}
     <br>
 {% endfor %}
-
+    {% else %}
+    <h5>Не имеется активных броней на сегодняшний день</h5>
+{% endif %}
+{% if bookings %}
 <h1>Все брони к звукорежиссеру</h1>
 
 {% for booking in bookings %}
@@ -43,4 +55,6 @@
     <br>
     <br>
 {% endfor %}
-
+    {% else %}
+    <h5>Не имеется броней к данному звукорежиссеру</h5>
+{% endif %}
