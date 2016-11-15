@@ -58,3 +58,19 @@
     {% else %}
     <h5>Не имеется броней к данному звукорежиссеру</h5>
 {% endif %}
+<form action='create_booking' method='post'>
+    {% csrf_token %}
+<pre>
+    <label for="start">Start</label>
+    <input type="time" name="start" value="" id="start">
+</pre>
+<pre>
+    <label for="end">End</label>
+    <input type="time"  name="end" value="" id="end">
+  <label for="date"></label><input type="text" name="date" value="{{ date }}" id="date" hidden="hidden">
+</pre>
+      <pre>
+      <input type="submit" value="create_booking" />
+</pre>
+
+</form>
