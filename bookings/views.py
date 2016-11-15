@@ -102,32 +102,43 @@ def show_schedule(request, soundman_id):
         today_schedule = []
         date = parse_date(datestr)
         print(date)
-        for schedule in schedules:
-            if date.isoweekday()==schedule.working_day:
-                print(schedule)
-                today_schedule.append(schedule)
-            for booking in bookings:
-                if schedule == booking.schedule:
-                    if booking.is_active == 1:
-                        if booking.date == date:
-                            print("имеется бронь на эту дату")
-                            act_bookings.append(booking)
-        context = {
-            'soundman': soundman,
-            'schedules': schedules,
-            'bookings': bookings,
-            'active_bookings': act_bookings,
-            'date':date,
-            'today_schedule': today_schedule
-        }
-        return render(request, 'bookings/show_schedule.html', context)
+
+        if date is not None:
+          for schedule in schedules:
+              if date.isoweekday()==schedule.working_day:
+                  print(schedule)
+                  today_schedule.append(schedule)
+              for booking in bookings:
+                  if schedule == booking.schedule:
+                      if booking.is_active == 1:
+                          if booking.date == date:
+                              print("имеется бронь на эту дату")
+                              act_bookings.append(booking)
+          context = {
+              'soundman': soundman,
+              'schedules': schedules,
+              'bookings': bookings,
+              'active_bookings': act_bookings,
+              'date':date,
+              'today_schedule': today_schedule
+          }
+          return render(request, 'bookings/show_schedule.html', context)
+        else:
+            return render(request,'accounts/http404.html')
     elif request.method == "GET":
         context = {
             'schedule': schedules
         }
         return render(request, 'bookings/show_calendar.html', context)
 
-
+def create_booking(request):
+    args = {}
+    args.update(csrf(request))
+    if request.method == "POST":
+        start = request.POST['start']
+        end = request.POST['end']
+        date = request.POST['date']
+    return render(request,'bookings/create_booking.html')
 # def show_soundman_schedule(request, soundman_id):
 #  soundman = get_object_or_404(User, id=soundman_id)
 #     print(soundman)
