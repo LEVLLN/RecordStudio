@@ -89,6 +89,10 @@ def show_soundmans(request):
     return render(request, "bookings/show_soundmans.html", context)
 
 
+def show_calendar(request,soundman_id):
+        return render(request, 'bookings/show_calendar.html')
+
+
 def show_schedule(request, soundman_id):
     args = {}
     args.update(csrf(request))
@@ -122,23 +126,36 @@ def show_schedule(request, soundman_id):
               'date':date,
               'today_schedule': today_schedule
           }
+
           return render(request, 'bookings/show_schedule.html', context)
         else:
             return render(request,'accounts/http404.html')
-    elif request.method == "GET":
-        context = {
-            'schedule': schedules
-        }
-        return render(request, 'bookings/show_calendar.html', context)
 
-def create_booking(request):
+
+def create_booking(request,soundman_id):
     args = {}
     args.update(csrf(request))
-    if request.method == "POST":
+    new_booking=[]
+    soundman = get_object_or_404(User, id=soundman_id)
+    if request.method=="POST":
         start = request.POST['start']
         end = request.POST['end']
-        date = request.POST['date']
-    return render(request,'bookings/create_booking.html')
+        datestr = request.POST['date']
+        date = parse_date(datestr)
+        print(datestr)
+        print(date)
+
+        schedule = Schedule.objects.all().filter(soundman=soundman,working_day=date.isoweekday()).first()
+        user = request.user
+        new_booking = Booking(user=user, start=start,end=end, is_active=1,date=date,
+                              schedule=schedule)
+        new_booking.save()
+        print(new_booking.start)
+
+        if new_booking is not None:
+            return render(request,'bookings/show_result.html',{'new_booking':new_booking})
+        else:
+            return render(request,'accounts/http404.html')
 # def show_soundman_schedule(request, soundman_id):
 #  soundman = get_object_or_404(User, id=soundman_id)
 #     print(soundman)

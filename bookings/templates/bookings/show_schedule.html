@@ -34,7 +34,7 @@
     <br>
 {% endfor %}
     {% else %}
-    <h5>Не имеется активных броней на сегодняшний день</h5>
+    <h2>Не имеется активных броней на сегодняшний день</h2>
 {% endif %}
 {% if bookings %}
 <h1>Все брони к звукорежиссеру</h1>
@@ -58,7 +58,8 @@
     {% else %}
     <h5>Не имеется броней к данному звукорежиссеру</h5>
 {% endif %}
-<form action='create_booking' method='post'>
+{% if schedules %}
+<form action='show' method='post'>
     {% csrf_token %}
 <pre>
     <label for="start">Start</label>
@@ -67,10 +68,14 @@
 <pre>
     <label for="end">End</label>
     <input type="time"  name="end" value="" id="end">
-  <label for="date"></label><input type="text" name="date" value="{{ date }}" id="date" hidden="hidden">
+  <label for="date"></label>
+    <input type="text" onloadstart="{{ date.isocalendar }}" name="date" value="{{ date.isoformat }}"  hidden="hidden" id="date">
 </pre>
       <pre>
       <input type="submit" value="create_booking" />
 </pre>
 
 </form>
+    {% else %}
+    <h4>Вы не можете создать запись</h4>
+{% endif %}
