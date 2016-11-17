@@ -71,8 +71,8 @@
 		height: 50px;
 	}
 	.nav > li > a {
-    font-size: 14px !important;
-}
+		font-size: 14px !important;
+	}
 }
 
 
@@ -347,7 +347,7 @@ img.pull-left {
 }
 
 .whyus .image-box	img {
-  border-radius: 130px;
+	border-radius: 130px;
 	/*margin-top: 40px;*/
 	margin: 40px;
 }
@@ -379,7 +379,7 @@ img.pull-left {
 	position: absolute;
 }
 i.fa.fa-check {
-    color: #C83939;
+	color: #C83939;
 }
 .whyus .text {
 	text-align: justify;
@@ -390,7 +390,7 @@ i.fa.fa-check {
 	font-size: 14px;
 }
 .two-column {
-  margin-top: 50px;
+	margin-top: 50px;
 	padding-bottom: 40px;
 }
 .about-section .two-column .image-caption{
@@ -444,16 +444,16 @@ i.fa.fa-check {
 	line-height:1.8em;
 }
 .three-column-boxed {
-    margin-top: 30px;
+	margin-top: 30px;
 }
 i.fa.fa-diamond.fa-3x, i.fa.fa-eye.fa-3x,
 i.fa.fa-bullseye.fa-3x {
-    color: #C83939;
+	color: #C83939;
 }
 /***
 
 ====================================================================
-	Team Style One
+Team Style One
 ====================================================================
 
 ***/
@@ -536,7 +536,7 @@ i.fa.fa-bullseye.fa-3x {
 	color:#C83939;
 }
 section.team-style-one.altered {
-    padding-bottom: 0px;
+	padding-bottom: 0px;
 }
 .avatar img {
 	margin: 2px;

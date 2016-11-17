@@ -20,58 +20,41 @@
       <li class="active">Бронирование Шаг - 2</li>
     </ol>
     <div class="row">
-        <header class="page-header">
-          <h1 class="page-title">Показ расписания звукорежиссера</h1>
-        </header>
-          <div class="col-md-6 show_schedule">
-            <form action="create" method="post">
-              {% csrf_token %}
-              <div class="top-margin">
-                <label>Выберите дату<span class="text-danger">*</span></label>
-                <div id="datepicker"></div>
-                <input name="date" type="text" class="form-control" id="calendar-input" required>
-                </div>
-                <div class="col-lg-12 text-left nopadding">
-                  <button class="btn btn-action" type="submit">Показать расписание</button>
-                </div>
-              </div>
-            </form>
+      <header class="page-header">
+        <h1 class="page-title">Показ расписания звукорежиссера</h1>
+      </header>
+      <div class="col-md-6 show_schedule">
+        <form action="create" method="post">
+          {% csrf_token %}
+          <div class="top-margin">
+            <label>Выберите дату<span class="text-danger">*</span></label>
+            <div id="datepicker"></div>
+            <input name="date" type="text" class="form-control" id="calendar-input" required>
           </div>
-
+          <div class="col-lg-12 text-left nopadding">
+            <button class="btn btn-action" type="submit">Показать расписание</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-  {% endblock %}
+</div>
+{% endblock %}
 </body>
 {% block custom_scripts %}
 <script type="text/javascript">
 $('#datepicker').datepicker({
-    format: "yyyy-mm-dd",
-    language: "ru",
-    autoclose: true,
-    todayHighlight: true,
-    defaultDate: new Date()
+  format: "yyyy-mm-dd",
+  language: "ru",
+  autoclose: true,
+  todayHighlight: true,
+  defaultDate: new Date()
 });
 $('#datepicker').on("changeDate", function() {
-    $('#calendar-input').val(
-        $('#datepicker').datepicker('getFormattedDate')
-    );
+  $('#calendar-input').val(
+    $('#datepicker').datepicker('getFormattedDate')
+  );
 });
 </script>
 {% endblock %}
 </html> -->
-
-
-<!-- <!DOCTYPE html>
-{{ soundman.id }}
-<form action='create' method='post'>
-{% csrf_token %}
-<pre>
-<label for="date">Введите дату расписания</label>
-<input type="date" name="date" value="" id="date">
-</pre>
-
-<pre>
-<input type="submit" value="show_schedule" />
-</pre>
-
-</form> -->

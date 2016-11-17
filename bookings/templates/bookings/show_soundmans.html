@@ -19,7 +19,7 @@
       <li><a href="/">Главная</a></li>
       <li class="active">Бронирование Шаг - 1</li>
     </ol>
-      <br>
+    <br>
     <div class="row">
       <header class="page-header">
         <h1 class="page-title">Выберите звукорежиссера</h1>
@@ -27,16 +27,14 @@
       {% for soundman in soundmans %}
       <div class="soundmans-list col-md-6 col-sm-12 col-lg-6">
         <div class="soundman-square">
-            <div class="avatar">
-              <a href="{% url 'step_2' soundman.id%}"><img src="{% static 'images/avatars/soundmans/default.png' %}" alt="">
+          <div class="avatar">
+            <a href="{% url 'step_2' soundman.id%}"><img src="{% static 'images/avatars/soundmans/default.png' %}" alt="">
               <h4>{{ soundman.username }}</h4>
-              </a>
-            </div>
-
+            </a>
+          </div>
         </div>
       </div>
       {% endfor %}
-
     </div>
   </div>
   {% endblock %}
