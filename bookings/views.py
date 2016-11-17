@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from django.utils.dateparse import parse_date
+from django.utils.dateparse import parse_time
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -89,8 +90,8 @@ def show_soundmans(request):
     return render(request, "bookings/show_soundmans.html", context)
 
 
-def show_calendar(request,soundman_id):
-        return render(request, 'bookings/show_calendar.html')
+def show_calendar(request, soundman_id):
+    return render(request, 'bookings/show_calendar.html')
 
 
 def show_schedule(request, soundman_id):
@@ -108,54 +109,59 @@ def show_schedule(request, soundman_id):
         print(date)
 
         if date is not None:
-          for schedule in schedules:
-              if date.isoweekday()==schedule.working_day:
-                  print(schedule)
-                  today_schedule.append(schedule)
-              for booking in bookings:
-                  if schedule == booking.schedule:
-                      if booking.is_active == 1:
-                          if booking.date == date:
-                              print("имеется бронь на эту дату")
-                              act_bookings.append(booking)
-          context = {
-              'soundman': soundman,
-              'schedules': schedules,
-              'bookings': bookings,
-              'active_bookings': act_bookings,
-              'date':date,
-              'today_schedule': today_schedule
-          }
+            for schedule in schedules:
+                if date.isoweekday() == schedule.working_day:
+                    print(schedule)
+                    today_schedule.append(schedule)
+                for booking in bookings:
+                    if schedule == booking.schedule:
+                        if booking.is_active == 1:
+                            if booking.date == date:
+                                print("имеется бронь на эту дату")
+                                act_bookings.append(booking)
+            context = {
+                'soundman': soundman,
+                'schedules': schedules,
+                'bookings': bookings,
+                'active_bookings': act_bookings,
+                'date': date,
+                'today_schedule': today_schedule
+            }
 
-          return render(request, 'bookings/show_schedule.html', context)
+            return render(request, 'bookings/show_schedule.html', context)
         else:
-            return render(request,'accounts/http404.html')
+            return render(request, 'accounts/http404.html')
 
 
-def create_booking(request,soundman_id):
+def create_booking(request, soundman_id):
     args = {}
     args.update(csrf(request))
-    new_booking=[]
+    new_booking = []
     soundman = get_object_or_404(User, id=soundman_id)
-    if request.method=="POST":
+    if request.method == "POST":
         start = request.POST['start']
         end = request.POST['end']
         datestr = request.POST['date']
         date = parse_date(datestr)
-        print(datestr)
-        print(date)
-
-        schedule = Schedule.objects.all().filter(soundman=soundman,working_day=date.isoweekday()).first()
+        schedule = Schedule.objects.all().filter(soundman=soundman, working_day=date.isoweekday()).first()
         user = request.user
-        new_booking = Booking(user=user, start=start,end=end, is_active=1,date=date,
-                              schedule=schedule)
-        new_booking.save()
-        print(new_booking.start)
+        bookings = Booking.objects.all().filter(date=date,schedule=schedule)   # Лист всех активных броней на текущую дату
 
-        if new_booking is not None:
-            return render(request,'bookings/show_result.html',{'new_booking':new_booking})
+
+        new_booking = Booking(user=user, start=start, end=end, is_active=1, date=date,
+                              schedule=schedule)
+        if parse_time(start) < schedule.start_of_the_day or parse_time(end) > schedule.end_of_the_day:
+            # for books in bookings:
+            # ToDo: Надо сделать проверку в цикле времен создаваемой брони с временами активных броней других пользователей
+            new_booking = None
         else:
-            return render(request,'accounts/http404.html')
+            new_booking.save()
+
+
+        return render(request, 'bookings/show_result.html', {'new_booking': new_booking})
+
+
+
 # def show_soundman_schedule(request, soundman_id):
 #  soundman = get_object_or_404(User, id=soundman_id)
 #     print(soundman)

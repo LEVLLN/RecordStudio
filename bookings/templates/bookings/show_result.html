@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-
+{% if new_booking %}
 <h1>ИНФОРМАЦИЯ О БРОНИ: </h1>
 <h3>Бронь пользователя: {{ new_booking.user.username }} к звукорежиссеру: {{ new_booking.schedule.soundman.username }}</h3>
 <h3>Бронь на дату: {{ new_booking.date }} ({{ new_booking.date.isoweekday }})</h3>
 <h3>Время начала записи: {{ new_booking.start }}</h3>
 <h3>Время конца записи: {{ new_booking.end}}</h3>
 <h3>Состояние брони: {{ new_booking.get_is_active_display }}</h3>
+{% else %}
+    <h1>Бронь не создана по ряду причин:</h1>
+    <li>Вы задали время,которое не совпадает с расписанием звукорежиссера</li>
+    <li>Вы задали время, которое уже занято другой бронью</li>
+{% endif %}
