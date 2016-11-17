@@ -538,6 +538,54 @@ i.fa.fa-bullseye.fa-3x {
 section.team-style-one.altered {
     padding-bottom: 0px;
 }
-.avatar img{
+.avatar img {
+	margin: 2px;
 	height: 9em;
+}
+
+.soundmans-list {
+	margin-bottom: 20px;
+}
+
+.soundmans-list .avatar img {
+	height: 220px;
+}
+
+.soundmans-list .avatar img:hover {
+	height: 223px;
+}
+
+.soundman-square {
+	height: 260px;
+	width: 260px;
+	margin: 0 auto;
+	text-align: center;
+}
+.soundmans-list h4 {
+	text-transform: uppercase;
+	font-size: 18px;
+}
+
+.soundmans-list a {
+	text-decoration: none;
+	color: #000;
+}
+.soundmans-list a:hover {
+	text-decoration: none;
+	color: #c83939;
+}
+
+.show_schedule button {
+	margin-top:10px;
+}
+
+.nopadding {
+	padding: 0;
+}
+.nomargin {
+	margin: 0;
+}
+
+#calendar-input {
+	display: none;
 }

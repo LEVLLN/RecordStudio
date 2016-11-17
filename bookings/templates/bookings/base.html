@@ -12,10 +12,13 @@
   <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}">
 
   <!-- Custom styles for our template -->
   <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}" media="screen" >
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -144,11 +147,14 @@
 
 
       <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-      <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+      <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+      <script src="{% static 'js/bootstrap-datepicker.ru.min.js' %}"></script>
       <script src="{% static 'js/headroom.min.js' %}"></script>
       <script src="{% static 'js/jQuery.headroom.min.js' %}"></script>
       <script src="{% static 'js/template.js' %}"></script>
       <script src="{% static 'js/validate.js' %}"></script>
+      {% block custom_scripts %}
+      {% endblock %}
     </body>
     </html>

@@ -1,7 +1,44 @@
-<!DOCTYPE html>
-{% for soundman in soundmans %}
-<h5><a href="{% url 'step_2' soundman.id%}">{{ soundman.username }}</a></h5>
-<br>Тут может быть фотография Звукорежиссера </br>
-<br>Тут может быть перечень его рабочих дней в минимизации</br>
+{% extends "bookings/base.html" %}
+{% load staticfiles %}
+</html>
+<html>
+<head>
+  {% block title %}<title>RS | Бронирование</title> {% endblock %}
+</head>
+<body>
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li><a href="/about/">О студии</a></li>
+  <li class="active"><a href="/step_1">Бронь записи</a></li>
+  {% endblock %}
+  {% block login-container %}
+  <header id="head" class="secondary"></header>
+  <!-- container -->
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">Главная</a></li>
+      <li class="active">Бронирование Шаг - 1</li>
+    </ol>
+      <br>
+    <div class="row">
+      <header class="page-header">
+        <h1 class="page-title">Выберите звукорежиссера</h1>
+      </header>
+      {% for soundman in soundmans %}
+      <div class="soundmans-list col-md-6 col-sm-12 col-lg-6">
+        <div class="soundman-square">
+            <div class="avatar">
+              <a href="{% url 'step_2' soundman.id%}"><img src="{% static 'images/avatars/soundmans/default.png' %}" alt="">
+              <h4>{{ soundman.username }}</h4>
+              </a>
+            </div>
 
-{% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+  {% endblock %}
+</body>
+</html>
