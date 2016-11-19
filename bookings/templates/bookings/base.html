@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-clockpicker.min.css' %}">
 
   <!-- Custom styles for our template -->
   <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}" media="screen" >
@@ -68,6 +69,8 @@
     {% block intro %}
     {% endblock %}
     {% block login-container %}
+    {% endblock %}
+    {% block univ-container %}
     {% endblock %}
     {% block about-container %}
     {% endblock %}
@@ -144,12 +147,11 @@
 
       </footer>
 
-
-
       <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
       <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
       <script src="{% static 'js/bootstrap-datepicker.ru.min.js' %}"></script>
+      <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
       <script src="{% static 'js/headroom.min.js' %}"></script>
       <script src="{% static 'js/jQuery.headroom.min.js' %}"></script>
       <script src="{% static 'js/template.js' %}"></script>

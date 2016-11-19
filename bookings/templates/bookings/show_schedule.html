@@ -1,60 +1,100 @@
-<!DOCTYPE html>
+{% extends "bookings/base.html" %}
+{% load staticfiles %}
+</html>
+<html>
+<head>
+  {% block title %}<title>RS | Бронирование</title> {% endblock %}
+</head>
+<body>
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li><a href="/about/">О студии</a></li>
+  <li class="active"><a href="/step_1">Бронь записи</a></li>
+  {% endblock %}
+  {% block univ-container %}
+  <header id="head" class="secondary"></header>
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">Главная</a></li>
+      <li class="active">Бронирование</li>
+    </ol>
+    {% if today_schedule %}
+    <div class="row">
+      <header class="page-header">
+        <h1 class="page-title">Расписание звукорежиссера {{ soundman.username }} на {{ date }}</h1>
+      </header>
 
+      <div class="col-md-6 show_schedule">
+        {% for schedule in today_schedule %}
+        <p><b>День недели:</b> {{ schedule.get_working_day_display }}</p>
+        <p><b>Начало:</b> {{ schedule.start_of_the_day.isoformat }}</p>
+        <p><b>Конец:</b> {{ schedule.end_of_the_day.isoformat }}</p>
+        {% endfor %}
+      </div>
+      <div class="col-md-6 show_schedule">
+        <form action="show" method="post">
+          {% csrf_token %}
+          <label for="start">Начало записи</label>
+          <div class="input-group clockpicker" data-align="top" data-autoclose="true">
+            <input type="text" name="start" class="form-control" value="00:00">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
+          </div>
+          <input type="text" onloadstart="{{ date.isocalendar }}" name="date" value="{{ date.isoformat }}"  hidden="hidden" id="date">
+          <label for="end">Конец записи</label>
+          <div class="input-group clockpicker" data-align="top" data-autoclose="true">
+            <input type="text" name="end" class="form-control" value="00:00">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
+          </div>
+          <div class="col-lg-12 text-right nopadding">
+            <button class="btn btn-action" type="submit" value="create_booking">Забронировать</button>
+          </div>
+        </form>
+      </div>
 
-{% if today_schedule %}
-<h1>Расписание звукорежиссера {{ soundman.username }} на {{ date }}</h1>
-
-
-
-{% for schedule in today_schedule %}
-    <b>День недели: {{ schedule.get_working_day_display }}</b>
-    <br>
-    start: {{ schedule.start_of_the_day.isoformat }}
-    <br>
-    end: {{ schedule.end_of_the_day.isoformat }}
-    <br>
-{% endfor %}
+    </div>
     {% else %}
-    <h1>На сегодняшнюю дату не установлено расписания</h1>
-{% endif %}
-{% if active_bookings %}
-<h2>Активные брони на сегодня</h2>
-{% for act in active_bookings %}
-    <b>Номер брони: </b> {{ act.id }}
-    <br>
-    Дата записи: {{ act.date }}
-    <br>
-    День недели: {{ act.date.isoweekday }}
-    <br>
-    Время начала записи: {{ act.start.isoformat }}
-    <br>
-    Время окончания записи: {{ act.end.isoformat }}
-    <br>
-    Состояние брони: {{ act.get_is_active_display }}
-    <br>
-{% endfor %}
+    <div class="row">
+      <header class="page-header">
+        <h1 class="page-title">Расписание звукорежиссера {{ soundman.username }} на {{ date }}</h1>
+      </header>
+      <div class="col-md-6 show_schedule">
+        <p>На сегодняшнюю дату не установлено расписания</p>
+      </div>
+    </div>
+    {% endif %}
+    {% if active_bookings %}
+    <div class="row">
+      <header class="page-header">
+        <h2 class="page-title">Активные брони на сегодня</h2>
+      </header>
+      {% for act in active_bookings %}
+      <div class="col-md-6 show_bookings">
+        <p>Номер брони:  {{ act.id }}</p>
+        <p>Дата записи: {{ act.date }}</p>
+        <p>День недели: {{ act.date.isoweekday }}</p>
+        <p>Время начала записи: {{ act.start.isoformat }}</p>
+        <p>Время окончания записи: {{ act.end.isoformat }}</p>
+        <p>Состояние брони: {{ act.get_is_active_display }}</p>
+        <hr>
+      </div>
+      {% endfor %}
+    </div>
     {% else %}
-    <h2>Не имеется активных броней на сегодняшний день</h2>
-{% endif %}
-
-{% if today_schedule %}
-<form action='show' method='post'>
-    {% csrf_token %}
-<pre>
-    <label for="start">Start</label>
-    <input type="time" name="start" value="" id="start">
-</pre>
-<pre>
-    <label for="end">End</label>
-    <input type="time"  name="end" value="" id="end">
-  <label for="date"></label>
-    <input type="text" onloadstart="{{ date.isocalendar }}" name="date" value="{{ date.isoformat }}"  hidden="hidden" id="date">
-</pre>
-      <pre>
-      <input type="submit" value="create_booking" />
-</pre>
-
-</form>
-    {% else %}
-    <h4>Вы не можете создать запись</h4>
-{% endif %}
+    <header class="page-header">
+      <h2 class="page-title">Не имеется активных броней на сегодняшний день</h2>
+    </header>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+</body>
+{% block custom_scripts %}
+<script type="text/javascript">
+$('.clockpicker').clockpicker();
+</script>
+{% endblock %}
+</html>

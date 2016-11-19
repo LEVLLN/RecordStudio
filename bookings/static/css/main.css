@@ -575,10 +575,16 @@ section.team-style-one.altered {
 	color: #c83939;
 }
 
-.show_schedule button {
+.col-md-6.show_schedule button {
 	margin-top:10px;
 }
+.col-md-6.show_schedule p {
+	font-size: 16px;
+}
 
+.accent {
+	color: #C83939;
+}
 .nopadding {
 	padding: 0;
 }
@@ -588,4 +594,8 @@ section.team-style-one.altered {
 
 #calendar-input {
 	display: none;
+}
+
+hr {
+	border-color: #bfbfbf !important;
 }
