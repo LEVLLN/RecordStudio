@@ -75,6 +75,7 @@ def show_schedule(request, soundman_id):
 def create_booking(request, soundman_id):
     args = {}
     args.update(csrf(request))
+    context = {}
     new_booking = []
     soundman = get_object_or_404(User, id=soundman_id)
     if request.method == "POST":
@@ -84,20 +85,36 @@ def create_booking(request, soundman_id):
         date = parse_date(datestr)
         schedule = Schedule.objects.all().filter(soundman=soundman, working_day=date.isoweekday()).first()
         user = request.user
-        bookings = Booking.objects.all().filter(date=date,schedule=schedule)   # Лист всех активных броней на текущую дату
-
+        bookings = Booking.objects.all().filter(date=date, schedule=schedule,
+                                                is_active=1)  # Лист всех активных броней на текущую дату
 
         new_booking = Booking(user=user, start=start, end=end, is_active=1, date=date,
                               schedule=schedule)
-        if parse_time(start) < schedule.start_of_the_day or parse_time(end) > schedule.end_of_the_day:
-            # for books in bookings:
-            # ToDo: Надо сделать проверку в цикле времен создаваемой брони с временами активных броней других пользователей
-            new_booking = None
-        else:
-            new_booking.save()
+        flag = False
+        for book in bookings:
+            if parse_time(start) >= book.start and parse_time(end) <= book.end:
+                if parse_time(start)>=book.start and parse_time(end)>=book.end:
+                  context['error'] = "На это время имеются брони"
+                  print(book)
+                  return render(request, 'bookings/show_result.html', context)
+    if parse_time(start) < schedule.start_of_the_day or parse_time(end) > schedule.end_of_the_day or parse_time(
+            start) > schedule.end_of_the_day or parse_time(end) < schedule.start_of_the_day:
+        # for books in bookings:
+        # ToDo: Надо сделать проверку в цикле времен создаваемой брони с временами активных броней других пользователей
+        context['error'] = "Вы выбрали время, не совпадающее с временем работы звукорежиссера"
+        print(bookings)
+        return render(request, 'bookings/show_result.html', context)
 
+    elif parse_time(start) > parse_time(end):
+        context['error'] = "Начало записи не может быть позже конца записи"
 
-        return render(request, 'bookings/show_result.html', {'new_booking': new_booking})
+        return render(request, 'bookings/show_result.html', context)
+    else:
+        new_booking.save()
+
+        context['new_booking'] = new_booking
+
+        return render(request, 'bookings/show_result.html', context)
 
 
 class CurrentRecordsView:
