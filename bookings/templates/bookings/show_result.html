@@ -31,16 +31,14 @@
         <p>Состояние брони: {{ new_booking.get_is_active_display }}</p>
       </div>
     </div>
-    {% else %}
+         {% endif %}
+    {% if error %}
     <div class="row">
       <header class="page-header">
-        <h1 class="page-title">Бронь не создана по ряду причин</h1>
+        <h1 class="page-title">{{ error }}</h1>
       </header>
       <div class="col-md-6 show_schedule">
-        <ul>
-          <li>Вы задали время,которое не совпадает с расписанием звукорежиссера</li>
-          <li>Вы задали время, которое уже занято другой бронью</li>
-        </ul>
+
       </div>
     </div>
     {% endif %}
