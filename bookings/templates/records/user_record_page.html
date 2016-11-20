@@ -16,9 +16,10 @@
 
     {%if againClicked%}
         {{ againClicked }}
-    {% endif %}
-    {%if againStopped%}
+    {%elif againStopped%}
         {{ againStopped }}
+        {%elif mal%}
+            {{ mal }}
     {% endif %}
 </form>
 </body>

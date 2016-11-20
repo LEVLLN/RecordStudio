@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta
 from django.utils.dateparse import parse_date
 from django.utils.dateparse import parse_time
 from django.contrib.auth.models import User, Group
@@ -140,12 +140,29 @@ class RecordView:
             args.update(csrf(self))
             # reservationId = request.POST['id']
             try:
+                # Если статус брони = "отменен" / "завершен" то выбросит ошибку
+                if Booking.objects.get(pk=booking_id).is_active == 3 or \
+                                Booking.objects.get(pk=booking_id).is_active == 4:
+                    args['againClicked'] = "Record is canceled or inactive"
+                    return render(self, "records/user_record_page.html", args)
 
+                # Если начало записи уже есть в БД то выбросит сообщение, что запись уже начата
                 if not Record.objects.get(reservation_id=booking_id).start_record is None:
                     args['againClicked'] = "Record is already started"
                     return render(self, "records/user_record_page.html", args)
 
+                # Проверка опоздал ли пользоватеь или нет
+                if (datetime.now(timezone.utc) - Booking.objects.get(pk=booking_id).start) > timedelta(minutes=15):
+                    args['mal'] = "The user is kotakbas"
+                    return render(self, "records/user_record_page.html", args)
+
+
             except ObjectDoesNotExist:
+                # Проверка опоздал ли пользоватеь или нет
+                if datetime.combine(date.min, datetime.now().time()) - datetime.combine(date.min, Booking.objects.get(pk=booking_id).start) > timedelta(minutes=15):
+                    args['mal'] = "The user is kotakbas"
+                    return render(self, "records/user_record_page.html", args)
+
                 _new_record = Record(reservation_id=booking_id, start_record=datetime.now(timezone.utc))
                 _new_record.save()
 
@@ -162,6 +179,7 @@ class RecordView:
             args = {}
             args.update(csrf(self))
 
+            # Если время окончание записи пуста
             if Record.objects.get(reservation_id=booking_id).stop_record is None:
                 _new_record = Record.objects.get(reservation_id=booking_id)
                 _new_record.stop_record = datetime.now(timezone.utc)
@@ -182,6 +200,12 @@ class RecordView:
                 _reservation.save()
 
                 args['againStopped'] = "Record is stopping"
+                return render(self, "records/user_record_page.html", args)
+
+            # Если статус брони = "отменен" / "завершен" то выбросит ошибку
+            if Booking.objects.get(pk=booking_id).is_active == 3 or \
+                            Booking.objects.get(pk=booking_id).is_active == 4:
+                args['againStopped'] = "Record is canceled or inactive"
                 return render(self, "records/user_record_page.html", args)
 
             args['againStopped'] = "Record is already stopped"

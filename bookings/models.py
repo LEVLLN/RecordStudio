@@ -1,10 +1,5 @@
-# Create your models here.
 from django.contrib.auth.models import User
 from django.db import models
-
-
-# Create your models here.
-
 
 
 class Schedule(models.Model):
@@ -42,7 +37,7 @@ class Booking(models.Model):
     schedule = models.ForeignKey(Schedule, related_name='sch_bookings')
 
     def __str__(self):
-        return '%s (%s)' % (self.user.username, self.schedule.soundman.username)
+        return 'User: %s | Soundman: %s' % (self.user.username, self.schedule.soundman.username)
 
 
 class Record(models.Model):
@@ -50,3 +45,6 @@ class Record(models.Model):
     start_record = models.DateTimeField(null=True)
     stop_record = models.DateTimeField(null=True)
     money_back = models.IntegerField(null=True)
+
+    def __str__(self):
+        return 'Record of user "%s"   | Soundman: "%s   | Date: %s"' % (self.reservation.user.username, self.reservation.schedule.soundman.username, self.reservation.date)
