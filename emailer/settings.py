@@ -5,4 +5,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'sbekzatm@gmail.com'
 DEFAULT_FROM_EMAIL = 'sbekzatm@gmail.com'
 SERVER_EMAIL = 'sbekzatm@gmail.com'
-EMAIL_HOST_PASSWORD = '9ib10wy04B'
+EMAIL_HOST_PASSWORD = ''

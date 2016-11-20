@@ -1,7 +1,11 @@
-# extend some base html page and return a message that his/her registration is done / that email is sent in order to recover the password
-
 {% if email_error %}
 {{email_error}}
+{% elif resent %}
+{{resent}}
+{% elif register %}
+{{register}}
+{% elif forget %}
+{{forget}}
+{%else %}
+<h3>The email was sent successfully</h3>
 {% endif %}
-
-else bla bla bla i td i tp

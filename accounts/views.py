@@ -17,7 +17,7 @@ from django.http import Http404
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
-from emailer.views import send_welcome_mail, send_forget_mail, resend_email
+from emailer.views import send_email
 
 
 class ForgetPasswordView(View):
@@ -37,7 +37,8 @@ class ForgetPasswordView(View):
                 user = User.objects.get(email=email)
                 __new_password = self.passGeneratorMethod()
                 user.set_password(__new_password)
-                return send_forget_mail(email, user.username, __new_password)  #
+                return send_email(email=email, username=user.username, password=__new_password)
+
             except ObjectDoesNotExist:
                 args['NoUserFound'] = "Почтовый ящик или логин не найдены."
                 return render_to_response("accounts/forget.html", args)
@@ -49,7 +50,7 @@ class ForgetPasswordView(View):
                 email = user.email
                 __new_password = self.passGeneratorMethod()
                 user.set_password(__new_password)
-                return send_forget_mail(email, username, __new_password)
+                return send_email(email=email, username=user.username, password=__new_password)
             except ObjectDoesNotExist:
                 args['NoUserFound'] = "Почтовый ящик или логин не найдены."
                 return render_to_response("accounts/forget.html", args)
@@ -130,12 +131,12 @@ class RegistrationView(View):
 
                 # auth.login(request, new_user)
                 __new_hash = SecretHashCode.objects.get(user_id=new_user.pk).hashcode
-                return send_welcome_mail(new_user_form.cleaned_data['email'],
-                                         new_user_form.cleaned_data['username'].lower(),
-                                         new_user_form.cleaned_data['password2'],
-                                         new_user_form.cleaned_data['first_name'],
-                                         new_user_form.cleaned_data['last_name'],
-                                         __new_hash)
+                return send_email(email=new_user_form.cleaned_data['email'],
+                                  username=new_user_form.cleaned_data['username'].lower(),
+                                  password=new_user_form.cleaned_data['password2'],
+                                  first_name=new_user_form.cleaned_data['first_name'],
+                                  last_name=new_user_form.cleaned_data['last_name'],
+                                  hash_code=__new_hash)
             else:
                 args['form'] = new_user_form
                 return render_to_response('accounts/register.html', args)
@@ -145,11 +146,13 @@ class RegistrationView(View):
 
 class ConfirmView(View):
     @staticmethod
-    def get(request):  # Пример ссылки для подтверждения
+    def get(request):
         if request.user.is_authenticated():
             raise Http404()
 
+        # Пример ссылки для подтверждения
         # http://127.0.0.1:8000/accounts/confirm?username=hashtest&hash=VAYN76N0VUUQ
+
         args = {}
         args.update(csrf(request))
         username = request.GET['username']
@@ -161,7 +164,7 @@ class ConfirmView(View):
 
             if datetime.now(timezone.utc) > expired_date:
                 args['expired'] = "This Link is expired"
-                args['username'] = username  # Реализовать переотправку имейла
+                args['username'] = username
                 return render_to_response('accounts/confirm.html', args)
 
             # Выбросит ошибку, если хеш код не совпадает хешу пользователя
@@ -196,8 +199,7 @@ class ConfirmView(View):
                        ).save()
         email = user.email
         hash_code = user.hashcode
-
-        return resend_email(username, email, hash_code)
+        return send_email(username=username, email=email, hash_code=hash_code)
 
 
 class PasswordChangeView(View):
@@ -207,7 +209,7 @@ class PasswordChangeView(View):
             args = {}
             args.update(csrf(request))
             return render_to_response("accounts/settings.html", args)
-        raise Http404()
+        return render(request, 'accounts/http404.html')
 
     @staticmethod
     def post(request):
