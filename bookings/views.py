@@ -92,17 +92,32 @@ def create_booking(request, soundman_id):
                               schedule=schedule)
         flag = False
         for book in bookings:
-            if parse_time(start) >= book.start and parse_time(end) <= book.end:
-                if parse_time(start)>=book.start and parse_time(end)>=book.end:
-                  context['error'] = "На это время имеются брони"
-                  print(book)
-                  return render(request, 'bookings/show_result.html', context)
+            print(flag)
+            if book.start <= parse_time(start) and book.end >= parse_time(end):
+                flag=True
+            if book.start >= parse_time(start) and book.end <= parse_time(end):
+                flag=True
+            if book.start <= parse_time(start) and book.end <= parse_time(end) and book.end >= parse_time(start):
+                flag=True
+            if book.start >= parse_time(start) and book.end >= parse_time(end) and book.start <= parse_time(end):
+                flag=True
+            # if parse_time(start) >= book.start and parse_time(end) <= book.end:
+            #     if parse_time(start)>=book.start and parse_time(end)>=book.end:
+            #       context['error'] = "На это время имеются брони"
+            #       print(book)
+            #       return render(request, 'bookings/show_result.html', context)
+
     if parse_time(start) < schedule.start_of_the_day or parse_time(end) > schedule.end_of_the_day or parse_time(
             start) > schedule.end_of_the_day or parse_time(end) < schedule.start_of_the_day:
         # for books in bookings:
         # ToDo: Надо сделать проверку в цикле времен создаваемой брони с временами активных броней других пользователей
         context['error'] = "Вы выбрали время, не совпадающее с временем работы звукорежиссера"
         print(bookings)
+        return render(request, 'bookings/show_result.html', context)
+
+    elif flag:
+        context['error'] = "На это время имеются брони"
+        print(book)
         return render(request, 'bookings/show_result.html', context)
 
     elif parse_time(start) > parse_time(end):
@@ -115,6 +130,7 @@ def create_booking(request, soundman_id):
         context['new_booking'] = new_booking
 
         return render(request, 'bookings/show_result.html', context)
+
 
 
 class CurrentRecordsView:
