@@ -91,21 +91,25 @@ def create_booking(request, soundman_id):
         new_booking = Booking(user=user, start=start, end=end, is_active=1, date=date,
                               schedule=schedule)
         flag = False
+        start_time = parse_time(start)
+        deltastart = timedelta(hours=start_time.hour, minutes=start_time.minute)
+        end_time = parse_time(end)
+        deltaend = timedelta(hours=end_time.hour, minutes=end_time.minute)
+        print("ДЕЛЬТА СТАРТ", deltastart)
+        print("ДЕЛЬТА КОНЕЦ", deltaend)
+        delta = deltaend - deltastart
+        print("РАЗНИЦА ДЕЛЬТ", delta)
+
         for book in bookings:
             print(flag)
             if book.start <= parse_time(start) and book.end >= parse_time(end):
-                flag=True
+                flag = True
             if book.start >= parse_time(start) and book.end <= parse_time(end):
-                flag=True
+                flag = True
             if book.start <= parse_time(start) and book.end <= parse_time(end) and book.end >= parse_time(start):
-                flag=True
+                flag = True
             if book.start >= parse_time(start) and book.end >= parse_time(end) and book.start <= parse_time(end):
-                flag=True
-            # if parse_time(start) >= book.start and parse_time(end) <= book.end:
-            #     if parse_time(start)>=book.start and parse_time(end)>=book.end:
-            #       context['error'] = "На это время имеются брони"
-            #       print(book)
-            #       return render(request, 'bookings/show_result.html', context)
+                flag = True
 
     if parse_time(start) < schedule.start_of_the_day or parse_time(end) > schedule.end_of_the_day or parse_time(
             start) > schedule.end_of_the_day or parse_time(end) < schedule.start_of_the_day:
@@ -115,22 +119,23 @@ def create_booking(request, soundman_id):
         print(bookings)
         return render(request, 'bookings/show_result.html', context)
 
+    elif delta < timedelta(minutes=30):
+        context['error'] = "Минимальная подолжительность записи 30 минут"
+        return render(request, 'bookings/show_result.html', context)
+
+    elif parse_time(start) >= parse_time(end):
+        context['error'] = "Начало записи не может быть больше или равно концу записи"
+        return render(request, 'bookings/show_result.html', context)
     elif flag:
         context['error'] = "На это время имеются брони"
         print(book)
-        return render(request, 'bookings/show_result.html', context)
-
-    elif parse_time(start) > parse_time(end):
-        context['error'] = "Начало записи не может быть позже конца записи"
-
         return render(request, 'bookings/show_result.html', context)
     else:
         new_booking.save()
 
         context['new_booking'] = new_booking
-
+        context['duration'] = delta
         return render(request, 'bookings/show_result.html', context)
-
 
 
 class CurrentRecordsView:
@@ -175,7 +180,8 @@ class RecordView:
 
             except ObjectDoesNotExist:
                 # Проверка опоздал ли пользоватеь или нет
-                if datetime.combine(date.min, datetime.now().time()) - datetime.combine(date.min, Booking.objects.get(pk=booking_id).start) > timedelta(minutes=15):
+                if datetime.combine(date.min, datetime.now().time()) - datetime.combine(date.min, Booking.objects.get(
+                        pk=booking_id).start) > timedelta(minutes=15):
                     args['mal'] = "The user is kotakbas"
                     return render(self, "records/user_record_page.html", args)
 
