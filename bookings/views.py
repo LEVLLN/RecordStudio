@@ -119,10 +119,6 @@ def create_booking(request, soundman_id):
         print(bookings)
         return render(request, 'bookings/show_result.html', context)
 
-    elif delta < timedelta(minutes=30):
-        context['error'] = "Минимальная подолжительность записи 30 минут"
-        return render(request, 'bookings/show_result.html', context)
-
     elif parse_time(start) >= parse_time(end):
         context['error'] = "Начало записи не может быть больше или равно концу записи"
         return render(request, 'bookings/show_result.html', context)
@@ -130,6 +126,10 @@ def create_booking(request, soundman_id):
         context['error'] = "На это время имеются брони"
         print(book)
         return render(request, 'bookings/show_result.html', context)
+    elif delta < timedelta(minutes=30):
+        context['error'] = "Минимальная подолжительность записи 30 минут"
+        return render(request, 'bookings/show_result.html', context)
+
     else:
         new_booking.save()
 
