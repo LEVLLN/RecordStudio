@@ -7,13 +7,13 @@ class Schedule(models.Model):
     start_of_the_day = models.TimeField()
     end_of_the_day = models.TimeField()
     DAY_OF_WEEK = (
-        (1, "Monday"),
-        (2, "Tuesday"),
-        (3, "Wednesday"),
-        (4, "Thursday"),
-        (5, "Friday"),
-        (6, "Saturday"),
-        (7, "Sunday")
+        (1, "Понедельник"),
+        (2, "Вторник"),
+        (3, "Среда"),
+        (4, "Четверг"),
+        (5, "Пятница"),
+        (6, "Суббота"),
+        (7, "Воскресенье")
 
     )
     working_day = models.IntegerField(choices=DAY_OF_WEEK)
@@ -25,10 +25,11 @@ class Schedule(models.Model):
 class Booking(models.Model):
     user = models.ForeignKey(User, related_name='bookings')
     STATUS = (
-        (1, 'Active'),
-        (2, 'In progress'),
-        (3, 'Inactive'),
-        (4, 'Canceled')
+        (1, 'Активна'),
+        (2, 'В процессе'),
+        (3, 'Неактивна'),
+        (4, 'Отменена'),
+        (5, 'Завершена'),
     )
     is_active = models.IntegerField(choices=STATUS)
     date = models.DateField()

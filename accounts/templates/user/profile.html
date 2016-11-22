@@ -42,14 +42,16 @@
               <th>Дата</th>
               <th>Время</th>
               <th>Звукорежиссер</th>
-              <th>Статус</th>
+              <th>Статус брони</th>
             </tr>
+              {% for booking in bookings %}
             <tr>
-              <td>08.11.2016</td>
-              <td>9:00</td>
-              <td>Dr.Dre</td>
-              <td>Запись успешно завершена</td>
+              <td>{{ booking.date }}</td>
+              <td>{{ booking.start }}</td>
+              <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
+              <td>{{ booking.get_is_active_display }}</td>
             </tr>
+              {% endfor %}
           </table>
         </div>
       </article>

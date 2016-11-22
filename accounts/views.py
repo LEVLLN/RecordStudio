@@ -17,6 +17,7 @@ from django.http import Http404
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
+from bookings.models import Booking
 from emailer.views import send_email
 
 
@@ -93,7 +94,11 @@ class AuthenticationView(View):
         if request.user.groups.filter(name='Soundmans').exists():
             return render(request, "soundman/soundman_page.html")
         if request.user.groups.filter(name='Customers').exists():
-            return render(request, "user/profile.html")
+            user_id = User.objects.get(username=request.user)
+            context = {
+                "bookings": Booking.objects.filter(user=user_id.id),
+            }
+            return render(request, "user/profile.html", context)
         return redirect('/accounts/login')
 
 
