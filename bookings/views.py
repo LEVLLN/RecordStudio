@@ -29,7 +29,7 @@ def show_soundmans(request):
         }
         return render(request, "bookings/show_soundmans.html", context)
     elif not request.user.is_authenticated():
-        return render(request, "accounts/login.html")
+        return redirect("accounts/login")
     else:
         context['error']="Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
         return render(request, "bookings/show_soundmans.html", context)
@@ -80,7 +80,7 @@ def show_schedule(request, soundman_id):
             context['today_schedule']=today_schedule
             return render(request, 'bookings/show_calendar.html', context)
         elif not request.user.is_authenticated():
-            return render(request, 'accounts/login.html')
+            return redirect("accounts/login")
         else:
             context['error']="Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
             return render(request, 'bookings/show_calendar.html', context)
