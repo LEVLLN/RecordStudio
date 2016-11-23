@@ -20,9 +20,9 @@
     </ol>
     <div class="row">
       <header class="page-header">
-        <h1 class="page-title">Показ расписания звукорежиссера</h1>
+        <h1 class="page-title">Расписание звукорежиссера</h1>
       </header>
-      <div class="col-md-6 show_schedule">
+      <div class="col-md-4 show_schedule">
         <form action="create" method="post">
           {% csrf_token %}
           <div class="top-margin">
@@ -31,10 +31,68 @@
             <input name="date" type="text" class="form-control" id="calendar-input" required>
           </div>
           <div class="col-lg-12 text-left nopadding">
-            <button class="btn btn-action" type="submit">Показать расписание</button>
+            <button id="show_working_day" class="btn btn-action" type="submit">Показать расписание</button>
           </div>
         </form>
       </div>
+      {% if today_schedule %}
+      <div id="working_day_schedule" class="col-md-3 show_shedule top-margin">
+        {% for schedule in today_schedule %}
+        <p><b>День недели:</b> {{ schedule.get_working_day_display }}</p>
+        <p><b>Начало рабочего дня:</b> {{ schedule.start_of_the_day.isoformat }}</p>
+        <p><b>Конец рабочего дня:</b> {{ schedule.end_of_the_day.isoformat }}</p>
+        {% endfor %}
+        <br>
+        <h5>Существующие записи брони:</h5>
+        <div class="row lr-padding">
+          {% for act in active_bookings %}
+          <div class="col-md-3 col-xs-4 bordered">
+            {{ act.start.isoformat }}
+            {{ act.end.isoformat }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-4 show_schedule top-margin">
+        <form action="show" method="post">
+          {% csrf_token %}
+          <label for="start">Начало записи</label>
+          <div class="input-group clockpicker" data-align="top" data-autoclose="true">
+            <input type="text" name="start" class="form-control" value="00:00">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
+          </div>
+          <input type="text" onloadstart="{{ date.isocalendar }}" name="date" value="{{ date.isoformat }}"  hidden="hidden" id="date">
+          <label for="end">Конец записи</label>
+          <div class="input-group clockpicker" data-align="top" data-autoclose="true">
+            <input type="text" name="end" class="form-control" value="00:00">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
+          </div>
+          <div class="error"></div>
+          <div class="col-lg-12 text-right nopadding">
+            <button id="create-button" class="btn btn-action" type="submit">Забронировать</button>
+          </div>
+        </form>
+      </div>
+        {% endif %}
+
+      {% if error %}
+      <div class="col-md-6 top-margin">
+        <span id="booking_error" style="color:red;">{{error}}</span>
+        <a href="javascript:history.back()">Попробовать еще раз</a>
+      </div>
+      {% endif %}
+      {% if new_booking %}
+      <div class="col-md-6 top-margin">
+      <p>Бронь на дату {{ new_booking.date }} успешно создана</p>
+      <p>Время начала записи: {{ new_booking.start }}</p>
+      <p>Время конца записи: {{ new_booking.end}}</p>
+      <p>Продолжительность: {{ duration }}</p>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -54,6 +112,9 @@ $('#datepicker').on("changeDate", function() {
     $('#datepicker').datepicker('getFormattedDate')
   );
 });
+</script>
+<script type="text/javascript">
+$('.clockpicker').clockpicker();
 </script>
 {% endblock %}
 </html>

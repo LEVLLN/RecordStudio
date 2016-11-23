@@ -29,7 +29,7 @@
         <div class="soundman-square">
           <div class="avatar">
             <a href="{% url 'step_2' soundman.id%}"><img src="{% static 'images/avatars/soundmans/default.png' %}" alt="">
-              <h4>{{ soundman.username }}</h4>
+              <h4>{{ soundman.first_name }} {{ soundman.last_name }}</h4>
             </a>
           </div>
         </div>

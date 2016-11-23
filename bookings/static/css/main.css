@@ -575,10 +575,10 @@ section.team-style-one.altered {
 	color: #c83939;
 }
 
-.col-md-6.show_schedule button {
+.show_schedule button {
 	margin-top:10px;
 }
-.col-md-6.show_schedule p {
+.show_schedule p {
 	font-size: 16px;
 }
 
@@ -592,10 +592,28 @@ section.team-style-one.altered {
 	margin: 0;
 }
 
-#calendar-input {
-	display: none;
+.top-margin {
+	margin-top:20px;
 }
 
-hr {
-	border-color: #bfbfbf !important;
+.lr-padding {
+	padding: 0px 10px 0px 10px;
+}
+
+.bordered {
+	padding: 5px;
+	font-weight: bold;
+	border: none;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border-color: red;
+	max-width: 70px;
+	background-color:#c83939;
+	color: #FFF;
+	margin: 5px;
+}
+
+#calendar-input {
+	display: none;
 }

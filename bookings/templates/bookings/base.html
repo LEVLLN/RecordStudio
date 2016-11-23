@@ -127,7 +127,11 @@
                   <p class="simplenav">
                     <a href="/">Главная</a> |
                     <a href="/about/">О студии</a> |
-                    <b><a href="/accounts/login">Вход / регистрация</a></b>
+                    {% if user.is_authenticated %}
+                    <b><a href="/accounts/my_profile">Профиль</a></b>
+                    {% else %}
+                    <b><a href="/accounts/login">Вход / Регистрация</a></b>
+                    {% endif %}
                   </p>
                 </div>
               </div>

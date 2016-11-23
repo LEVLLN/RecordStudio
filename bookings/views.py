@@ -67,7 +67,7 @@ def show_schedule(request, soundman_id):
                 'today_schedule': today_schedule
             }
 
-            return render(request, 'bookings/show_schedule.html', context)
+            return render(request, 'bookings/show_calendar.html', context)
         else:
             return render(request, 'accounts/http404.html')
 
@@ -117,25 +117,25 @@ def create_booking(request, soundman_id):
         # ToDo: Надо сделать проверку в цикле времен создаваемой брони с временами активных броней других пользователей
         context['error'] = "Вы выбрали время, не совпадающее с временем работы звукорежиссера"
         print(bookings)
-        return render(request, 'bookings/show_result.html', context)
+        return render(request, 'bookings/show_calendar.html', context)
 
     elif parse_time(start) >= parse_time(end):
         context['error'] = "Начало записи не может быть больше или равно концу записи"
-        return render(request, 'bookings/show_result.html', context)
+        return render(request, 'bookings/show_calendar.html', context)
     elif flag:
         context['error'] = "На это время имеются брони"
         print(book)
-        return render(request, 'bookings/show_result.html', context)
+        return render(request, 'bookings/show_calendar.html', context)
     elif delta < timedelta(minutes=30):
         context['error'] = "Минимальная подолжительность записи 30 минут"
-        return render(request, 'bookings/show_result.html', context)
+        return render(request, 'bookings/show_calendar.html', context)
 
     else:
         new_booking.save()
 
         context['new_booking'] = new_booking
         context['duration'] = delta
-        return render(request, 'bookings/show_result.html', context)
+        return render(request, 'bookings/show_calendar.html', context)
 
 
 class CurrentRecordsView:
