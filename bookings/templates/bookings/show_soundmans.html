@@ -21,9 +21,11 @@
     </ol>
     <br>
     <div class="row">
+    {% if soundmans %}
       <header class="page-header">
         <h1 class="page-title">Выберите звукорежиссера</h1>
       </header>
+
       {% for soundman in soundmans %}
       <div class="soundmans-list col-md-6 col-sm-12 col-lg-6">
         <div class="soundman-square">
@@ -35,6 +37,10 @@
         </div>
       </div>
       {% endfor %}
+    {% endif %}
+    {% if error %}
+        <h3>{{ error }}</h3>
+    {% endif %}
     </div>
   </div>
   {% endblock %}

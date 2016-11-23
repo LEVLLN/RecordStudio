@@ -19,12 +19,20 @@ def about(request):
 
 
 def show_soundmans(request):
+    context = {}
     group = Group.objects.get(name="Soundmans")
     soundmans = group.user_set.all()
-    context = {
-        'soundmans': soundmans
-    }
-    return render(request, "bookings/show_soundmans.html", context)
+
+    if request.user.groups.filter(name='Customers').exists():
+        context = {
+            'soundmans': soundmans
+        }
+        return render(request, "bookings/show_soundmans.html", context)
+    elif not request.user.is_authenticated():
+        return render(request, "accounts/login.html")
+    else:
+        context['error']="Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
+        return render(request, "bookings/show_soundmans.html", context)
 
 
 def show_calendar(request, soundman_id):
@@ -33,6 +41,7 @@ def show_calendar(request, soundman_id):
 
 def show_schedule(request, soundman_id):
     args = {}
+    context ={}
     args.update(csrf(request))
     soundman = get_object_or_404(User, id=soundman_id)
     schedules = Schedule.objects.all().filter(soundman=soundman)
@@ -56,18 +65,25 @@ def show_schedule(request, soundman_id):
                             if booking.date == date:
                                 print("имеется бронь на эту дату")
                                 act_bookings.append(booking)
-            context = {
-                'soundman': soundman,
-                'schedules': schedules,
-                'bookings': bookings,
-                'active_bookings': act_bookings,
-                'date': date,
-                'today_schedule': today_schedule
-            }
-
+                            context = {
+                                'soundman': soundman,
+                                'schedules': schedules,
+                                'bookings': bookings,
+                                'active_bookings': act_bookings,
+                                'date': date,
+                            }
+        if date < datetime.today().date():
+            today_schedule = None
+            context['error']= "На предыдущую дату невозможно создать бронь"
             return render(request, 'bookings/show_calendar.html', context)
+        if request.user.groups.filter(name='Customers').exists():
+            context['today_schedule']=today_schedule
+            return render(request, 'bookings/show_calendar.html', context)
+        elif not request.user.is_authenticated():
+            return render(request, 'accounts/login.html')
         else:
-            return render(request, 'accounts/http404.html')
+            context['error']="Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
+            return render(request, 'bookings/show_calendar.html', context)
 
 
 def create_booking(request, soundman_id):
@@ -130,7 +146,6 @@ def create_booking(request, soundman_id):
 
     else:
         new_booking.save()
-
         context['new_booking'] = new_booking
         context['duration'] = delta
         return render(request, 'bookings/show_calendar.html', context)
