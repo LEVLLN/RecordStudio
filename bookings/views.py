@@ -1,13 +1,11 @@
 from datetime import datetime, timezone, date, timedelta
-from django.utils.dateparse import parse_date
-from django.utils.dateparse import parse_time
+
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
-from django.views import View
-from pytimeparse.timeparse import timeparse
+from django.utils.dateparse import parse_date
+from django.utils.dateparse import parse_time
 
 from bookings.models import Booking, Schedule, Record
 
@@ -177,7 +175,6 @@ class RecordView:
                     args['mal'] = "The user is kotakbas"
                     return render(self, "records/user_record_page.html", args)
 
-
             except ObjectDoesNotExist:
                 # Проверка опоздал ли пользоватеь или нет
                 if datetime.combine(date.min, datetime.now().time()) - datetime.combine(date.min, Booking.objects.get(
@@ -234,3 +231,10 @@ class RecordView:
             return render(self, "records/user_record_page.html", args)
 
         return redirect('/accounts/my_profile')
+
+
+def cancel_booking(request, booking_id):
+    booking_object = Booking.objects.get(id=booking_id)
+    booking_object.is_active = 4
+    booking_object.save()
+    return redirect('/accounts/my_profile')

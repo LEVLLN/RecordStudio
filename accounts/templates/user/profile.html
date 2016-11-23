@@ -3,61 +3,65 @@
 </html>
 <html>
 <head>
-  {% block title %}<title>RS | Профиль</title> {% endblock %}
+    {% block title %}<title>RS | Профиль</title> {% endblock %}
 </head>
 <body>
-  {% block navbar-active %}
-  <li><a href="/">Главная</a></li>
-  <li><a href="/about/">О студии</a></li>
-  <li><a href="/step_1">Бронь записи</a></li>
-  {% endblock %}
-  {% block login-active %}
-  <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
-  {% endblock %}
-  {% block login-container %}
-  <header id="head" class="secondary"></header>
-  <!-- container -->
-  <div class="container">
-    <ol class="breadcrumb">
-      <li><a href="/">Главная</a></li>
-      <li class="active">Профиль</li>
-    </ol>
-    <div class="row">
-      <!-- Article main content -->
-      <article class="col-xs-12 maincontent">
-        <header class="page-header">
-          <h1 class="page-title">Профиль</h1>
-        </header>
-        <div class="col-md-3">
-          <div class="avatar">
-            <img src="{% static 'images/avatars/unknown-avatar.png' %}" alt="">
-          </div>
-          <h3>{{ user.username }}</h3>
-          <h4>{{ user.last_name }} {{ user.first_name }}</h4>
-          <button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button>
+{% block navbar-active %}
+    <li><a href="/">Главная</a></li>
+    <li><a href="/about/">О студии</a></li>
+    <li><a href="/step_1">Бронь записи</a></li>
+{% endblock %}
+{% block login-active %}
+    <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
+{% endblock %}
+{% block login-container %}
+    <header id="head" class="secondary"></header>
+    <!-- container -->
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="/">Главная</a></li>
+            <li class="active">Профиль</li>
+        </ol>
+        <div class="row">
+            <!-- Article main content -->
+            <article class="col-xs-12 maincontent">
+                <header class="page-header">
+                    <h1 class="page-title">Профиль</h1>
+                </header>
+                <div class="col-md-3">
+                    <div class="avatar">
+                        <img src="{% static 'images/avatars/unknown-avatar.png' %}" alt="">
+                    </div>
+                    <h3>{{ user.username }}</h3>
+                    <h4>{{ user.last_name }} {{ user.first_name }}</h4>
+                    <button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button>
+                </div>
+                <div class="col-md-9">
+                    <table width="100%" cellspacing="0" border="1">
+                        <tr>
+                            <th>Дата</th>
+                            <th>Время</th>
+                            <th>Звукорежиссер</th>
+                            <th>Статус брони</th>
+                        </tr>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.date }}</td>
+                                <td>{{ booking.start }}</td>
+                                <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
+                                <td>{{ booking.get_is_active_display }}
+                                    {% if booking.is_active == 1 %}
+                                         | | <a href="{% url 'cancel_booking' booking.id%}"> Отменить бронь </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </article>
+            <!-- /Article -->
         </div>
-        <div class="col-md-9">
-          <table width="100%" cellspacing="0" border="1">
-            <tr>
-              <th>Дата</th>
-              <th>Время</th>
-              <th>Звукорежиссер</th>
-              <th>Статус брони</th>
-            </tr>
-              {% for booking in bookings %}
-            <tr>
-              <td>{{ booking.date }}</td>
-              <td>{{ booking.start }}</td>
-              <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
-              <td>{{ booking.get_is_active_display }}</td>
-            </tr>
-              {% endfor %}
-          </table>
-        </div>
-      </article>
-      <!-- /Article -->
-    </div>
-  </div>    <!-- /container -->
-  {% endblock %}
+    </div>    <!-- /container -->
+{% endblock %}
 </body>
 </html>
