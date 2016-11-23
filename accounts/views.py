@@ -17,7 +17,7 @@ from django.http import Http404
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
-from bookings.models import Booking
+from bookings.models import Booking, Record
 from emailer.views import send_email
 
 
@@ -89,17 +89,24 @@ class AuthenticationView(View):
 
     @staticmethod
     def check_for_permission(request):
+        user_id = User.objects.get(username=request.user).id
         if request.user.groups.filter(name='Administrators').exists():
-            return render(request, "administrator/administrator_page.html")
-        if request.user.groups.filter(name='Soundmans').exists():
-            return render(request, "soundman/soundman_page.html")
-        if request.user.groups.filter(name='Customers').exists():
-            user_id = User.objects.get(username=request.user)
             context = {
-                "bookings": Booking.objects.filter(user=user_id.id),
+                "Administrators": "Admin",
+                "Records": Record.objects.all(),
+                "allBookings": Booking.objects.all().order_by('date')
             }
-            return render(request, "user/profile.html", context)
-        return redirect('/accounts/login')
+        if request.user.groups.filter(name='Soundmans').exists():
+            context = {
+                "Soundmans": "Soundmans",
+                "bookings": Booking.objects.filter(schedule__soundman=user_id).order_by('date'),
+            }
+        if request.user.groups.filter(name='Customers').exists():
+            context = {
+                "Customers": "Customers",
+                "bookings": Booking.objects.filter(user=user_id).order_by('date'),
+            }
+        return render(request, "accounts/profile.html", context)
 
 
 class RegistrationView(View):
