@@ -42,8 +42,9 @@
                       <form name="profile" method="POST">
                         {% csrf_token %}
                         <input name="date" type="date" />
-                        <input type="submit" />
+                        <input type="submit" value="Поиск"/>
                       </form>
+                      <input name="cancel" type="submit" value="Отмена" onclick="javascript:window.location='my_profile'" />
                     {% if Customers %}
                             <tr>
                                 <th>Дата</th>

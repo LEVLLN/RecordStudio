@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 
 from django.contrib import auth
 from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
@@ -13,6 +14,7 @@ from django.core.validators import validate_email
 from django.http import Http404
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
+from django.utils.decorators import method_decorator
 from django.views import View
 
 from accounts.forms import UserCreationForm
@@ -76,34 +78,58 @@ class AuthenticationView(View):
         auth.logout(self)
         return redirect("/")
 
-    def profile(self):
-        user_id = User.objects.get(username=self.user).id
+
+class ProfileView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        user_id = User.objects.get(username=request.user).id
+
+        if request.user.groups.filter(name='Administrators').exists():
+            context = {
+                "Administrators": "Admin",
+                "Records": Record.objects.all(),
+                "allBookings": Booking.objects.all().order_by('date')
+            }
+        elif request.user.groups.filter(name='Soundmans').exists():
+            context = {
+                "Soundmans": "Soundmans",
+                "bookings": Booking.objects.filter(schedule__soundman=user_id).order_by('date'),
+            }
+        elif request.user.groups.filter(name='Customers').exists():
+            context = {
+                "Customers": "Customers",
+                "bookings": Booking.objects.filter(user=user_id).order_by('date'),
+            }
+        return render(request, "accounts/profile.html", context)
+
+    @method_decorator(login_required)
+    def post(self, request):
+        user_id = User.objects.get(username=request.user).id
 
         # Чекает 1) Пришла ли дата методом пост; 2) Пришла ли дата правильно
         try:
-            date = self.POST['date']
+            date = request.POST['date']
             datetime.strptime(date, '%Y-%m-%d')
         except Exception:  # Если дата приходит в неверном формате, то вручную указываем дату сегоднящнего дня
             date = datetime.now().date()
 
-        if self.user.groups.filter(name='Administrators').exists():
+        if request.user.groups.filter(name='Administrators').exists():
             context = {
                 "Administrators": "Admin",
-                "all_soundmans": User.objects.filter(groups__name="Soundmans"),
                 "Records": Record.objects.all(),
                 "allBookings": Booking.objects.filter(date=date).order_by('date')
             }
-        elif self.user.groups.filter(name='Soundmans').exists():
+        elif request.user.groups.filter(name='Soundmans').exists():
             context = {
                 "Soundmans": "Soundmans",
                 "bookings": Booking.objects.filter(schedule__soundman=user_id, date=date).order_by('date'),
             }
-        elif self.user.groups.filter(name='Customers').exists():
+        elif request.user.groups.filter(name='Customers').exists():
             context = {
                 "Customers": "Customers",
                 "bookings": Booking.objects.filter(user=user_id, date=date).order_by('date'),
             }
-        return render(self, "accounts/profile.html", context)
+        return render(request, "accounts/profile.html", context)
 
 
 class RegistrationView(View):
