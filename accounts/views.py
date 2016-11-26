@@ -10,10 +10,10 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.http import Http404
 from django.shortcuts import render, redirect, render_to_response
 from django.template.context_processors import csrf
 from django.views import View
-from django.http import Http404
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
@@ -22,11 +22,8 @@ from emailer.views import send_email
 
 
 class ForgetPasswordView(View):
-    @staticmethod
-    def get(request):
-        if not request.user.is_authenticated():
-            return render(request, 'accounts/forget.html')
-        return render(request, 'accounts/http404.html')
+    def get(self, request):
+        return render(request, 'accounts/forget.html')
 
     def post(self, request):
         args = {}
@@ -36,8 +33,9 @@ class ForgetPasswordView(View):
             email = request.POST['email']
             try:
                 user = User.objects.get(email=email)
-                __new_password = self.passGeneratorMethod()
+                __new_password = self.password_generating_method()
                 user.set_password(__new_password)
+                user.save()
                 return send_email(email=email, username=user.username, password=__new_password)
 
             except ObjectDoesNotExist:
@@ -45,31 +43,20 @@ class ForgetPasswordView(View):
                 return render_to_response("accounts/forget.html", args)
 
         except ValidationError:
-            username = request.POST['email']  # реализовать удаление пробелов
-            try:
-                user = User.objects.get(username=username)
-                email = user.email
-                __new_password = self.passGeneratorMethod()
-                user.set_password(__new_password)
-                return send_email(email=email, username=user.username, password=__new_password)
-            except ObjectDoesNotExist:
-                args['NoUserFound'] = "Почтовый ящик или логин не найдены."
-                return render_to_response("accounts/forget.html", args)
+            args['validation'] = "Неверный формат почтового адреса"
+            return render_to_response("accounts/forget.html", args)
 
-    @staticmethod
-    def passGeneratorMethod(size=8, chars=string.ascii_uppercase + string.digits):
+    def password_generating_method(self, size=8, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
 
 class AuthenticationView(View):
-    @staticmethod
-    def get(request):
+    def get(self, request):
         if request.user.is_authenticated():
             return render(request, 'accounts/http404.html')
         return render(request, "accounts/login.html")
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         args = {}
         args.update(csrf(request))
         user = authenticate(username=request.POST['username'].lower(),
@@ -77,47 +64,55 @@ class AuthenticationView(View):
 
         if user is not None and user.is_active:
             auth.login(request, user)
-            return redirect('/')
+            try:
+                return redirect(request.GET['next'])
+            except Exception:
+                return redirect('/')
         else:
             args['login_error'] = "Ошибка авторизации"
             return render_to_response("accounts/login.html", args)
 
-    @staticmethod
-    def logout(request):
-        auth.logout(request)
+    def logout(self):
+        auth.logout(self)
         return redirect("/")
 
-    @staticmethod
-    def check_for_permission(request):
-        user_id = User.objects.get(username=request.user).id
-        if request.user.groups.filter(name='Administrators').exists():
+    def profile(self):
+        user_id = User.objects.get(username=self.user).id
+
+        # Чекает 1) Пришла ли дата методом пост; 2) Пришла ли дата правильно
+        try:
+            date = self.POST['date']
+            datetime.strptime(date, '%Y-%m-%d')
+        except Exception:  # Если дата приходит в неверном формате, то вручную указываем дату сегоднящнего дня
+            date = datetime.now().date()
+
+        if self.user.groups.filter(name='Administrators').exists():
             context = {
                 "Administrators": "Admin",
+                "all_soundmans": User.objects.filter(groups__name="Soundmans"),
                 "Records": Record.objects.all(),
-                "allBookings": Booking.objects.all().order_by('date')
+                "allBookings": Booking.objects.filter(date=date).order_by('date')
             }
-        if request.user.groups.filter(name='Soundmans').exists():
+        elif self.user.groups.filter(name='Soundmans').exists():
             context = {
                 "Soundmans": "Soundmans",
-                "bookings": Booking.objects.filter(schedule__soundman=user_id).order_by('date'),
+                "bookings": Booking.objects.filter(schedule__soundman=user_id, date=date).order_by('date'),
             }
-        if request.user.groups.filter(name='Customers').exists():
+        elif self.user.groups.filter(name='Customers').exists():
             context = {
                 "Customers": "Customers",
-                "bookings": Booking.objects.filter(user=user_id).order_by('date'),
+                "bookings": Booking.objects.filter(user=user_id, date=date).order_by('date'),
             }
-        return render(request, "accounts/profile.html", context)
+        return render(self, "accounts/profile.html", context)
 
 
 class RegistrationView(View):
-    @staticmethod
-    def get(request):
+    def get(self, request):
         if request.user.is_authenticated():
             return render(request, 'accounts/http404.html')
         return render(request, 'accounts/register.html')
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         if not request.user.is_authenticated():
             args = {}
             args.update(csrf(request))
@@ -157,8 +152,7 @@ class RegistrationView(View):
 
 
 class ConfirmView(View):
-    @staticmethod
-    def get(request):
+    def get(self, request):
         if request.user.is_authenticated():
             raise Http404()
 
@@ -200,9 +194,8 @@ class ConfirmView(View):
             args['fail'] = "No hash code like this"
             return render_to_response('accounts/confirm.html', args)
 
-    @staticmethod
-    def resend_email(request):
-        username = request.GET['username']
+    def resend_email(self):
+        username = self.GET['username']
         user = User.objects.get(username=username)
         SecretHashCode(user_id=user.pk,
                        hashcode=''.join(
@@ -215,26 +208,20 @@ class ConfirmView(View):
 
 
 class PasswordChangeView(View):
-    @staticmethod
-    def get(request):
-        if request.user.is_authenticated:
-            args = {}
-            args.update(csrf(request))
-            return render_to_response("accounts/settings.html", args)
-        return render(request, 'accounts/http404.html')
+    def get(self, request):
+        args = {}
+        args.update(csrf(request))
+        return render_to_response("accounts/settings.html", args)
 
-    @staticmethod
-    def post(request):
-        if request.user.is_authenticated:
-            args = {}
-            args.update(csrf(request))
-            form = PasswordChangeForm(user=request.user, data=request.POST)
-            if form.is_valid():
-                form.save()
-                update_session_auth_hash(request, form.user)
-                args['success'] = 'Success'
-                return render_to_response('accounts/settings.html', args)
-            else:
-                args['error'] = form.errors
-                return render_to_response("accounts/settings.html", args)
-        return redirect('/accounts/settings')
+    def post(self, request):
+        args = {}
+        args.update(csrf(request))
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            args['success'] = 'Success'
+            return render_to_response('accounts/settings.html', args)
+        else:
+            args['error'] = form.errors
+            return render_to_response("accounts/settings.html", args)

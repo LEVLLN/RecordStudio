@@ -34,10 +34,16 @@
                     </div>
                     <h3>{{ user.username }}</h3>
                     <h4>{{ user.last_name }} {{ user.first_name }}</h4>
+                    <h4>{{ user.email }}</h4>
                     <button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button>
                 </div>
                 <div class="col-md-9">
                     <table width="100%" cellspacing="0" border="1">
+                      <form name="profile" method="POST">
+                        {% csrf_token %}
+                        <input name="date" type="date" />
+                        <input type="submit" />
+                      </form>
                     {% if Customers %}
                             <tr>
                                 <th>Дата</th>

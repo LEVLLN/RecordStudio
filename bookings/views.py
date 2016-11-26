@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, date, timedelta
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
@@ -18,6 +19,7 @@ def about(request):
     return render(request, "bookings/about.html")
 
 
+@login_required
 def show_soundmans(request):
     context = {}
     group = Group.objects.get(name="Soundmans")
@@ -28,20 +30,20 @@ def show_soundmans(request):
             'soundmans': soundmans
         }
         return render(request, "bookings/show_soundmans.html", context)
-    elif not request.user.is_authenticated():
-        return redirect("accounts/login")
     else:
-        context['error']="Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
+        context['error'] = "Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
         return render(request, "bookings/show_soundmans.html", context)
 
 
+@login_required
 def show_calendar(request, soundman_id):
     return render(request, 'bookings/show_calendar.html')
 
 
+@login_required
 def show_schedule(request, soundman_id):
     args = {}
-    context ={}
+    context = {}
     args.update(csrf(request))
     soundman = get_object_or_404(User, id=soundman_id)
     schedules = Schedule.objects.all().filter(soundman=soundman)
@@ -74,18 +76,19 @@ def show_schedule(request, soundman_id):
                             }
         if date < datetime.today().date():
             today_schedule = None
-            context['error']= "На предыдущую дату невозможно создать бронь"
+            context['error'] = "На предыдущую дату невозможно создать бронь"
             return render(request, 'bookings/show_calendar.html', context)
         if request.user.groups.filter(name='Customers').exists():
-            context['today_schedule']=today_schedule
+            context['today_schedule'] = today_schedule
             return render(request, 'bookings/show_calendar.html', context)
         elif not request.user.is_authenticated():
             return redirect("accounts/login")
         else:
-            context['error']="Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
+            context['error'] = "Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
             return render(request, 'bookings/show_calendar.html', context)
 
 
+@login_required
 def create_booking(request, soundman_id):
     args = {}
     args.update(csrf(request))
@@ -151,19 +154,7 @@ def create_booking(request, soundman_id):
         return render(request, 'bookings/show_calendar.html', context)
 
 
-class CurrentRecordsView:
-    def get(self):
-        args = {}
-        args.update(csrf(self))
-        soundman = self.user
-        try:
-            args['bookings'] = Booking.objects.all().filter(schedule__soundman=soundman, date=datetime.now().date())
-            return render_to_response('records/current_records.html', args)
-        except ObjectDoesNotExist:
-            args['nobookings'] = "You have no customers who booked"
-            return render_to_response('records/current_records.html', args)
-
-
+@login_required
 class RecordView:
     def details(self, booking_id):
         return render(self, "records/user_record_page.html")
