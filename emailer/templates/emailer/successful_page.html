@@ -1,11 +1,70 @@
-{% if email_error %}
-{{email_error}}
-{% elif resent %}
-{{resent}}
-{% elif register %}
-{{register}}
-{% elif forget %}
-{{forget}}
-{%else %}
-<h3>The email was sent successfully</h3>
-{% endif %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Успех</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+</head>
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+}
+.content {
+  margin-top: 200px;
+}
+h1 {
+  color: #000;
+}
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 200px;
+}
+</style>
+<body>
+  {% if email_error %}
+  <div class="container">
+    <div class="content">
+      <h2>{{email_error}}</h2>
+      <br>
+      <img src="{% static 'images/mail-error.png' %}" alt="email_error" />
+      <br>
+    </div>
+  </div>
+  {% elif resent %}
+  <div class="container">
+    <div class="content">
+      <h2>{{resent}}</h2>
+      <br>
+      <img src="{% static 'images/mail.png' %}" alt="resent" />
+      <br>
+    </div>
+  </div>
+  {% elif register %}
+  <div class="container">
+    <div class="content">
+      <h2>{{register}}</h2>
+      <br>
+      <img src="{% static 'images/success.png' %}" alt="register" />
+      <br>
+    </div>
+  </div>
+  {% elif forget %}
+  <div class="container">
+    <div class="content">
+      <h2>{{forget}}</h2>
+      <br>
+      <img src="{% static 'images/lock.png' %}" alt="forget" />
+      <br>
+    </div>
+  </div>
+  {% endif %}
+</body>
+</html>
