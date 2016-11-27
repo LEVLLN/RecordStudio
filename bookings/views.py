@@ -34,6 +34,9 @@ def show_soundmans(request):
         context['error'] = "Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
         return render(request, "bookings/show_soundmans.html", context)
 
+# solution for the bug
+__date_for_booking = ""
+
 
 @login_required
 def show_calendar(request, soundman_id):
@@ -55,6 +58,8 @@ def show_schedule(request, soundman_id):
         today_schedule = []
         date = parse_date(datestr)
         print(date)
+        global __date_for_booking
+        __date_for_booking = date
 
         if date is not None:
             for schedule in schedules:
@@ -99,7 +104,7 @@ def create_booking(request, soundman_id):
         start = request.POST['start']
         end = request.POST['end']
         datestr = request.POST['date']
-        date = parse_date(datestr)
+        date = __date_for_booking
         schedule = Schedule.objects.all().filter(soundman=soundman, working_day=date.isoweekday()).first()
         user = request.user
         bookings = Booking.objects.all().filter(date=date, schedule=schedule,
