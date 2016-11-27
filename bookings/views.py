@@ -1,9 +1,9 @@
 from datetime import datetime, timezone, date, timedelta
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User, Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, get_object_or_404, redirect, render_to_response
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.context_processors import csrf
 from django.utils.dateparse import parse_date
 from django.utils.dateparse import parse_time
@@ -154,11 +154,12 @@ def create_booking(request, soundman_id):
         return render(request, 'bookings/show_calendar.html', context)
 
 
-@login_required
 class RecordView:
+    @permission_required("bookings.change_record", raise_exception=True)
     def details(self, booking_id):
         return render(self, "records/user_record_page.html")
 
+    @permission_required("bookings.change_record", raise_exception=True)
     def start_record_method(self, booking_id):
         if self.POST:
             args = {}
@@ -172,12 +173,12 @@ class RecordView:
                     return render(self, "records/user_record_page.html", args)
 
                 # Если начало записи уже есть в БД то выбросит сообщение, что запись уже начата
-                if not Record.objects.get(reservation_id=booking_id).start_record is None:
+                elif not Record.objects.get(reservation_id=booking_id).start_record is None:
                     args['againClicked'] = "Record is already started"
                     return render(self, "records/user_record_page.html", args)
 
                 # Проверка опоздал ли пользоватеь или нет
-                if (datetime.now(timezone.utc) - Booking.objects.get(pk=booking_id).start) > timedelta(minutes=15):
+                elif (datetime.now(timezone.utc) - Booking.objects.get(pk=booking_id).start) > timedelta(minutes=15):
                     args['mal'] = "The user is kotakbas"
                     return render(self, "records/user_record_page.html", args)
 
@@ -199,42 +200,47 @@ class RecordView:
 
         return redirect('/accounts/my_profile')
 
+    @permission_required("bookings.change_record", raise_exception=True)
     def stop_record_method(self, booking_id):
         if self.POST:
             args = {}
             args.update(csrf(self))
 
-            # Если время окончание записи пуста
-            if Record.objects.get(reservation_id=booking_id).stop_record is None:
-                _new_record = Record.objects.get(reservation_id=booking_id)
-                _new_record.stop_record = datetime.now(timezone.utc)
+            try:
+                # Если время окончание записи пуста
+                if Record.objects.get(reservation_id=booking_id).stop_record is None:
+                    _new_record = Record.objects.get(reservation_id=booking_id)
+                    _new_record.stop_record = datetime.now(timezone.utc)
 
-                # duration is in minutes
-                duration = (_new_record.stop_record - _new_record.start_record).seconds / 60
-                price_per_minute = 100  # The price per minute of record
+                    # duration is in minutes
+                    duration = (_new_record.stop_record - _new_record.start_record).seconds / 60
+                    price_per_minute = 100  # ToDO: Указать цену
 
-                if duration > 5:
-                    _new_record.money_back = duration * price_per_minute
-                else:
-                    _new_record.money_back = 0
+                    if duration > 5:
+                        _new_record.money_back = duration * price_per_minute
+                    else:
+                        _new_record.money_back = 0
 
-                _new_record.save()
+                    _new_record.save()
 
-                _reservation = Booking.objects.get(pk=booking_id)
-                _reservation.is_active = 3
-                _reservation.save()
+                    _reservation = Booking.objects.get(pk=booking_id)
+                    _reservation.is_active = 3
+                    _reservation.save()
 
-                args['againStopped'] = "Record is stopping"
+                    args['againStopped'] = "Record is stopping"
+                    return render(self, "records/user_record_page.html", args)
+
+                # Если статус брони = "отменен" / "завершен" то выбросит ошибку
+                if Booking.objects.get(pk=booking_id).is_active == 3 or \
+                                Booking.objects.get(pk=booking_id).is_active == 4:
+                    args['againStopped'] = "Record is canceled or inactive"
+                    return render(self, "records/user_record_page.html", args)
+
+                args['againStopped'] = "Record is already stopped"
                 return render(self, "records/user_record_page.html", args)
-
-            # Если статус брони = "отменен" / "завершен" то выбросит ошибку
-            if Booking.objects.get(pk=booking_id).is_active == 3 or \
-                            Booking.objects.get(pk=booking_id).is_active == 4:
-                args['againStopped'] = "Record is canceled or inactive"
+            except ObjectDoesNotExist:
+                args['againStopped'] = "Record is never started"
                 return render(self, "records/user_record_page.html", args)
-
-            args['againStopped'] = "Record is already stopped"
-            return render(self, "records/user_record_page.html", args)
 
         return redirect('/accounts/my_profile')
 
