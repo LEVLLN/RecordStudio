@@ -6,7 +6,7 @@ from accounts import views
 urlpatterns = [
     url(r'^login', views.AuthenticationView.as_view(), name='login'),
     url(r'^logout', views.AuthenticationView.logout, name='logout'),
-    url(r'^my_profile', views.ProfileView.as_view(), name='profiles'),
+    url(r'^my_profile', views.CustomerProfileView.as_view(), name='profiles'),
     url(r'^settings', login_required(views.PasswordChangeView.as_view()), name='settings'),
 
     url(r'^register', views.RegistrationView.as_view(), name="reg"),

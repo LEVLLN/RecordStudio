@@ -254,4 +254,4 @@ def cancel_booking(request, booking_id):
     booking_object = Booking.objects.get(id=booking_id)
     booking_object.is_active = 4
     booking_object.save()
-    return redirect('/accounts/my_profile')
+    return redirect('/staff')

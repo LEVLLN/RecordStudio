@@ -79,28 +79,16 @@ class AuthenticationView(View):
         return redirect("/")
 
 
-class ProfileView(View):
+class CustomerProfileView(View):
     @method_decorator(login_required)
     def get(self, request):
         user_id = User.objects.get(username=request.user).id
-
-        if request.user.groups.filter(name='Administrators').exists():
+        if request.user.groups.filter(name='Customers').exists():
             context = {
-                "Administrators": "Admin",
-                "Records": Record.objects.all(),
-                "allBookings": Booking.objects.all().order_by('date')
-            }
-        elif request.user.groups.filter(name='Soundmans').exists():
-            context = {
-                "Soundmans": "Soundmans",
-                "bookings": Booking.objects.filter(schedule__soundman=user_id).order_by('date'),
-            }
-        elif request.user.groups.filter(name='Customers').exists():
-            context = {
-                "Customers": "Customers",
                 "bookings": Booking.objects.filter(user=user_id).order_by('date'),
             }
-        return render(request, "accounts/profile.html", context)
+            return render(request, "accounts/profile.html", context)
+        raise Http404()
 
     @method_decorator(login_required)
     def post(self, request):
@@ -113,23 +101,13 @@ class ProfileView(View):
         except Exception:  # Если дата приходит в неверном формате, то вручную указываем дату сегоднящнего дня
             date = datetime.now().date()
 
-        if request.user.groups.filter(name='Administrators').exists():
-            context = {
-                "Administrators": "Admin",
-                "Records": Record.objects.all(),
-                "allBookings": Booking.objects.filter(date=date).order_by('date')
-            }
-        elif request.user.groups.filter(name='Soundmans').exists():
-            context = {
-                "Soundmans": "Soundmans",
-                "bookings": Booking.objects.filter(schedule__soundman=user_id, date=date).order_by('date'),
-            }
-        elif request.user.groups.filter(name='Customers').exists():
+        if request.user.groups.filter(name='Customers').exists():
             context = {
                 "Customers": "Customers",
                 "bookings": Booking.objects.filter(user=user_id, date=date).order_by('date'),
             }
-        return render(request, "accounts/profile.html", context)
+            return render(request, "accounts/profile.html", context)
+        raise Http404()
 
 
 class RegistrationView(View):
@@ -251,3 +229,60 @@ class PasswordChangeView(View):
         else:
             args['error'] = form.errors
             return render_to_response("accounts/settings.html", args)
+
+
+# staff stuff
+class StuffProfileLoginPageView(View):
+    def get(self, request):
+        if request.user.is_authenticated():
+            return self.check_if_staff(request)
+        return render(request, 'accounts/staff/loginPage.html')
+
+    def post(self, request):
+        args = {}
+        args.update(csrf(request))
+        if 'login' and 'password' in request.POST:
+            user = authenticate(username=request.POST['login'].lower(),
+                                password=request.POST['password'])
+            if user is not None and user.is_active:
+                auth.login(request, user)
+                return self.check_if_staff(request)  # Проверяет куда перенаправлять сотрудника
+            else:
+                args['login_error'] = "Ошибка авторизации"
+                return render_to_response("accounts/staff/loginPage.html", args)
+        else:  # Если пришли не логин и пароль (допустим дата), то обновляем контекст
+            return self.date_filter(request)
+
+    def date_filter(self, request):
+        user_id = User.objects.get(username=request.user).id
+        # Чекает 1) Пришла ли дата методом пост; 2) Пришла ли дата правильно
+        try:
+            date = request.POST['date']
+            datetime.strptime(date, '%Y-%m-%d')
+        except Exception:  # Если дата приходит в неверном формате, то вручную указываем дату сегоднящнего дня
+            date = datetime.now().date()
+        if request.user.groups.filter(name='Soundmans').exists():
+            context = {
+                "bookings": Booking.objects.filter(schedule__soundman=user_id, date=date).order_by('date'),
+            }
+            return render(request, 'accounts/staff/soundmans_page.html', context)
+        elif request.user.groups.filter(name='Administrators').exists():
+            context = {
+                "Records": Record.objects.all(),
+                "allBookings": Booking.objects.filter(date=date).order_by('date')
+            }
+            return render(request, 'accounts/staff/administrators_page.html', context)
+        raise Http404()
+
+    def check_if_staff(self, request):
+        if request.user.groups.filter(name='Administrators').exists():
+            context = {
+                "Records": Record.objects.all(),
+                "allBookings": Booking.objects.all().order_by('date')
+            }
+            return render(request, 'accounts/staff/administrators_page.html', context)
+        elif request.user.groups.filter(name='Soundmans').exists():
+            context = {
+                "bookings": Booking.objects.filter(schedule__soundman=request.user).order_by('date'),
+            }
+            return render(request, 'accounts/staff/soundmans_page.html', context)

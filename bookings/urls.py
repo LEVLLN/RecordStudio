@@ -14,6 +14,5 @@ urlpatterns = [
     url(r'^records/(?P<booking_id>[0-9]+)/start', views.RecordView.start_record_method),
     url(r'^records/(?P<booking_id>[0-9]+)/stop', views.RecordView.stop_record_method),
 
-    url(r'^my_profile/booking/(?P<booking_id>[0-9]+)/cancel', views.cancel_booking, name="cancel_booking"),
 
 ]

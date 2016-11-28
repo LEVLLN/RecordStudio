@@ -1,0 +1,22 @@
+{% load bookings_extras %}
+{% csrf_token %}
+<table>
+<tr>
+    <th>Дата</th>
+    <th>Время начала</th>
+    <th>Пользователь</th>
+    <th>Звукорежиссер</th>
+    <th>Оплата</th>
+    <th>Статус брони</th>
+</tr>
+{% for booking in allBookings %}
+    <tr>
+        <td>{{ booking.date }}</td>
+        <td>{{ booking.start }}</td>
+        <td>{{ booking.user.first_name }} {{booking.user.last_name }} </td>
+        <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
+        <td>{{ Records.filter|money_back:booking.id}}</td>
+        <td>{{ booking.get_is_active_display }}</td>
+    </tr>
+{% endfor %}
+</table>
