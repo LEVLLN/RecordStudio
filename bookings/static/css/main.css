@@ -1,4 +1,21 @@
 /* Header */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+}
+
+#main {
+  overflow: auto;
+  padding-bottom: 47px; /* must be same height as the footer */
+}
 #head {
 	background: #181015 url( ../images/bg_header.jpg) no-repeat;
 	background-size: cover;
@@ -194,9 +211,15 @@ img.pull-left {
 }
 
 /* Footer */
+#footer {
+  position: relative;
+  margin-top: -180px; /* negative value of footer height */
+  height: 47px;
+  clear: both;
+}
 .footer1 {
 	background:#FFF;
-	padding: 30px 0 0 0;
+	padding: 30px 0 0 47px;
 	font-size: 12px;
 	color: #8c8c8c;
 }
@@ -616,4 +639,24 @@ section.team-style-one.altered {
 
 #calendar-input {
 	display: none;
+}
+
+.profile-data .btn {
+	padding: 5px 10px !important;
+	margin: 1px 3px 1px 3px;
+	max-width: 120px;
+	min-width: 100px;
+}
+
+.positive-color {
+	color: #33ff33 !important;
+}
+
+.positive-bgc {
+	background-image: linear-gradient(to bottom, #33ff33 0%, #66ff66 100%);
+}
+
+.positive-bgc:hover, .positive-bgc:focus {
+    color: #fff;
+    background: #008000;
 }

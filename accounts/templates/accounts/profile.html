@@ -3,117 +3,136 @@
 </html>
 <html>
 <head>
-    {% block title %}<title>RS | Профиль</title> {% endblock %}
+  {% block title %}<title>RS | Профиль</title> {% endblock %}
 </head>
 <body>
-{% block navbar-active %}
-    <li><a href="/">Главная</a></li>
-    <li><a href="/about/">О студии</a></li>
-    <li><a href="/step_1">Бронь записи</a></li>
-{% endblock %}
-{% block login-active %}
-    <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
-{% endblock %}
-{% block login-container %}
-    <header id="head" class="secondary"></header>
-    <!-- container -->
-    <div class="container">
-        <ol class="breadcrumb">
-            <li><a href="/">Главная</a></li>
-            <li class="active">Профиль</li>
-        </ol>
-        <div class="row">
-            <!-- Article main content -->
-            <article class="col-xs-12 maincontent">
-                <header class="page-header">
-                    <h1 class="page-title">Профиль</h1>
-                </header>
-                <div class="col-md-3">
-                    <div class="avatar">
-                        <img src="{% static 'images/avatars/unknown-avatar.png' %}" alt="">
-                    </div>
-                    <h3>{{ user.username }}</h3>
-                    <h4>{{ user.last_name }} {{ user.first_name }}</h4>
-                    <h4>{{ user.email }}</h4>
-                    <button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button>
-                </div>
-                <div class="col-md-9">
-                    <table class="table table-striped table-hover">
-                      <form name="profile" method="POST">
-                        {% csrf_token %}
-                        <input name="date" type="date" />
-                        <input type="submit" value="Поиск"/>
-                      </form>
-                      <input name="cancel" type="submit" value="Отмена" onclick="javascript:window.location='my_profile'" />
-                    {% if Customers %}
-                            <tr>
-                                <th>Дата</th>
-                                <th>Время</th>
-                                <th>Звукорежиссер</th>
-                                <th>Статус брони</th>
-                            </tr>
-                            {% for booking in bookings %}
-                                <tr>
-                                    <td>{{ booking.date }}</td>
-                                    <td>{{ booking.start }}</td>
-                                    <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
-                                    <td>{{ booking.get_is_active_display }}
-                                        {% if booking.is_active == 1 %}
-                                             | | <a href="{% url 'cancel_booking' booking.id%}"> Отменить бронь </a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                    {% elif Soundmans%}
-                        <tr>
-                            <th>Дата</th>
-                            <th>Время начала</th>
-                            <th>Пользователь</th>
-                            <th>Статус брони</th>
-                        </tr>
-                        {% for booking in bookings %}
-                            <tr>
-                                <td>{{ booking.date }}</td>
-                                <td>{{ booking.start }}</td>
-                                <td>{{ booking.user.first_name}} {{booking.user.last_name }}</td>
-                                <td>{{ booking.get_is_active_display }}
-                                    {% if booking.is_active == 1 %}
-                                         | | <a href="{% url 'cancel_booking' booking.id%}"> Отменить бронь </a>
-                                         | | <a href="{% url 'start_record' booking.id%}"> Начать запись </a>
-                                    {% elif booking.is_active == 2%}
-                                        | | <a href="{% url 'start_record' booking.id%}"> Продолжить запись </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% elif Administrators %}
-                        {% load bookings_extras %}
-                            <tr>
-                                <th>Дата</th>
-                                <th>Время начала</th>
-                                <th>Пользователь</th>
-                                <th>Звукорежиссер</th>
-                                <th>Возврат денег</th>
-                                <th>Статус брони</th>
-                            </tr>
-                            {% for booking in allBookings %}
-                                <tr>
-                                    <td>{{ booking.date }}</td>
-                                    <td>{{ booking.start }}</td>
-                                    <td>{{ booking.user.first_name }} {{booking.user.last_name }} </td>
-                                    <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
-                                    <td>{{ Records.filter|money_back:booking.id}}</td>
-                                    <td>{{ booking.get_is_active_display }}</td>
-                                </tr>
-                            {% endfor %}
-                    {% endif %}
-                </table>
-
-                </div>
-            </article>
-            <!-- /Article -->
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li><a href="/about/">О студии</a></li>
+  <li><a href="/step_1">Бронь записи</a></li>
+  {% endblock %}
+  {% block login-active %}
+  <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
+  {% endblock %}
+  {% block login-container %}
+  <header id="head" class="secondary"></header>
+  <!-- container -->
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">Главная</a></li>
+      <li class="active">Профиль</li>
+    </ol>
+    <div class="row">
+      <!-- Article main content -->
+      <article class="col-xs-12 maincontent">
+        <header class="page-header">
+          <h1 class="page-title">Профиль</h1>
+        </header>
+        <div class="col-md-3">
+          <div class="avatar">
+            <img src="{% static 'images/avatars/unknown-avatar.png' %}" alt="">
+          </div>
+          <h3>{{ user.username }}</h3>
+          <h4>{{ user.last_name }} {{ user.first_name }}</h4>
+          <h4>{{ user.email }}</h4>
+          <button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button>
         </div>
-    </div>    <!-- /container -->
-{% endblock %}
+
+        <div class="col-md-9 profile-data">
+          <table class="table table-striped table-hover top-margin">
+            <form name="profile" method="POST">
+              {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-6"><div class="input-group date">
+                    <input placeholder="Выберите дату" type="text" name="date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                  </div></div>
+                  <div class="col-md-6 text-left">
+                    <button class="btn btn-action positive-bgc" type="submit">Поиск</button>
+                    <button class="btn btn-action" name="cancel" onclick="javascript:window.location='my_profile'">Отмена</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            {% if Customers %}
+            <tr>
+              <th>Дата</th>
+              <th>Время</th>
+              <th>Звукорежиссер</th>
+              <th>Статус брони</th>
+            </tr>
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ booking.date }}</td>
+              <td>{{ booking.start }}</td>
+              <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
+              <td>{{ booking.get_is_active_display }}
+                {% if booking.is_active == 1 %}
+                | | <a class="btn btn-action" href="{% url 'cancel_booking' booking.id%}">Отменить</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% elif Soundmans%}
+            <tr>
+              <th>Дата</th>
+              <th>Время начала</th>
+              <th>Пользователь</th>
+              <th>Статус брони</th>
+            </tr>
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ booking.date }}</td>
+              <td>{{ booking.start }}</td>
+              <td>{{ booking.user.first_name}} {{booking.user.last_name }}</td>
+              <td> <span class="positive-color">{{ booking.get_is_active_display }}</span>
+                {% if booking.is_active == 1 %}
+                <a class="btn btn-action" href="{% url 'cancel_booking' booking.id%}">Отменить</a>
+                <a class="btn btn-action positive-bgc" href="{% url 'start_record' booking.id%}">Начать запись</a>
+                {% elif booking.is_active == 2 %}
+                <a class="btn btn-action" href="{% url 'start_record' booking.id%}">Продолжить запись</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% elif Administrators %}
+            {% load bookings_extras %}
+            <tr>
+              <th>Дата</th>
+              <th>Время начала</th>
+              <th>Пользователь</th>
+              <th>Звукорежиссер</th>
+              <th>Возврат денег</th>
+              <th>Статус брони</th>
+            </tr>
+            {% for booking in allBookings %}
+            <tr>
+              <td>{{ booking.date }}</td>
+              <td>{{ booking.start }}</td>
+              <td>{{ booking.user.first_name }} {{booking.user.last_name }} </td>
+              <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
+              <td>{{ Records.filter|money_back:booking.id}}</td>
+              <td>{{ booking.get_is_active_display }}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </table>
+        </div>
+      </article>
+      <!-- /Article -->
+    </div>
+  </div>    <!-- /container -->
+  {% endblock %}
+  {% block custom_scripts %}
+  <script type="text/javascript">
+  $('.input-group.date').datepicker({
+    format: "yyyy-mm-dd",
+    language: "ru",
+    autoclose: true,
+    todayHighlight: true,
+    orientation: "bottom auto",
+    defaultDate: new Date()
+  });
+  </script>
+  {% endblock %}
 </body>
 </html>
