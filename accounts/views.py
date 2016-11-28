@@ -65,11 +65,14 @@ class AuthenticationView(View):
                             password=request.POST['password'])
 
         if user is not None and user.is_active:
-            auth.login(request, user)
-            try:
-                return redirect(request.GET['next'])
-            except Exception:
-                return redirect('/')
+            if user.groups.filter(name="Customers").exists():
+                auth.login(request, user)
+                try:
+                    return redirect(request.GET['next'])
+                except Exception:
+                    return redirect('/')
+            else:
+                raise Http404()
         else:
             args['login_error'] = "Ошибка авторизации"
             return render_to_response("accounts/login.html", args)
@@ -231,29 +234,53 @@ class PasswordChangeView(View):
             return render_to_response("accounts/settings.html", args)
 
 
+# _______________________
 # staff stuff
-class StuffProfileLoginPageView(View):
+# _______________________
+
+
+# Staff's login page
+# url : /staff
+class StaffLoginPageView(View):
     def get(self, request):
         if request.user.is_authenticated():
-            return self.check_if_staff(request)
+            return redirect('/profile')
         return render(request, 'accounts/staff/loginPage.html')
 
     def post(self, request):
         args = {}
         args.update(csrf(request))
-        if 'login' and 'password' in request.POST:
-            user = authenticate(username=request.POST['login'].lower(),
-                                password=request.POST['password'])
-            if user is not None and user.is_active:
+        user = authenticate(username=request.POST['login'].lower(),
+                            password=request.POST['password'])
+        if user is not None and user.is_active:
+            if user.groups.filter(name='Administrators').exists() or \
+                    user.groups.filter(name='Soundmans').exists():
                 auth.login(request, user)
-                return self.check_if_staff(request)  # Проверяет куда перенаправлять сотрудника
-            else:
-                args['login_error'] = "Ошибка авторизации"
-                return render_to_response("accounts/staff/loginPage.html", args)
-        else:  # Если пришли не логин и пароль (допустим дата), то обновляем контекст
-            return self.date_filter(request)
+                return redirect('/profile')
+            raise Http404()
+        else:
+            args['login_error'] = "Ошибка авторизации"
+            return render_to_response("accounts/staff/loginPage.html", args)
 
-    def date_filter(self, request):
+
+# url: /profile
+class StaffProfilePageView(View):
+    def get(self, request):
+        if request.user.is_authenticated():
+            if request.user.groups.filter(name='Administrators').exists():
+                context = {
+                    "Records": Record.objects.all(),
+                    "allBookings": Booking.objects.all().order_by('date')
+                }
+                return render(request, 'accounts/staff/administrators_page.html', context)
+            elif request.user.groups.filter(name='Soundmans').exists():
+                context = {
+                    "bookings": Booking.objects.filter(schedule__soundman=request.user).order_by('date'),
+                }
+                return render(request, 'accounts/staff/soundmans_page.html', context)
+        raise Http404()
+
+    def post(self, request):
         user_id = User.objects.get(username=request.user).id
         # Чекает 1) Пришла ли дата методом пост; 2) Пришла ли дата правильно
         try:
@@ -273,16 +300,3 @@ class StuffProfileLoginPageView(View):
             }
             return render(request, 'accounts/staff/administrators_page.html', context)
         raise Http404()
-
-    def check_if_staff(self, request):
-        if request.user.groups.filter(name='Administrators').exists():
-            context = {
-                "Records": Record.objects.all(),
-                "allBookings": Booking.objects.all().order_by('date')
-            }
-            return render(request, 'accounts/staff/administrators_page.html', context)
-        elif request.user.groups.filter(name='Soundmans').exists():
-            context = {
-                "bookings": Booking.objects.filter(schedule__soundman=request.user).order_by('date'),
-            }
-            return render(request, 'accounts/staff/soundmans_page.html', context)
