@@ -1,22 +1,73 @@
+{% extends "accounts/staff/dashboard_base.html" %}
 {% load bookings_extras %}
+{% load staticfiles %}
 {% csrf_token %}
-<table>
-<tr>
-    <th>Дата</th>
-    <th>Время начала</th>
-    <th>Пользователь</th>
-    <th>Звукорежиссер</th>
-    <th>Оплата</th>
-    <th>Статус брони</th>
-</tr>
-{% for booking in allBookings %}
-    <tr>
-        <td>{{ booking.date }}</td>
-        <td>{{ booking.start }}</td>
-        <td>{{ booking.user.first_name }} {{booking.user.last_name }} </td>
-        <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
-        <td>{{ Records.filter|money_back:booking.id}}</td>
-        <td>{{ booking.get_is_active_display }}</td>
-    </tr>
-{% endfor %}
-</table>
+{% block title %}
+<title>RS | Admin Page</title>
+{% endblock %}
+{% block main-content %}
+<div class="content">
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="card">
+              <div class="header">
+                <form name="profile" method="POST">
+                  {% csrf_token %}
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="input-group date">
+                        <input placeholder="Выберите дату" type="text" name="date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                      </div>
+                    </div>
+                      <div class="col-md-6 text-left">
+                        <button class="btn btn-fill btn-info" type="submit">Поиск</button>
+                        <button class="btn btn-fill" name="cancel" onclick="javascript:window.location='my_profile'">Отмена</button>
+                      </div>
+                    </div>
+                    </form>
+                  </div>
+              </div>
+              <div class="content table-responsive table-full-width">
+                  <table class="table table-hover table-striped">
+
+                      <thead>
+                        <th>Дата</th>
+                        <th>Время начала</th>
+                        <th>Пользователь</th>
+                        <th>Звукорежиссер</th>
+                        <th>Оплата</th>
+                        <th>Статус брони</th>
+                      </thead>
+                      <tbody>
+                    {% for booking in allBookings %}
+                        <tr>
+                            <td>{{ booking.date }}</td>
+                            <td>{{ booking.start }}</td>
+                            <td>{{ booking.user.first_name }} {{booking.user.last_name }} </td>
+                            <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
+                            <td>{{ Records.filter|money_back:booking.id}}</td>
+                            <td>{{ booking.get_is_active_display }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+{% block custom_scripts %}
+<script>
+$('.input-group.date').datepicker({
+format: "yyyy-mm-dd",
+language: "ru",
+autoclose: true,
+todayHighlight: true,
+orientation: "bottom auto",
+defaultDate: new Date()
+});
+</script>
+{% endblock %}
