@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  {% load staticfiles %}
+  <meta charset="UTF-8">
+  <title>RS | Admin Auth</title>
+  <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'>
+  <link href="{% static 'dashboard-assets/css/login-form-style.css' %}" rel="stylesheet">
 </head>
 <body>
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name = "login"/>
-    <input type="password" name = "password"/>
-    <input type="submit"/>
-</form>
+  <div class="wrapper">
+    <form method="POST" class="form-signin">
+      {% csrf_token %}
+      <h2 class="form-signin-heading">Авторизация</h2>
+      <input type="text" class="form-control" name="login" placeholder="Имя пользователя" required autofocus />
+      <input type="password" class="form-control" name="password" placeholder="Пароль" required />
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+    </form>
+  </div>
 </body>
 </html>
