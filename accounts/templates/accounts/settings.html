@@ -7,11 +7,21 @@
 <body>
 <form action="" method="POST">
     {% csrf_token %}
-    {{ user.username }} <br/>
-    <input type="password" name="old_password"/>
-    <input type="password" name="new_password1"/>
-    <input type="password" name="new_password2"/>
+    <p>First name</p>
+    <input type="input" value="{{ user.first_name }}" name="first_name" /> <br>
+    <p>Last name</p>
+    <input type="input" value="{{ user.last_name }}" name="last_name" /> <br>
+    <p>Email</p>
+    <input type="input"  value="{{ user.email }}" name="email"> <br>
+    <p>Old password</p>
+    <input type="password" name="old_password" value=""/> <br>
+    <p>New password</p>
+    <input type="password" name="new_password1" value=""/> <br>
+    <p>Enter it again</p>
+    <input type="password" name="new_password2" value=""/> <br>
+    <br>
     <input type="submit"/>
+
     {% if error %}
         {{ error }}
     {% else %}

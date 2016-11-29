@@ -90,30 +90,28 @@ class SoundmanAddView(View):
         raise Http404()
 
     def post(self, request):
-        if ('first_name' and 'last_name' and 'login' and 'email') in request.POST:
-            args = {}
-            args.update(csrf(request))
-            new_user_form = SoundmanCreationForm(request.POST)
-            if new_user_form.is_valid():
-                new_user = User.objects.create_user(username=new_user_form.cleaned_data['username'].lower(),
-                                                    first_name=new_user_form.cleaned_data['first_name'],
-                                                    last_name=new_user_form.cleaned_data['last_name'],
-                                                    email=new_user_form.cleaned_data['email'],
-                                                    )
-                password = ForgetPasswordView()
-                __new_password_of_soundman = password.password_generating_method()
-                new_user.set_password(__new_password_of_soundman)
-                new_user.is_active = True
-                new_user.save()
-                Group.objects.get(name='Soundmans').user_set.add(new_user)
+        args = {}
+        args.update(csrf(request))
+        new_user_form = SoundmanCreationForm(request.POST)
+        if new_user_form.is_valid():
+            new_user = User.objects.create_user(username=new_user_form.cleaned_data['username'].lower(),
+                                                first_name=new_user_form.cleaned_data['first_name'],
+                                                last_name=new_user_form.cleaned_data['last_name'],
+                                                email=new_user_form.cleaned_data['email'],
+                                                )
+            password = ForgetPasswordView()
+            __new_password_of_soundman = password.password_generating_method()
+            new_user.set_password(__new_password_of_soundman)
+            new_user.is_active = True
+            new_user.save()
+            Group.objects.get(name='Soundmans').user_set.add(new_user)
 
-                return send_email(email=request.POST['email'],
-                                  username=request.POST['login'],
-                                  password=__new_password_of_soundman,
-                                  first_name=request.POST['first_name'],
-                                  last_name=request.POST['last_name'])
+            return send_email(email=request.POST['email'],
+                              username=request.POST['username'],
+                              password=__new_password_of_soundman,
+                              first_name=request.POST['first_name'],
+                              last_name=request.POST['last_name'])
 
-            args['form'] = new_user_form
-            return render_to_response('staff/soundmanAdd.html', args)
-        raise Http404()
+        args['form'] = new_user_form
+        return render_to_response('staff/soundmanAdd.html', args)
 

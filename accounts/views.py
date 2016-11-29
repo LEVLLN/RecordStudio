@@ -218,17 +218,38 @@ class PasswordChangeView(View):
     def get(self, request):
         args = {}
         args.update(csrf(request))
+        args['user'] = request.user
         return render_to_response("accounts/settings.html", args)
 
     def post(self, request):
         args = {}
         args.update(csrf(request))
-        form = PasswordChangeForm(user=request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-            update_session_auth_hash(request, form.user)
-            args['success'] = 'Success'
-            return render_to_response('accounts/settings.html', args)
-        else:
-            args['error'] = form.errors
+        if not request.POST['old_password'] == "" \
+                and not request.POST['new_password1'] == ""\
+                and not request.POST['new_password2'] == "":
+
+            form = PasswordChangeForm(user=request.user, data=request.POST)
+            if form.is_valid():
+                request.user.first_name = request.POST["first_name"]
+                request.user.last_name = request.POST["last_name"]
+                request.user.email = request.POST["email"]
+                request.user.save()
+                form.save()
+                update_session_auth_hash(request, form.user)
+                args['success'] = 'Success'
+            else:
+                args['error'] = form.errors
+
+            args['user'] = request.user
             return render_to_response("accounts/settings.html", args)
+
+        if request.user.check_password(request.POST["old_password"]):
+            request.user.first_name = request.POST["first_name"]
+            request.user.last_name = request.POST["last_name"]
+            request.user.email = request.POST["email"]
+            request.user.save()
+            args['success'] = 'Success'
+
+        args['user'] = request.user
+        args['error'] = "Неверный пароль"
+        return render_to_response("accounts/settings.html", args)
