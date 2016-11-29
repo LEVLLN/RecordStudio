@@ -12,16 +12,21 @@ from bookings.models import Booking, Schedule, Record
 
 
 def home(request):
+    if request.user.groups.filter(name="Administrators").exists() \
+            or request.user.groups.filter(name="Soundmans").exists():
+        return redirect('/staff')
     return render(request, "bookings/home.html")
 
 
 def about(request):
+    if request.user.groups.filter(name="Administrators").exists() \
+            or request.user.groups.filter(name="Soundmans").exists():
+        return redirect('/staff')
     return render(request, "bookings/about.html")
 
 
 @login_required
 def show_soundmans(request):
-    context = {}
     group = Group.objects.get(name="Soundmans")
     soundmans = group.user_set.all()
 
@@ -30,9 +35,9 @@ def show_soundmans(request):
             'soundmans': soundmans
         }
         return render(request, "bookings/show_soundmans.html", context)
-    else:
-        context['error'] = "Вы не являетесь клиентом системы,вы не имеете права создавать бронь"
-        return render(request, "bookings/show_soundmans.html", context)
+
+    return redirect('/staff')
+
 
 # solution for the bug
 __date_for_booking = ""
