@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'bookings',
     'accounts',
-    'emailer'
+    'emailer',
+    'staff'
 ]
 
 MIDDLEWARE = [

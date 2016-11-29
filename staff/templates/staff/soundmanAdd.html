@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+    {% csrf_token %}
+    <p>Name</p><input type="text" name="first_name"> <br />
+    <p>Surname </p><input type="text" name="last_name"> <br />
+    <p>Login </p><input type="text" name="username"> <br />
+    <p>Email </p><input type="text" name="email"> <br />
+    <input type="submit"> <br />
+    {% if form.errors %}
+        {{ form.errors }}
+    {% endif %}
+</form>
+</body>
+</html>

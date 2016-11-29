@@ -52,7 +52,7 @@ class ForgetPasswordView(View):
         return ''.join(random.choice(chars) for _ in range(size))
 
 
-class AuthenticationView(View):
+class UserAuthenticationView(View):
     def get(self, request):
         if request.user.is_authenticated():
             return render(request, 'accounts/http404.html')
@@ -113,7 +113,7 @@ class CustomerProfileView(View):
         raise Http404()
 
 
-class RegistrationView(View):
+class UserRegistrationView(View):
     def get(self, request):
         if request.user.is_authenticated():
             return render(request, 'accounts/http404.html')
@@ -158,7 +158,7 @@ class RegistrationView(View):
         return render(request, 'accounts/register.html')
 
 
-class ConfirmView(View):
+class ConfirmEmailView(View):
     def get(self, request):
         if request.user.is_authenticated():
             raise Http404()
@@ -232,71 +232,3 @@ class PasswordChangeView(View):
         else:
             args['error'] = form.errors
             return render_to_response("accounts/settings.html", args)
-
-
-# _______________________
-# staff stuff
-# _______________________
-
-
-# Staff's login page
-# url : /staff
-class StaffLoginPageView(View):
-    def get(self, request):
-        if request.user.is_authenticated():
-            return redirect('/profile')
-        return render(request, 'accounts/staff/loginPage.html')
-
-    def post(self, request):
-        args = {}
-        args.update(csrf(request))
-        user = authenticate(username=request.POST['login'].lower(),
-                            password=request.POST['password'])
-        if user is not None and user.is_active:
-            if user.groups.filter(name='Administrators').exists() or \
-                    user.groups.filter(name='Soundmans').exists():
-                auth.login(request, user)
-                return redirect('/profile')
-            raise Http404()
-        else:
-            args['login_error'] = "Ошибка авторизации"
-            return render_to_response("accounts/staff/loginPage.html", args)
-
-
-# url: /profile
-class StaffProfilePageView(View):
-    def get(self, request):
-        if request.user.is_authenticated():
-            if request.user.groups.filter(name='Administrators').exists():
-                context = {
-                    "Records": Record.objects.all(),
-                    "allBookings": Booking.objects.all().order_by('date')
-                }
-                return render(request, 'accounts/staff/administrators_page.html', context)
-            elif request.user.groups.filter(name='Soundmans').exists():
-                context = {
-                    "bookings": Booking.objects.filter(schedule__soundman=request.user).order_by('date'),
-                }
-                return render(request, 'accounts/staff/soundmans_page.html', context)
-        raise Http404()
-
-    def post(self, request):
-        user_id = User.objects.get(username=request.user).id
-        # Чекает 1) Пришла ли дата методом пост; 2) Пришла ли дата правильно
-        try:
-            date = request.POST['date']
-            datetime.strptime(date, '%Y-%m-%d')
-        except Exception:  # Если дата приходит в неверном формате, то вручную указываем дату сегоднящнего дня
-            date = datetime.now().date()
-        if request.user.groups.filter(name='Soundmans').exists():
-            context = {
-                "bookings": Booking.objects.filter(schedule__soundman=user_id, date=date).order_by('date'),
-            }
-            return render(request, 'accounts/staff/soundmans_page.html', context)
-        elif request.user.groups.filter(name='Administrators').exists():
-            context = {
-                "Records": Record.objects.all(),
-                "allBookings": Booking.objects.filter(date=date).order_by('date')
-            }
-            return render(request, 'accounts/staff/administrators_page.html', context)
-        raise Http404()

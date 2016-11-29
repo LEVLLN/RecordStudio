@@ -15,6 +15,13 @@ def send_email(**kwargs):
         message = "http://127.0.0.1:8000/accounts/confirm?username=%s&hash=%s" % (username, __hash_code)
         args['register'] = "Вы успешно зарегестрировались на сайте. Осталось подтвердить email"
 
+    elif len(kwargs) == 5:
+        email = kwargs['email']
+        username = kwargs['username']
+        password = kwargs['password']
+        message = "Добро пожаловать в команду RecordStudio! Ваш логин и пароль для входа в профиль: %s %s " % \
+                  (username, password)
+
     # resend email
     elif len(kwargs) == 3 and 'hash_code' in kwargs.keys():
         username = kwargs['username']
