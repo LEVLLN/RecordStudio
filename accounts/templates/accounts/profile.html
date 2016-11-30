@@ -35,10 +35,11 @@
           <h3>{{ user.username }}</h3>
           <h4>{{ user.last_name }} {{ user.first_name }}</h4>
           <h4>{{ user.email }}</h4>
-          <button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button>
+          <a href="/accounts/settings"><button class="btn btn-action"><span class="glyphicon glyphicon-edit"></span> Редактировать</button></a>
         </div>
 
-        <div class="col-md-9 profile-data">
+        <div class="col-md-9 profile-data top-margin">
+        <div class="table-responsive">
           <table class="table table-striped table-hover top-margin">
             <form name="profile" method="POST">
               {% csrf_token %}
@@ -51,14 +52,14 @@
                     <button class="btn btn-action" name="cancel" onclick="javascript:window.location='my_profile'">Отмена</button>
                   </div>
                 </div>
-              </div>
-            </form>
-            <tr>
+                </form>
+            <thead>
               <th>Дата</th>
               <th>Время</th>
               <th>Звукорежиссер</th>
               <th>Статус брони</th>
-            </tr>
+            </thead>
+            <tbody>
             {% for booking in bookings %}
             <tr>
               <td>{{ booking.date }}</td>
@@ -66,13 +67,14 @@
               <td>{{ booking.schedule.soundman.first_name}} {{booking.schedule.soundman.last_name }}</td>
               <td>{{ booking.get_is_active_display }}
                 {% if booking.is_active == 1 %}
-                | | <a class="btn btn-action" href="{% url 'cancel_booking' booking.id%}">Отменить</a>
+                <a class="btn btn-action" href="{% url 'cancel_booking' booking.id%}">Отменить</a>
                 {% endif %}
               </td>
             </tr>
             {% endfor %}
-
+          </tbody>
           </table>
+          </div>
         </div>
       </article>
       <!-- /Article -->

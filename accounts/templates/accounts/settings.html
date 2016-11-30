@@ -1,4 +1,109 @@
-<!DOCTYPE html>
+{% extends "bookings/base.html" %}
+{% load staticfiles %}
+</html>
+<html>
+<head>
+  {% block title %}<title>RS | Настройки</title> {% endblock %}
+</head>
+<body>
+  {% block navbar-active %}
+  <li><a href="/">Главная</a></li>
+  <li><a href="/about/">О студии</a></li>
+  <li><a href="/step_1">Бронь записи</a></li>
+  {% endblock %}
+  {% block login-active %}
+  <li class="active"><a href="/accounts/login">Вход / регистрация</a></li>
+  {% endblock %}
+  {% block login-container %}
+  <header id="head" class="secondary"></header>
+  <!-- container -->
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">Главная</a></li>
+      <li class="active">Настройки профиля</li>
+    </ol>
+    <div class="row">
+      <!-- Article main content -->
+      <article class="col-xs-12 maincontent">
+        <header class="page-header">
+          <h1 class="page-title">Настройки профиля</h1>
+        </header>
+        <div class="col-md-3 profile-settings">
+          <div class="avatar">
+            <div class="image-title text-center">
+              <h5>Изображение профиля</h5>
+            </div>
+            <img src="{% static 'images/avatars/unknown-avatar.png' %}" alt="">
+            <a class="btn btn-action top-margin">Изменить</a>
+          </div>
+        </div>
+
+        <div class="col-md-9 profile-settings top-margin">
+          <div class="row">
+            <div class="col-md-6">
+              <form action="" method="POST">
+                {% csrf_token %}
+                  <div class="form-group">
+                  <label for="first_name">Имя:</label>
+                  <input type="input" class="form-control" value="{{ user.first_name }}" name="first_name" />
+                  </div>
+                  <div class="form-group">
+                  <label for="last_name">Фамилия:</label>
+                  <input type="input" class="form-control" value="{{ user.last_name }}" name="last_name" />
+                  </div>
+                  <div class="form-group">
+                  <label for="email">Email:</label>
+                  <input type="input" class="form-control" value="{{ user.email }}" name="email">
+                  </div>
+
+                  <div class="form-group">
+                  <label for="old_password">Текущий пароль:</label>
+                  <input type="password" class="form-control" name="old_password" value=""/>
+                  </div>
+                  <div id="password-change-form" style="display:none">
+                  <div class="form-group">
+                  <label for="new_password1">Новый пароль:</label>
+                  <input type="password" class="form-control" name="new_password1" value=""/>
+                  </div>
+                  <div class="form-group">
+                    <label for="new_password2">Новый пароль еще раз:</label>
+                  <input type="password" class="form-control" name="new_password2" value=""/>
+                  </div>
+                </div>
+                <div class="error-section">
+                  {% if error %}
+                      {{ error }}
+                  {% else %}
+                      {{ success }}
+                  {% endif %}
+                </div>
+                  <div class="settings-buttons text-right">
+                    <a id="change-pass-btn" class="btn btn-action">Изменить пароль</a>
+                    <button class="btn btn-action" type="submit">Сохранить</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+      </article>
+      <!-- /Article -->
+    </div>
+  </div>    <!-- /container -->
+  {% endblock %}
+</body>
+</html>
+{% block custom_scripts %}
+<script>
+document.querySelector("#change-pass-btn").addEventListener("click", function(){
+    document.querySelector("#password-change-form").style.display = "block";
+});
+</script>
+{% endblock %}
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -30,4 +135,4 @@
 
 </form>
 </body>
-</html> 
+</html>  -->

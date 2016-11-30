@@ -213,7 +213,7 @@ img.pull-left {
 /* Footer */
 #footer {
   position: relative;
-  margin-top: -180px; /* negative value of footer height */
+  margin-top: -47px; /* negative value of footer height */
   height: 47px;
   clear: both;
 }
@@ -561,9 +561,28 @@ Team Style One
 section.team-style-one.altered {
 	padding-bottom: 0px;
 }
+
+.profile-settings .avatar .btn{
+  min-width: 168px !important;
+}
+
 .avatar img {
 	margin: 2px;
-	height: 9em;
+	height: 12em;
+}
+.profile-settings .image-title {
+  max-width: 168px;
+  min-width: 168px;
+}
+
+.profile-settings .avatar {
+  max-width: 255px;
+}
+
+.settings-buttons .btn{
+  max-width: 48.7%;
+  min-width: 48.7%;
+  margin: 1px;
 }
 
 .soundmans-list {
@@ -576,6 +595,15 @@ section.team-style-one.altered {
 
 .soundmans-list .avatar img:hover {
 	height: 223px;
+}
+
+.error-section {
+  padding: 5px;
+  font-size: 15px;
+  list-style-type: none;
+}
+.errorlist {
+  list-style-type: none !important;
 }
 
 .soundman-square {
@@ -619,6 +647,10 @@ section.team-style-one.altered {
 	margin-top:20px;
 }
 
+.table-responsive {
+  overflow-x: visible !important;
+}
+
 .lr-padding {
 	padding: 0px 10px 0px 10px;
 }
@@ -653,10 +685,14 @@ section.team-style-one.altered {
 }
 
 .positive-bgc {
-	background-image: linear-gradient(to bottom, #33ff33 0%, #66ff66 100%);
+	background-image: linear-gradient(to bottom, #009900 0%, #008000 100%);
 }
 
 .positive-bgc:hover, .positive-bgc:focus {
     color: #fff;
-    background: #008000;
+    background: #006600;
+}
+.positive-bgc:active {
+  color: #fff;
+  background: #003300;
 }
