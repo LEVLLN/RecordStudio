@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, date, timedelta
 
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.context_processors import csrf
@@ -108,7 +108,6 @@ def create_booking(request, soundman_id):
     if request.method == "POST":
         start = request.POST['start']
         end = request.POST['end']
-        datestr = request.POST['date']
         date = __date_for_booking
         schedule = Schedule.objects.all().filter(soundman=soundman, working_day=date.isoweekday()).first()
         user = request.user
@@ -177,8 +176,8 @@ class RecordView:
             # reservationId = request.POST['id']
             try:
                 # Если статус брони = "отменен" / "завершен" то выбросит ошибку
-                if Booking.objects.get(pk=booking_id).is_active == 3 or \
-                                Booking.objects.get(pk=booking_id).is_active == 4:
+                if Booking.objects.get(pk=booking_id).is_active == 3 \
+                        or Booking.objects.get(pk=booking_id).is_active == 4:
                     args['againClicked'] = "Record is canceled or inactive"
                     return render(self, "records/user_record_page.html", args)
 
@@ -241,8 +240,8 @@ class RecordView:
                     return render(self, "records/user_record_page.html", args)
 
                 # Если статус брони = "отменен" / "завершен" то выбросит ошибку
-                if Booking.objects.get(pk=booking_id).is_active == 3 or \
-                                Booking.objects.get(pk=booking_id).is_active == 4:
+                if Booking.objects.get(pk=booking_id).is_active == 3 \
+                        or Booking.objects.get(pk=booking_id).is_active == 4:
                     args['againStopped'] = "Record is canceled or inactive"
                     return render(self, "records/user_record_page.html", args)
 

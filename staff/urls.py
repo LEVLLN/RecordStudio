@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^profile/', views.StaffProfilePageView.as_view(), name='staff_profile'),
     url(r'^add/', views.SoundmanAddView.as_view(), name='soundman_add'),
     url(r'^booking/(?P<booking_id>[0-9]+)/cancel/', booking_views.cancel_booking, name="cancel_booking"),
+
 ]

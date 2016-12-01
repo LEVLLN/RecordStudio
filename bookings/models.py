@@ -48,4 +48,5 @@ class Record(models.Model):
     money_back = models.IntegerField(null=True)
 
     def __str__(self):
-        return 'Record of user "%s"   | Soundman: "%s   | Date: %s"' % (self.reservation.user.username, self.reservation.schedule.soundman.username, self.reservation.date)
+        return 'Record of user "%s"   | Soundman: "%s   | Date: %s"' % \
+               (self.reservation.user.username, self.reservation.schedule.soundman.username, self.reservation.date)

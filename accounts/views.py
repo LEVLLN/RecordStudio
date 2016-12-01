@@ -19,7 +19,7 @@ from django.views import View
 
 from accounts.forms import UserCreationForm
 from accounts.models import SecretHashCode
-from bookings.models import Booking, Record
+from bookings.models import Booking
 from emailer.views import send_email
 
 

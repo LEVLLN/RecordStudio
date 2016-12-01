@@ -70,4 +70,3 @@ class BookingPageTest(unittest.TestCase):
         self.client.post('/accounts/login', {'username': 'tester', 'password': 'Jaxonyo23'})
         response = self.client.get('/step_1/')
         self.assertEquals(response.status_code, 302)
-

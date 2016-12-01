@@ -15,5 +15,4 @@ urlpatterns = [
     url(r'^confirm', views.ConfirmEmailView.as_view(), name='confirmation'),
     url(r'^resend', views.ConfirmEmailView.resend_email, name='resend'),
 
-    
 ]

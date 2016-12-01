@@ -5,18 +5,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group, User
 from django.http import Http404
 from django.shortcuts import render, redirect, render_to_response
-
-# _______________________
-# staff stuff
-# _______________________
-
-
-# Staff's login page
-# url : /staff
 from django.template.context_processors import csrf
 from django.views import View
 
-from accounts.forms import UserCreationForm, SoundmanCreationForm
+from accounts.forms import SoundmanCreationForm
 from accounts.views import ForgetPasswordView
 from bookings.models import Record, Booking
 from emailer.views import send_email
@@ -114,4 +106,3 @@ class SoundmanAddView(View):
 
         args['form'] = new_user_form
         return render_to_response('staff/soundmanAdd.html', args)
-
