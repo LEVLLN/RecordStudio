@@ -1,3 +1,5 @@
 pytimeparse
-### RecordStudio site
 Django==1.10.2
+django-extensions
+ipython
+django-timedeltafield
